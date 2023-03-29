@@ -4,7 +4,7 @@ using HallHaven.Data;
 using HallHaven.Areas.Identity.Data;
 
 var builder = WebApplication.CreateBuilder(args);
-var connectionString = builder.Configuration.GetConnectionString("HallHavenContextConnection") ?? throw new InvalidOperationException("Connection string 'HallHavenContextConnection' not found.");
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
 builder.Services.AddDbContext<HallHavenContext>(options =>
     options.UseSqlServer(connectionString));
@@ -29,7 +29,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-app.UseAuthentication();;
+app.UseAuthentication();
 
 app.UseAuthorization();
 
