@@ -14,7 +14,6 @@ public class HallHavenContext : IdentityDbContext<HallHavenUser>
         : base(options)
     {
     }
-
     public virtual DbSet<CreditHour> CreditHours { get; set; } = null!;
     public virtual DbSet<Dorm> Dorms { get; set; } = null!;
     public virtual DbSet<Form> Forms { get; set; } = null!;
@@ -23,17 +22,17 @@ public class HallHavenContext : IdentityDbContext<HallHavenUser>
     public virtual DbSet<Match> Matches { get; set; } = null!;
     public virtual DbSet<User> Users { get; set; } = null!;
 
-    protected override void OnModelCreating(ModelBuilder builder)
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        base.OnModelCreating(builder);
+        base.OnModelCreating(modelBuilder);
         // Customize the ASP.NET Identity model and override the defaults if needed.
         // For example, you can rename the ASP.NET Identity table names and more.
         // Add your customizations after calling base.OnModelCreating(builder);
-        builder.Entity<HallHavenUser>()
+        modelBuilder.Entity<HallHavenUser>()
         .Property(p => p.DisplayName)
         .HasComputedColumnSql("[FirstName] + ' ' + [LastName]");
 
-        builder.Entity<CreditHour>(entity =>
+        modelBuilder.Entity<CreditHour>(entity =>
         {
             entity.ToTable("CreditHour");
 
@@ -46,7 +45,7 @@ public class HallHavenContext : IdentityDbContext<HallHavenUser>
                 .IsUnicode(false);
         });
 
-        builder.Entity<Dorm>(entity =>
+        modelBuilder.Entity<Dorm>(entity =>
         {
             entity.ToTable("Dorm");
 
@@ -66,7 +65,7 @@ public class HallHavenContext : IdentityDbContext<HallHavenUser>
                 .OnDelete(DeleteBehavior.ClientSetNull);
         });
 
-        builder.Entity<Form>(entity =>
+        modelBuilder.Entity<Form>(entity =>
         {
             entity.ToTable("Form");
 
@@ -92,7 +91,7 @@ public class HallHavenContext : IdentityDbContext<HallHavenUser>
                 .OnDelete(DeleteBehavior.ClientSetNull);
         });
 
-        builder.Entity<Gender>(entity =>
+        modelBuilder.Entity<Gender>(entity =>
         {
             entity.ToTable("Gender");
 
@@ -102,7 +101,7 @@ public class HallHavenContext : IdentityDbContext<HallHavenUser>
                 .HasColumnName("Gender");
         });
 
-        builder.Entity<Major>(entity =>
+        modelBuilder.Entity<Major>(entity =>
         {
             entity.ToTable("Major");
 
@@ -111,7 +110,7 @@ public class HallHavenContext : IdentityDbContext<HallHavenUser>
                 .IsUnicode(false);
         });
 
-        builder.Entity<Match>(entity =>
+        modelBuilder.Entity<Match>(entity =>
         {
             entity.Property(e => e.ApplicationUser1Id).HasMaxLength(450);
 
@@ -130,10 +129,8 @@ public class HallHavenContext : IdentityDbContext<HallHavenUser>
                 .HasForeignKey(d => d.User2Id);
         });
 
-        builder.Entity<User>(entity =>
+        modelBuilder.Entity<User>(entity =>
         {
-            entity.Property(e => e.AspNetUserId).HasMaxLength(450);
-
             entity.Property(e => e.DisplayName).HasComputedColumnSql("(([FirstName]+' ')+[LastName])", false);
 
             entity.Property(e => e.Email).HasMaxLength(256);
@@ -146,7 +143,7 @@ public class HallHavenContext : IdentityDbContext<HallHavenUser>
         });
 
 
-        builder.ApplyConfiguration(new HallHavenUserEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new HallHavenUserEntityConfiguration());
     }
 
     public class HallHavenUserEntityConfiguration : IEntityTypeConfiguration<HallHavenUser>

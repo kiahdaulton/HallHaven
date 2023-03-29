@@ -12,7 +12,6 @@ namespace HallHaven.Models
             MatchUser2s = new HashSet<Match>();
         }
 
-        public string? AspNetUserId { get; set; }
         public string UserId { get; set; } = null!;
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
