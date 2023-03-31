@@ -22,6 +22,10 @@ body {
     height: 30px;
 }
 
+.form-group {
+    margin-bottom: 10px;
+}
+
 @media only screen and (max-width: 768px) {
 }
 

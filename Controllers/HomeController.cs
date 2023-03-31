@@ -1,6 +1,7 @@
 ﻿using HallHaven.Areas.Identity.Data;
 using HallHaven.Data;
 using HallHaven.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;

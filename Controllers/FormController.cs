@@ -9,6 +9,7 @@ using HallHaven.Data;
 using HallHaven.Models;
 using Microsoft.AspNetCore.Identity;
 using HallHaven.Areas.Identity.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HallHaven.Controllers
 {
@@ -24,6 +25,7 @@ namespace HallHaven.Controllers
         }
 
         // GET: Forms
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             // get logged in user's gender through gender model
