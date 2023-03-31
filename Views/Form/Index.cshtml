@@ -1,0 +1,132 @@
+﻿@model IEnumerable<HallHaven.Models.Form>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.GenderId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsCandiateStudent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsStudentAthlete)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NeatnessLevel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VisitorLevel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FitnessLevel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AcademicLevel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SocialLevel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SharingLevel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BackgroundNoiseLevel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BedTimeRanking)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ModestyLevel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NumberOfBelongings)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreditHour)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Dorm)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Major)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.GenderId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsCandiateStudent)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsStudentAthlete)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NeatnessLevel)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VisitorLevel)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FitnessLevel)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AcademicLevel)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SocialLevel)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SharingLevel)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BackgroundNoiseLevel)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BedTimeRanking)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ModestyLevel)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NumberOfBelongings)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreditHour.CreditHourId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Dorm.DormId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Major.MajorId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.User.UserId)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.FormId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.FormId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.FormId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

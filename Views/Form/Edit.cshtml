@@ -1,0 +1,115 @@
+﻿@model HallHaven.Models.Form
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Edit</h1>
+
+<h4>Form</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="FormId" />
+            <div class="form-group">
+                <label asp-for="DormId" class="control-label"></label>
+                <select asp-for="DormId" class="form-control" asp-items="ViewBag.DormId"></select>
+                <span asp-validation-for="DormId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserId" class="control-label"></label>
+                <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId"></select>
+                <span asp-validation-for="UserId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MajorId" class="control-label"></label>
+                <select asp-for="MajorId" class="form-control" asp-items="ViewBag.MajorId"></select>
+                <span asp-validation-for="MajorId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreditHourId" class="control-label"></label>
+                <select asp-for="CreditHourId" class="form-control" asp-items="ViewBag.CreditHourId"></select>
+                <span asp-validation-for="CreditHourId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GenderId" class="control-label"></label>
+                <input asp-for="GenderId" class="form-control" />
+                <span asp-validation-for="GenderId" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsCandiateStudent" /> @Html.DisplayNameFor(model => model.IsCandiateStudent)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsStudentAthlete" /> @Html.DisplayNameFor(model => model.IsStudentAthlete)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="NeatnessLevel" class="control-label"></label>
+                <input asp-for="NeatnessLevel" class="form-control" />
+                <span asp-validation-for="NeatnessLevel" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="VisitorLevel" class="control-label"></label>
+                <input asp-for="VisitorLevel" class="form-control" />
+                <span asp-validation-for="VisitorLevel" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FitnessLevel" class="control-label"></label>
+                <input asp-for="FitnessLevel" class="form-control" />
+                <span asp-validation-for="FitnessLevel" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AcademicLevel" class="control-label"></label>
+                <input asp-for="AcademicLevel" class="form-control" />
+                <span asp-validation-for="AcademicLevel" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SocialLevel" class="control-label"></label>
+                <input asp-for="SocialLevel" class="form-control" />
+                <span asp-validation-for="SocialLevel" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SharingLevel" class="control-label"></label>
+                <input asp-for="SharingLevel" class="form-control" />
+                <span asp-validation-for="SharingLevel" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BackgroundNoiseLevel" class="control-label"></label>
+                <input asp-for="BackgroundNoiseLevel" class="form-control" />
+                <span asp-validation-for="BackgroundNoiseLevel" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BedTimeRanking" class="control-label"></label>
+                <input asp-for="BedTimeRanking" class="form-control" />
+                <span asp-validation-for="BedTimeRanking" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ModestyLevel" class="control-label"></label>
+                <input asp-for="ModestyLevel" class="form-control" />
+                <span asp-validation-for="ModestyLevel" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NumberOfBelongings" class="control-label"></label>
+                <input asp-for="NumberOfBelongings" class="form-control" />
+                <span asp-validation-for="NumberOfBelongings" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
