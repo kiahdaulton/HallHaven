@@ -1,9 +1,8 @@
 ﻿@using HallHaven.Areas.Identity.Data;
 @using Microsoft.AspNetCore.Identity;
 
-@inject SignInManager<HallHavenUser> SignInManager
-@inject UserManager<HallHavenUser> UserManager
-@inject UserManager<HallHavenUser> UserManager
+@inject SignInManager<HallHavenUser> _signInManager
+@inject Microsoft.AspNetCore.Identity.UserManager<HallHavenUser> _userManager
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -29,37 +28,34 @@
 <div class="album py-5">
     <div class="container">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-            @{
+@*            @{
+                //string userId = _userManager.GetUserId(User);
+                //<div>@userId</div>
 
-                var myUser = await UserManager.GetUserAsync(User);
-                <div>@myUser.DisplayName</div>
-            }
-
-@*            @foreach (var item in Model)
-            {
-                <div>
-                    @item.Gender;
-                </div>
+                var user = await _userManager.GetUserAsync(User);
+                <div>@user.Id</div>
+                <div>@user.DisplayName</div>
+                <div>@user.Gender</div>
             }*@
-
-@*            @if (SignInManager.IsSignedIn(User))
+            @if (_signInManager.IsSignedIn(User))
             {
                 @if (Model.Count != null)
                 {
-                    foreach (HallHavenUser user in Model)
+                    @foreach (HallHavenUser user in Model)
                     {
-                        //var currentUser = UserManager.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
                         <div class="col">
                             <div class="card shadow-sm">
-                                @if (UserManager.GetUserAsync(User).Result.ProfilePicture != null)
+                                @if (_userManager.GetUserAsync(User).Result.ProfilePicture != null)
                                 {
                                     <img class="bd-placeholder-img card-img-top" width="100%" height="225"
-                                         src="data:image/*;base64,@(Convert.ToBase64String(UserManager.GetUserAsync(User).Result.ProfilePicture))">
+                                         src="data:image/*;base64,@(Convert.ToBase64String(_userManager.GetUserAsync(User).Result.ProfilePicture))">
                                 }
 
                                 <div class="card-body">
                                     <p class="card-text">
                                         <div class="d-flex justify-content-center">@user.DisplayName</div>
+                                        <div>@user.Id</div>
+                                        <div>@user.Gender</div>
                                         <div>Hall</div>
                                         <div>Classification</div>
                                         <div>Percentage</div>
@@ -86,7 +82,8 @@
                 {
                     <div>There are no users.</div>
                 }
-            }*@
+
+            }
 
         </div>
     </div>

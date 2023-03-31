@@ -16,3 +16,18 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.icon {
+    width: 30px;
+    height: 30px;
+}
+
+@media only screen and (max-width: 768px) {
+}
+
+@media only screen and (max-width: 576px) {
+
+    .card-img-top {
+        height: 50vw;
+    }
+}

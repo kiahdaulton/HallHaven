@@ -15,6 +15,9 @@ builder.Services.AddDefaultIdentity<HallHavenUser>(options => options.SignIn.Req
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+// Add get user service
+builder.Services.AddHttpContextAccessor();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
