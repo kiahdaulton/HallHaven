@@ -106,7 +106,7 @@ public class HallHavenContext : IdentityDbContext<HallHavenUser>
             entity.ToTable("Major");
 
             entity.Property(e => e.MajorName)
-                .HasMaxLength(50)
+                .HasMaxLength(450)
                 .IsUnicode(false);
         });
 
