@@ -62,7 +62,7 @@ namespace HallHaven.Controllers
             ViewData["CreditHourId"] = new SelectList(_context.CreditHours, "CreditHourId", "CreditHourName");
             // add in gender portion here
             ViewData["DormId"] = new SelectList(_context.Dorms, "DormId", "DormName");
-            ViewData["MajorId"] = new SelectList(_context.Majors, "MajorId", "MajorName");
+            ViewData["MajorId"] = new SelectList(_context.Majors, "MajorId", "MajorName").OrderBy(x => x.Text);
             ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId");
             return View();
         }
@@ -82,7 +82,7 @@ namespace HallHaven.Controllers
             }
             ViewData["CreditHourId"] = new SelectList(_context.CreditHours, "CreditHourId", "CreditHourName", form.CreditHourId);
             ViewData["DormId"] = new SelectList(_context.Dorms, "DormId", "DormName", form.DormId);
-            ViewData["MajorId"] = new SelectList(_context.Majors, "MajorId", "MajorName", form.MajorId);
+            ViewData["MajorId"] = new SelectList(_context.Majors, "MajorId", "MajorName", form.MajorId).OrderBy(x => x.Text); ;
             ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId", form.UserId);
             return View(form);
         }
@@ -102,7 +102,7 @@ namespace HallHaven.Controllers
             }
             ViewData["CreditHourId"] = new SelectList(_context.CreditHours, "CreditHourId", "CreditHourName", form.CreditHourId);
             ViewData["DormId"] = new SelectList(_context.Dorms, "DormId", "DormName", form.DormId);
-            ViewData["MajorId"] = new SelectList(_context.Majors, "MajorId", "MajorName", form.MajorId);
+            ViewData["MajorId"] = new SelectList(_context.Majors, "MajorId", "MajorName", form.MajorId).OrderBy(x => x.Text); ;
             ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId", form.UserId);
             return View(form);
         }
@@ -141,7 +141,7 @@ namespace HallHaven.Controllers
             }
             ViewData["CreditHourId"] = new SelectList(_context.CreditHours, "CreditHourId", "CreditHourName", form.CreditHourId);
             ViewData["DormId"] = new SelectList(_context.Dorms, "DormId", "DormName", form.DormId);
-            ViewData["MajorId"] = new SelectList(_context.Majors, "MajorId", "MajorName", form.MajorId);
+            ViewData["MajorId"] = new SelectList(_context.Majors, "MajorId", "MajorName", form.MajorId).OrderBy(x => x.Text); ;
             ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId", form.UserId);
             return View(form);
         }
