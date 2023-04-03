@@ -69,8 +69,6 @@ public class HallHavenContext : IdentityDbContext<HallHavenUser>
         {
             entity.ToTable("Form");
 
-            entity.Property(e => e.UserId).HasMaxLength(450);
-
             entity.HasOne(d => d.CreditHour)
                 .WithMany(p => p.Forms)
                 .HasForeignKey(d => d.CreditHourId)
@@ -87,8 +85,7 @@ public class HallHavenContext : IdentityDbContext<HallHavenUser>
 
             entity.HasOne(d => d.User)
                 .WithMany(p => p.Forms)
-                .HasForeignKey(d => d.UserId)
-                .OnDelete(DeleteBehavior.ClientSetNull);
+                .HasForeignKey(d => d.UserId);
         });
 
         modelBuilder.Entity<Gender>(entity =>
@@ -106,7 +103,7 @@ public class HallHavenContext : IdentityDbContext<HallHavenUser>
             entity.ToTable("Major");
 
             entity.Property(e => e.MajorName)
-                .HasMaxLength(450)
+                .HasMaxLength(50)
                 .IsUnicode(false);
         });
 
@@ -115,10 +112,6 @@ public class HallHavenContext : IdentityDbContext<HallHavenUser>
             entity.Property(e => e.ApplicationUser1Id).HasMaxLength(450);
 
             entity.Property(e => e.ApplicationUser2Id).HasMaxLength(450);
-
-            entity.Property(e => e.User1Id).HasMaxLength(450);
-
-            entity.Property(e => e.User2Id).HasMaxLength(450);
 
             entity.HasOne(d => d.User1)
                 .WithMany(p => p.MatchUser1s)
@@ -131,6 +124,8 @@ public class HallHavenContext : IdentityDbContext<HallHavenUser>
 
         modelBuilder.Entity<User>(entity =>
         {
+            entity.Property(e => e.UserId).ValueGeneratedNever();
+
             entity.Property(e => e.DisplayName).HasComputedColumnSql("(([FirstName]+' ')+[LastName])", false);
 
             entity.Property(e => e.Email).HasMaxLength(256);
