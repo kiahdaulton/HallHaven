@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using HallHaven.Data;
 
 namespace HallHaven.Areas.Identity.Pages.Account
 {
@@ -30,13 +31,15 @@ namespace HallHaven.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<HallHavenUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly HallHavenContext _context;
 
         public RegisterModel(
             UserManager<HallHavenUser> userManager,
             IUserStore<HallHavenUser> userStore,
             SignInManager<HallHavenUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            HallHavenContext context)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -44,6 +47,7 @@ namespace HallHaven.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _context = context;
         }
 
         /// <summary>
@@ -95,6 +99,9 @@ namespace HallHaven.Areas.Identity.Pages.Account
             [Display(Name = "Profile Biography")]
             public string ProfileBio { get; set; }
 
+            // custom user id to map to identity user
+            public int? CustomUserId { get; set; } = null;
+
 
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -141,9 +148,16 @@ namespace HallHaven.Areas.Identity.Pages.Account
                 var user = CreateUser();
                 user.FirstName = Input.FirstName;
                 user.LastName = Input.LastName;
-                user.Gender = Input.Gender;
+                //user.Gender = Input.Gender;
                 //user.ProfilePicture = Input.ProfilePicture;
                 user.ProfileBio = Input.ProfileBio;
+                // set to null
+                user.CustomUserId = Input.CustomUserId;
+
+                // generate new user in user model
+
+
+
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
@@ -154,7 +168,20 @@ namespace HallHaven.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User created a new account with password.");
 
+                    // userId is created
                     var userId = await _userManager.GetUserIdAsync(user);
+
+
+                    // link identiy context to hall haven context with custom user id
+                    // set user id to user table
+                    user.CustomUserId = _context.Users.FirstOrDefault().UserId;
+                    // set gender name to gender table
+                    user.Gender = _context.Genders.FirstOrDefault().Gender1;
+
+
+
+
+
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Page(

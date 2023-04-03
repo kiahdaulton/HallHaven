@@ -29,5 +29,7 @@ public class HallHavenUser : IdentityUser
 
     [PersonalData]
     public string DisplayName { get; set; }
+
+    public int? CustomUserId { get; set; } = null;
 }
 
