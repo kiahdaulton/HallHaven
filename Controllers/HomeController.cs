@@ -34,10 +34,24 @@ namespace HallHaven.Controllers
             {
                 // get logged in user
                 var user = await _userManager.GetUserAsync(User);
+
                 // get logged in user's gender
                 var gender = user.Gender;
                 // only show users that match the logged in user's gender in the view
                 var users = _userManager.Users.Where(g => g.Gender == gender).ToList();
+
+                // get list of hall haven context users
+                var students = _context.Users.ToList();
+                // get current student by userId
+                var students2 = _context.Users.FindAsync(userId);
+
+                //var user1 = students[0];
+                // set first student id in users Model to be the current student id
+                //user1.UserId = userId;
+
+                //var myUser = _context.Users.ToList();
+
+                //var myGenders = _context.Genders;
 
                 // configure not displaying logged in user or add a specific button to current user to hide profile
 

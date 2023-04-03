@@ -36,7 +36,9 @@ namespace HallHaven.Controllers
             // get logged in user's gender
             var gender = user.Gender;
 
-            var hallHavenContext = _context.Users.Include(u => u.Gender);
+            var id = user.Id;
+
+            var hallHavenContext = _context.Users.Include(u => u.Gender).Include(u => u.UserId);
             return View(await hallHavenContext.ToListAsync());
         }
 
@@ -78,6 +80,10 @@ namespace HallHaven.Controllers
         {
             if (ModelState.IsValid)
             {
+                //var userData = await _userManager.GetUserAsync(User);
+                //var userId = userData.UserId;
+                
+
                 _context.Add(user);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

@@ -28,11 +28,31 @@ namespace HallHaven.Controllers
         [Authorize]
         public async Task<IActionResult> Index()
         {
-            // get logged in user's gender through gender model
-            //.Where(g => g.Gender == genderId).
+            var userId = User.GetLoggedInUserId<string>();
 
-            var hallHavenContext = _context.Forms.Include(f => f.CreditHour).Include(f => f.Dorm).Include(f => f.Major).Include(f => f.User);
-            return View(await hallHavenContext.ToListAsync());
+            // if user is logged in
+            if (userId != null)
+            {
+                // get logged in user
+                var user = await _userManager.GetUserAsync(User);
+                // get logged in user's gender
+                var gender = user.Gender;
+
+                // test users whose gender equals user's
+                var users = _userManager.Users.Where(g => g.Gender == gender).ToList();
+
+                // get dorms by user gender
+
+                // bind form values
+                // ORIGINAL
+                var hallHavenContext = _context.Forms.Include(f => f.CreditHour).Include(f => f.Dorm).Include(f => f.Major).Include(f => f.User);
+                return View(await hallHavenContext.ToListAsync());
+            }
+            else
+            {
+                // display default view if user is not currently logged in
+                return View();
+            }
         }
 
         // GET: Forms/Details/5
