@@ -42,8 +42,9 @@ namespace HallHaven.Controllers
 
                 // get list of hall haven context users
                 var students = _context.Users.ToList();
-                // get current student by userId
-                var students2 = _context.Users.FindAsync(userId);
+
+                // get current student by userId string
+                //var students2 = _context.Users.FindAsync(userId);
 
                 //var user1 = students[0];
                 // set first student id in users Model to be the current student id

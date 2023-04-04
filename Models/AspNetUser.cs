@@ -20,7 +20,7 @@ namespace HallHaven.Models
         public byte[]? ProfilePicture { get; set; }
         public string ProfileBio { get; set; } = null!;
         public string DisplayName { get; set; } = null!;
-        public string UserName { get; set; } = null!;
+        public string? UserName { get; set; }
         public string? NormalizedUserName { get; set; }
         public string? Email { get; set; }
         public string? NormalizedEmail { get; set; }
@@ -34,6 +34,7 @@ namespace HallHaven.Models
         public DateTimeOffset? LockoutEnd { get; set; }
         public bool LockoutEnabled { get; set; }
         public int AccessFailedCount { get; set; }
+        public int? CustomUserId { get; set; }
 
         public virtual ICollection<AspNetUserClaim> AspNetUserClaims { get; set; }
         public virtual ICollection<AspNetUserLogin> AspNetUserLogins { get; set; }

@@ -30,6 +30,9 @@ namespace HallHaven.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<int?>("AspNetUserId")
+                        .HasColumnType("int");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -159,9 +162,9 @@ namespace HallHaven.Migrations
 
                     b.HasKey("DormId");
 
-                    b.HasIndex("CreditHourId");
+                    b.HasIndex(new[] { "CreditHourId" }, "IX_Dorm_CreditHourId");
 
-                    b.HasIndex("GenderId");
+                    b.HasIndex(new[] { "GenderId" }, "IX_Dorm_GenderId");
 
                     b.ToTable("Dorm", (string)null);
                 });
@@ -221,7 +224,6 @@ namespace HallHaven.Migrations
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("VisitorLevel")
@@ -229,13 +231,13 @@ namespace HallHaven.Migrations
 
                     b.HasKey("FormId");
 
-                    b.HasIndex("CreditHourId");
+                    b.HasIndex(new[] { "CreditHourId" }, "IX_Form_CreditHourId");
 
-                    b.HasIndex("DormId");
+                    b.HasIndex(new[] { "DormId" }, "IX_Form_DormId");
 
-                    b.HasIndex("MajorId");
+                    b.HasIndex(new[] { "MajorId" }, "IX_Form_MajorId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex(new[] { "UserId" }, "IX_Form_UserId");
 
                     b.ToTable("Form", (string)null);
                 });
@@ -302,18 +304,16 @@ namespace HallHaven.Migrations
                         .HasColumnType("real");
 
                     b.Property<string>("User1Id")
-                        .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("User2Id")
-                        .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("MatchId");
 
-                    b.HasIndex("User1Id");
+                    b.HasIndex(new[] { "User1Id" }, "IX_Matches_User1Id");
 
-                    b.HasIndex("User2Id");
+                    b.HasIndex(new[] { "User2Id" }, "IX_Matches_User2Id");
 
                     b.ToTable("Matches", (string)null);
                 });
@@ -348,6 +348,9 @@ namespace HallHaven.Migrations
                     b.Property<int?>("GenderId")
                         .HasColumnType("int");
 
+                    b.Property<string>("HallHavenUserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
@@ -369,7 +372,9 @@ namespace HallHaven.Migrations
 
                     b.HasKey("UserId");
 
-                    b.HasIndex("GenderId");
+                    b.HasIndex("HallHavenUserId");
+
+                    b.HasIndex(new[] { "GenderId" }, "IX_Users_GenderId");
 
                     b.ToTable("Users", (string)null);
                 });
@@ -582,6 +587,10 @@ namespace HallHaven.Migrations
                         .WithMany("Users")
                         .HasForeignKey("GenderId");
 
+                    b.HasOne("HallHaven.Areas.Identity.Data.HallHavenUser", null)
+                        .WithMany("Users")
+                        .HasForeignKey("HallHavenUserId");
+
                     b.Navigation("Gender");
                 });
 
@@ -634,6 +643,11 @@ namespace HallHaven.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("HallHaven.Areas.Identity.Data.HallHavenUser", b =>
+                {
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("HallHaven.Models.CreditHour", b =>

@@ -20,6 +20,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using HallHaven.Data;
+using HallHaven.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace HallHaven.Areas.Identity.Pages.Account
 {
@@ -145,16 +147,41 @@ namespace HallHaven.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
+
+                var customUser = new User();
+
+                if (Input.Gender == "Male")
+                {
+                    customUser.GenderId = 1;
+
+                }
+                // female
+                else
+                {
+                    customUser.GenderId = 2;
+                }
+
+                await _context.SaveChangesAsync();
+                //_context.SaveChanges();
+
+                int id = customUser.UserId;
+
+
+
+                //_context.Update(customUser);
+                //await _context.SaveChangesAsync();
+
                 var user = CreateUser();
                 user.FirstName = Input.FirstName;
                 user.LastName = Input.LastName;
-                //user.Gender = Input.Gender;
+                user.Gender = Input.Gender;
                 //user.ProfilePicture = Input.ProfilePicture;
                 user.ProfileBio = Input.ProfileBio;
                 // set to null
                 user.CustomUserId = Input.CustomUserId;
 
                 // generate new user in user model
+
 
 
 
@@ -174,9 +201,9 @@ namespace HallHaven.Areas.Identity.Pages.Account
 
                     // link identiy context to hall haven context with custom user id
                     // set user id to user table
-                    user.CustomUserId = _context.Users.FirstOrDefault().UserId;
-                    // set gender name to gender table
-                    user.Gender = _context.Genders.FirstOrDefault().Gender1;
+                    //user.CustomUserId = _context.Users.FirstOrDefault().UserId;
+                    //// set gender name to gender table
+                    //user.Gender = _context.Genders.FirstOrDefault().Gender1;
 
 
 

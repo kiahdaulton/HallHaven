@@ -7,7 +7,7 @@ namespace HallHaven.Models
     {
         public int FormId { get; set; }
         public int DormId { get; set; }
-        public int? UserId { get; set; }
+        public int UserId { get; set; }
         public int MajorId { get; set; }
         public int CreditHourId { get; set; }
         public int GenderId { get; set; }
@@ -27,6 +27,6 @@ namespace HallHaven.Models
         public virtual CreditHour CreditHour { get; set; } = null!;
         public virtual Dorm Dorm { get; set; } = null!;
         public virtual Major Major { get; set; } = null!;
-        public virtual User? User { get; set; }
+        public virtual User User { get; set; } = null!;
     }
 }

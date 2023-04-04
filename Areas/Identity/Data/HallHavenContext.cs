@@ -14,6 +14,7 @@ public class HallHavenContext : IdentityDbContext<HallHavenUser>
         : base(options)
     {
     }
+
     public virtual DbSet<CreditHour> CreditHours { get; set; } = null!;
     public virtual DbSet<Dorm> Dorms { get; set; } = null!;
     public virtual DbSet<Form> Forms { get; set; } = null!;
@@ -32,6 +33,7 @@ public class HallHavenContext : IdentityDbContext<HallHavenUser>
         .Property(p => p.DisplayName)
         .HasComputedColumnSql("[FirstName] + ' ' + [LastName]");
 
+
         modelBuilder.Entity<CreditHour>(entity =>
         {
             entity.ToTable("CreditHour");
@@ -48,6 +50,10 @@ public class HallHavenContext : IdentityDbContext<HallHavenUser>
         modelBuilder.Entity<Dorm>(entity =>
         {
             entity.ToTable("Dorm");
+
+            entity.HasIndex(e => e.CreditHourId, "IX_Dorm_CreditHourId");
+
+            entity.HasIndex(e => e.GenderId, "IX_Dorm_GenderId");
 
             entity.Property(e => e.DormName)
                 .HasMaxLength(50)
@@ -69,6 +75,14 @@ public class HallHavenContext : IdentityDbContext<HallHavenUser>
         {
             entity.ToTable("Form");
 
+            entity.HasIndex(e => e.CreditHourId, "IX_Form_CreditHourId");
+
+            entity.HasIndex(e => e.DormId, "IX_Form_DormId");
+
+            entity.HasIndex(e => e.MajorId, "IX_Form_MajorId");
+
+            entity.HasIndex(e => e.UserId, "IX_Form_UserId");
+
             entity.HasOne(d => d.CreditHour)
                 .WithMany(p => p.Forms)
                 .HasForeignKey(d => d.CreditHourId)
@@ -85,7 +99,9 @@ public class HallHavenContext : IdentityDbContext<HallHavenUser>
 
             entity.HasOne(d => d.User)
                 .WithMany(p => p.Forms)
-                .HasForeignKey(d => d.UserId);
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Form_Users_UserId");
         });
 
         modelBuilder.Entity<Gender>(entity =>
@@ -109,22 +125,36 @@ public class HallHavenContext : IdentityDbContext<HallHavenUser>
 
         modelBuilder.Entity<Match>(entity =>
         {
+            entity.ToTable("Match");
+
+            entity.HasIndex(e => e.User1Id, "IX_Matches_User1Id");
+
+            entity.HasIndex(e => e.User2Id, "IX_Matches_User2Id");
+
             entity.Property(e => e.ApplicationUser1Id).HasMaxLength(450);
 
             entity.Property(e => e.ApplicationUser2Id).HasMaxLength(450);
 
             entity.HasOne(d => d.User1)
                 .WithMany(p => p.MatchUser1s)
-                .HasForeignKey(d => d.User1Id);
+                .HasForeignKey(d => d.User1Id)
+                .HasConstraintName("FK_Matches_Users_User1Id");
 
             entity.HasOne(d => d.User2)
                 .WithMany(p => p.MatchUser2s)
-                .HasForeignKey(d => d.User2Id);
+                .HasForeignKey(d => d.User2Id)
+                .HasConstraintName("FK_Matches_Users_User2Id");
         });
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.Property(e => e.UserId).ValueGeneratedNever();
+            entity.ToTable("User");
+
+            entity.HasIndex(e => e.GenderId, "IX_Users_GenderId");
+
+            entity.HasIndex(e => e.HallHavenUserId, "IX_Users_HallHavenUserId");
+
+            entity.Property(e => e.AspNetUserId).HasMaxLength(450);
 
             entity.Property(e => e.DisplayName).HasComputedColumnSql("(([FirstName]+' ')+[LastName])", false);
 
@@ -134,7 +164,8 @@ public class HallHavenContext : IdentityDbContext<HallHavenUser>
 
             entity.HasOne(d => d.Gender)
                 .WithMany(p => p.Users)
-                .HasForeignKey(d => d.GenderId);
+                .HasForeignKey(d => d.GenderId)
+                .HasConstraintName("FK_User_Gender");
         });
 
 
