@@ -154,7 +154,6 @@ namespace HallHaven.Areas.Identity.Pages.Account
                 {
                     customUser.GenderId = 1;
                     //customUser.Gender = "Male"; 
-
                 }
                 // female
                 else
@@ -162,20 +161,16 @@ namespace HallHaven.Areas.Identity.Pages.Account
                     customUser.GenderId = 2;
                 }
 
-               
-                //_context.SaveChanges();
+                customUser.FirstName = Input.FirstName;
+                customUser.LastName = Input.LastName;
+                customUser.Email = Input.Email;
+                customUser.ProfileBio = Input.ProfileBio;
 
-                await _context.Users.AddAsync(customUser);
-
-                _context.SaveChanges();
-                //await _context.SaveChangesAsync();
-
-                int id = customUser.UserId;
-
-
-
-                //_context.Update(customUser);
-                //await _context.SaveChangesAsync();
+                _context.Add(customUser);
+                await _context.SaveChangesAsync();
+                //return RedirectToAction(nameof(Index));
+                
+                //int customUserId = customUser.UserId;
 
                 var user = CreateUser();
                 user.FirstName = Input.FirstName;
@@ -183,12 +178,10 @@ namespace HallHaven.Areas.Identity.Pages.Account
                 user.Gender = Input.Gender;
                 //user.ProfilePicture = Input.ProfilePicture;
                 user.ProfileBio = Input.ProfileBio;
-                // set to null
-                user.CustomUserId = Input.CustomUserId;
+                // set null customUserId to value of userId in user table
+                user.CustomUserId = customUser.UserId;
 
                 // generate new user in user model
-
-
 
 
 
