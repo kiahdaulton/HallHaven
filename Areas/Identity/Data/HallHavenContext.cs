@@ -118,9 +118,7 @@ public class HallHavenContext : IdentityDbContext<HallHavenUser>
         {
             entity.ToTable("Major");
 
-            entity.Property(e => e.MajorName)
-                .HasMaxLength(50)
-                .IsUnicode(false);
+            entity.Property(e => e.MajorName).HasMaxLength(450);
         });
 
         modelBuilder.Entity<Match>(entity =>
@@ -167,7 +165,6 @@ public class HallHavenContext : IdentityDbContext<HallHavenUser>
                 .HasForeignKey(d => d.GenderId)
                 .HasConstraintName("FK_User_Gender");
         });
-
 
         modelBuilder.ApplyConfiguration(new HallHavenUserEntityConfiguration());
     }

@@ -153,6 +153,7 @@ namespace HallHaven.Areas.Identity.Pages.Account
                 if (Input.Gender == "Male")
                 {
                     customUser.GenderId = 1;
+                    //customUser.Gender = "Male"; 
 
                 }
                 // female
@@ -161,8 +162,13 @@ namespace HallHaven.Areas.Identity.Pages.Account
                     customUser.GenderId = 2;
                 }
 
-                await _context.SaveChangesAsync();
+               
                 //_context.SaveChanges();
+
+                await _context.Users.AddAsync(customUser);
+
+                _context.SaveChanges();
+                //await _context.SaveChangesAsync();
 
                 int id = customUser.UserId;
 
