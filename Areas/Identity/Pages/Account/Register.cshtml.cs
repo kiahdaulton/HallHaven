@@ -153,7 +153,6 @@ namespace HallHaven.Areas.Identity.Pages.Account
                 if (Input.Gender == "Male")
                 {
                     customUser.GenderId = 1;
-                    //customUser.Gender = "Male"; 
                 }
                 // female
                 else
@@ -166,11 +165,9 @@ namespace HallHaven.Areas.Identity.Pages.Account
                 customUser.Email = Input.Email;
                 customUser.ProfileBio = Input.ProfileBio;
 
+                // generate new user in user table
                 _context.Add(customUser);
                 await _context.SaveChangesAsync();
-                //return RedirectToAction(nameof(Index));
-                
-                //int customUserId = customUser.UserId;
 
                 var user = CreateUser();
                 user.FirstName = Input.FirstName;
@@ -181,13 +178,11 @@ namespace HallHaven.Areas.Identity.Pages.Account
                 // set null customUserId to value of userId in user table
                 user.CustomUserId = customUser.UserId;
 
-                // generate new user in user model
-
-
-
+                // set identity email
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
 
+                // create identity user
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
@@ -196,17 +191,6 @@ namespace HallHaven.Areas.Identity.Pages.Account
 
                     // userId is created
                     var userId = await _userManager.GetUserIdAsync(user);
-
-
-                    // link identiy context to hall haven context with custom user id
-                    // set user id to user table
-                    //user.CustomUserId = _context.Users.FirstOrDefault().UserId;
-                    //// set gender name to gender table
-                    //user.Gender = _context.Genders.FirstOrDefault().Gender1;
-
-
-
-
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));

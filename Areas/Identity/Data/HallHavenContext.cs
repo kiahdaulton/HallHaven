@@ -150,15 +150,9 @@ public class HallHavenContext : IdentityDbContext<HallHavenUser>
 
             entity.HasIndex(e => e.GenderId, "IX_Users_GenderId");
 
-            entity.HasIndex(e => e.HallHavenUserId, "IX_Users_HallHavenUserId");
-
-            entity.Property(e => e.AspNetUserId).HasMaxLength(450);
-
             entity.Property(e => e.DisplayName).HasComputedColumnSql("(([FirstName]+' ')+[LastName])", false);
 
             entity.Property(e => e.Email).HasMaxLength(256);
-
-            entity.Property(e => e.NormalizedEmail).HasMaxLength(256);
 
             entity.HasOne(d => d.Gender)
                 .WithMany(p => p.Users)

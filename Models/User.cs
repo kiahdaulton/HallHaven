@@ -13,7 +13,6 @@ namespace HallHaven.Models
         }
 
         public int UserId { get; set; }
-        public string? AspNetUserId { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public int? GenderId { get; set; }
@@ -21,12 +20,7 @@ namespace HallHaven.Models
         public string? ProfileBio { get; set; }
         public string? DisplayName { get; set; }
         public string? Email { get; set; }
-        public string? NormalizedEmail { get; set; }
         public bool EmailConfirmed { get; set; }
-        public string? PasswordHash { get; set; }
-        public string? SecurityStamp { get; set; }
-        public string? ConcurrencyStamp { get; set; }
-        public int? HallHavenUserId { get; set; }
 
         public virtual Gender? Gender { get; set; }
         public virtual ICollection<Form> Forms { get; set; }
