@@ -1,8 +1,16 @@
 ﻿@using HallHaven.Areas.Identity.Data;
 @using Microsoft.AspNetCore.Identity;
+@using HallHaven.Models;
+@using System.Security.Claims;
+
+
+@*@using Microsoft.AspNetCore.Identity
+@using HallHaven.Areas.Identity.Data*@
 
 @inject SignInManager<HallHavenUser> _signInManager
-@inject Microsoft.AspNetCore.Identity.UserManager<HallHavenUser> _userManager
+@inject UserManager<HallHavenUser> _userManager
+@inject HallHaven.Data.HallHavenContext _context
+
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -28,6 +36,11 @@
 <div class="album py-5">
     <div class="container">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            @{
+                var identityUser = await _userManager.GetUserAsync(User);
+                
+            }
+           
 @*            @{
                 //string userId = _userManager.GetUserId(User);
                 //<div>@userId</div>
@@ -37,24 +50,35 @@
                 <div>@user.DisplayName</div>
                 <div>@user.Gender</div>
             }*@
-            @if (_signInManager.IsSignedIn(User))
-            {
+            @*@if (_signInManager.IsSignedIn(User))
+            {*@
                 @if (Model.Count != null)
                 {
-                    @foreach (HallHavenUser user in Model)
+                    @foreach (User user in Model)
                     {
                         <div class="col">
                             <div class="card shadow-sm">
-                                @if (_userManager.GetUserAsync(User).Result.ProfilePicture != null)
+                  @*              @if (_userManager.GetUserAsync(User).Result.ProfilePicture != null)
                                 {
                                     <img class="bd-placeholder-img card-img-top" width="100%" height="225"
                                          src="data:image/*;base64,@(Convert.ToBase64String(_userManager.GetUserAsync(User).Result.ProfilePicture))">
-                                }
+                                }*@
 
+                            @* if foreign key equals user id*@
+@*                            @if (_context.CustomUserId == user.UserId)
+                            {
+                                @if (_context.ProfilePicture != null)
+                                {
+                                    // need to get current user
+                                    <img class="bd-placeholder-img card-img-top" width="100%" height="225"
+                                         src="data:image/*;base64,@(Convert.ToBase64String(_context.ProfilePicture))">
+                                }
+                            }
+*@
                                 <div class="card-body">
                                     <p class="card-text">
                                         <div class="d-flex justify-content-center">@user.DisplayName</div>
-                                        <div>@user.Id</div>
+                                        <div>@user.UserId</div>
                                         <div>@user.Gender</div>
                                         <div>Hall</div>
                                         <div>Classification</div>
@@ -83,7 +107,7 @@
                     <div>There are no users.</div>
                 }
 
-            }
+            @*}*@
 
         </div>
     </div>

@@ -47,9 +47,15 @@ namespace HallHaven.Controllers
                 var gender = user.Gender;
 
                 // test users whose gender equals user's
-                var users = _userManager.Users.Where(g => g.Gender == gender).ToList();
+                //var users = _userManager.Users.Where(g => g.Gender == gender).ToList();
 
                 // get dorms by user gender
+
+                // get logged in user with hall haven context
+                var hallHavenUser = _context.Users.Where(g => g.Gender.Gender1 == gender).ToList();
+
+
+
 
                 // bind form values
                 // ORIGINAL
