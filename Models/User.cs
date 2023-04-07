@@ -22,9 +22,10 @@ namespace HallHaven.Models
         public string? Email { get; set; }
         public bool EmailConfirmed { get; set; }
 
-        public virtual Gender? Gender { get; set; }
+        public Gender Gender { get; set; }
         public virtual ICollection<Form> Forms { get; set; }
         public virtual ICollection<Match> MatchUser1s { get; set; }
         public virtual ICollection<Match> MatchUser2s { get; set; }
+
     }
 }

@@ -149,6 +149,7 @@ namespace HallHaven.Areas.Identity.Pages.Account
             {
 
                 var customUser = new User();
+                var customUserGender = new Gender();
 
                 if (Input.Gender == "Male")
                 {

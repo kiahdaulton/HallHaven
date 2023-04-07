@@ -4,6 +4,7 @@ using HallHaven.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Security.Claims;
@@ -34,32 +35,19 @@ namespace HallHaven.Controllers
             {
                 // get logged in user
                 var user = await _userManager.GetUserAsync(User);
-                var customUser = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                //var customUser = User.FindFirst(ClaimTypes.NameIdentifier).Value;
                 
-
                 // get logged in user's gender
                 var gender = user.Gender;
+
                 // only show users that match the logged in user's gender in the view
-                var users = _userManager.Users.Where(g => g.Gender == gender).ToList();
+                //var users = _userManager.Users.Where(g => g.Gender == gender).ToList();
 
                 // get list of hall haven context users
                 var students = _context.Users.ToList();
 
-                var usersByGender = _context.Users.Where(g => g.Gender.Gender1 == gender).ToList();
-
-                // get current student by userId string
-                //var students2 = _context.Users.FindAsync(userId);
-
-                //var user1 = students[0];
-                // set first student id in users Model to be the current student id
-                //user1.UserId = userId;
-
-                //var myUser = _context.Users.ToList();
-
-                //var myGenders = _context.Genders;
-
-                // configure not displaying logged in user or add a specific button to current user to hide profile
-
+                // display users by gender to home view
+                var usersByGender = _context.Users.Include(u => u.Gender).Where(g => g.Gender.Gender1 == gender).ToList();
 
                 return View(usersByGender);
             }
