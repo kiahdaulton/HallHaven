@@ -22,6 +22,10 @@ using Microsoft.Extensions.Logging;
 using HallHaven.Data;
 using HallHaven.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using HallHaven.Controllers;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HallHaven.Areas.Identity.Pages.Account
 {
@@ -34,6 +38,7 @@ namespace HallHaven.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly HallHavenContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
         public RegisterModel(
             UserManager<HallHavenUser> userManager,
@@ -41,7 +46,8 @@ namespace HallHaven.Areas.Identity.Pages.Account
             SignInManager<HallHavenUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            HallHavenContext context)
+            HallHavenContext context,
+            IWebHostEnvironment webHostEnvironment)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -50,6 +56,7 @@ namespace HallHaven.Areas.Identity.Pages.Account
             _logger = logger;
             _emailSender = emailSender;
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         /// <summary>
@@ -92,10 +99,21 @@ namespace HallHaven.Areas.Identity.Pages.Account
             [BindProperty]
             public string Gender { get; set; }
 
-            //[Required(ErrorMessage = "Please enter your profile picture")]
+            //[Required(ErrorMessage = "Please select your profile picture")]
+            ////[DataType(DataType.Upload)]
             //[Display(Name = "Profile Picture")]
             //public byte[] ProfilePicture { get; set; }
 
+
+            [Required(ErrorMessage = "Please select a profile picture.")]
+            [Display(Name = "Profile Picture")]
+            public IFormFile ProfilePictureFile { get; set; }
+
+            public byte[] ProfilePicture { get; set; }
+
+
+            //[ValidateNever]
+            //public string? ImageUrl { get; set; }
 
             [Required(ErrorMessage = "Please enter your profile biography")]
             [Display(Name = "Profile Biography")]
@@ -141,7 +159,7 @@ namespace HallHaven.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
 
-        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
+        public async Task<IActionResult> OnPostAsync(IFormFile ProfilePicture, string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
@@ -166,10 +184,24 @@ namespace HallHaven.Areas.Identity.Pages.Account
                 customUser.Email = Input.Email;
                 customUser.ProfileBio = Input.ProfileBio;
 
+
+                // user table
+                if (Input.ProfilePictureFile != null && Input.ProfilePictureFile.Length > 0)
+                {
+                    using (var ms = new MemoryStream())
+                    {
+                        Input.ProfilePictureFile.CopyTo(ms);
+                        customUser.ProfilePicture = ms.ToArray();
+                    }
+                }
+
+
                 // generate new user in user table
                 _context.Add(customUser);
                 await _context.SaveChangesAsync();
 
+
+                // create identity user
                 var user = CreateUser();
                 user.FirstName = Input.FirstName;
                 user.LastName = Input.LastName;
@@ -178,6 +210,16 @@ namespace HallHaven.Areas.Identity.Pages.Account
                 user.ProfileBio = Input.ProfileBio;
                 // set null customUserId to value of userId in user table
                 user.CustomUserId = customUser.UserId;
+
+                // identity table
+                if (Input.ProfilePictureFile != null && Input.ProfilePictureFile.Length > 0)
+                {
+                    using (var ms = new MemoryStream())
+                    {
+                        Input.ProfilePictureFile.CopyTo(ms);
+                        user.ProfilePicture = ms.ToArray();
+                    }
+                }
 
                 // set identity email
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
@@ -189,6 +231,17 @@ namespace HallHaven.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
+
+                    // add profile image
+                    // handle profile image file upload
+                    //if (Input.ProfilePictureFile != null && ProfilePicture.Length > 0)
+                    //{
+                    //    var imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "images", Input.ProfilePictureFile.FileName);
+                    //    using (var stream = new FileStream(imagePath, FileMode.Create))
+                    //    {
+                    //        await Input.ProfilePictureFile.CopyToAsync(stream);
+                    //    }
+                    //}
 
                     // userId is created
                     var userId = await _userManager.GetUserIdAsync(user);
@@ -223,6 +276,16 @@ namespace HallHaven.Areas.Identity.Pages.Account
             // If we got this far, something failed, redisplay form
             return Page();
         }
+
+        private async Task<byte[]> ConvertFileToByteArray(IFormFile file)
+        {
+            using (var stream = new MemoryStream())
+            {
+                await file.CopyToAsync(stream);
+                return stream.ToArray();
+            }
+        }
+
 
         private HallHavenUser CreateUser()
         {

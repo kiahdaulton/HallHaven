@@ -22,6 +22,7 @@ namespace HallHaven.Controllers
         // GET: User
         public async Task<IActionResult> Index()
         {
+            // get all users by gender
             var hallHavenContext = _context.Users.Include(u => u.Gender);
             return View(await hallHavenContext.ToListAsync());
         }

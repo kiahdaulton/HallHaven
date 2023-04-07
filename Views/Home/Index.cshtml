@@ -3,10 +3,6 @@
 @using HallHaven.Models;
 @using System.Security.Claims;
 
-
-@*@using Microsoft.AspNetCore.Identity
-@using HallHaven.Areas.Identity.Data*@
-
 @inject SignInManager<HallHavenUser> _signInManager
 @inject UserManager<HallHavenUser> _userManager
 @inject HallHaven.Data.HallHavenContext _context
@@ -50,10 +46,14 @@
                         <div class="col">
                             <div class="card shadow-sm">
 
-                                @if (_userManager.GetUserAsync(User).Result.ProfilePicture != null)
+                                @if (user.ProfilePicture != null)
                                 {
-                                    <img class="bd-placeholder-img card-img-top" width="100%" height="225"
-                                    src="data:image/*;base64,@(Convert.ToBase64String(_userManager.GetUserAsync(User).Result.ProfilePicture))">
+                                    <img class="bd-placeholder-img card-img-top" width="100%" height="225" alt="User Profile Image"
+                                    src="data:image/*;base64,@(Convert.ToBase64String(user.ProfilePicture))">
+                                }
+                                else {
+                                <img class="bd-placeholder-img card-img-top" width="100%" height="225"
+                                         src="/images/user.png" alt="User Icon">
                                 }
 
 

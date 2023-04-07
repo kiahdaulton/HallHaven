@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace HallHaven.Areas.Identity.Data;
 
@@ -21,8 +23,11 @@ public class HallHavenUser : IdentityUser
     public string Gender { get; set; }
 
     [PersonalData]
-    [Display(Name = "Profile Picture")]
-    public byte[]? ProfilePicture { get; set; }
+    [NotMapped]
+    public IFormFile ProfilePictureFile { get; set; }
+
+    [PersonalData]
+    public byte[] ProfilePicture { get; set; }
 
     [PersonalData]
     public string ProfileBio { get; set; }

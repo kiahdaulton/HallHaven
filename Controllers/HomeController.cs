@@ -36,7 +36,7 @@ namespace HallHaven.Controllers
                 // get logged in user
                 var user = await _userManager.GetUserAsync(User);
                 //var customUser = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-                
+
                 // get logged in user's gender
                 var gender = user.Gender;
 
@@ -55,7 +55,7 @@ namespace HallHaven.Controllers
             {
                 // display default view if user is not currently logged in
                 return View();
-            }     
+            }
 
             // this gets and displays username/email
             //return Content(this.User.GetLoggedInUserName());

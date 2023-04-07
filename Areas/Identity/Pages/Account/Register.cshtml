@@ -8,7 +8,7 @@
 
 <div class="row">
     <div class="col-md-4">
-        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" enctype="multipart/form-data">
             <h2>Create a new account.</h2>
             <hr />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -42,6 +42,51 @@
                     </div>
                 </div>
             </fieldset>
+
+
+            <div class="form-group">
+                <label asp-for="Input.ProfilePictureFile" class="control-label"></label>
+                <input asp-for="Input.ProfilePictureFile" type="file" class="form-control" accept="image/*">
+                <span asp-validation-for="Input.ProfilePictureFile" class="text-danger"></span>
+            </div>
+
+@*            <div class="form-group">
+                <label asp-for="Input.ProfilePicture" class="control-label"></label>
+                <input asp-for="Input.ProfilePicture" name="ProfilePicture" type="file" accept=".png,.jpg,.jpeg" class="form-control" />
+                <span asp-validation-for="Input.ProfilePicture" class="text-danger"></span>
+            </div>*@
+
+@*            <div class="form-group">
+                <label for="Input.ProfilePicture">Profile Picture</label>
+                <input type="file" class="form-control-file" id="ProfilePicture" name="ProfilePicture">
+                <span asp-validation-for="Input.ProfilePicture" class="text-danger"></span>
+            </div>
+*@
+
+@*            <div class="form-group">
+                <label asp-for="Input.ProfilePicture" style="width: 100%;"></label>
+                @if (Model.Input != null && Model.Input.ProfilePicture == null)
+                {
+                    // temporary profile picture
+                    <img id="profilePicture" style="width:403.5px; height:350px; object-fit:cover" src="/images/no-image-icon.png" alt="No Image Icon">
+                }
+                else
+                {
+                <img id="profilePicture" alt="User Profile Image" style="width:403.5px;height:350px; object-fit:cover"
+                     src="data:image/*;base64,@(Convert.ToBase64String(Model.Input.ProfilePicture))">
+                }
+         
+
+
+                <span asp-validation-for="Input.ProfilePicture" class="text-danger"></span>
+                <input type="file"
+                       accept=".png,.jpg,.jpeg,.gif,.tif"
+                       asp-for="Input.ProfilePicture"
+                       aria-required="true"
+                       class="form-control"
+                       style="margin-top: 10px;margin-bottom: 30px;"
+                       onchange="document.getElementById('profilePicture').src = window.URL.createObjectURL(this.files[0])" />
+            </div>*@
 
 @*            <div class="form-group">
                 <label asp-for="Input.ProfilePicture" style="width: 100%;"></label>
