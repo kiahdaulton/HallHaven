@@ -1,37 +1,44 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using HallHaven.Areas.Identity.Data
+@using HallHaven.Models;
 
 @inject SignInManager<HallHavenUser> SignInManager
 @inject UserManager<HallHavenUser> UserManager
+@inject HallHaven.Data.HallHavenContext _context
+
+@* Hello @UserManager.GetUserName(User)! *@
+
+@{
+    var user = await UserManager.GetUserAsync(User);
+}
 
 <ul class="navbar-nav">
-@if (SignInManager.IsSignedIn(User))
-{
+    @if (SignInManager.IsSignedIn(User))
+    {
+
         <li class="nav-item">
-            @* change to name not email *@
-            <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
+            <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@user.DisplayName's Profile
+                @* add profile picture to profile if user is logged in *@
+                @if (UserManager.GetUserAsync(User).Result.ProfilePicture != null)
+                {
+                    <img style="width:40px;height:40px; object-fit:cover; border-radius:30px"
+                         src="data:image/*;base64,@(Convert.ToBase64String(UserManager.GetUserAsync(User).Result.ProfilePicture))">
+                }
+            </a>
         </li>
         <li class="nav-item">
             <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
                 <button id="logout" type="submit" class="nav-link btn btn-link text-dark">Logout</button>
             </form>
         </li>
-        // add profile picture to profile if user is logged in
-        <li class="nav-item" style="align-self: center;">
-            @if (UserManager.GetUserAsync(User).Result.ProfilePicture != null)
-            {
-                <img style="width:40px;height:40px; object-fit:cover; border-radius:30px"
-                     src="data:image/*;base64,@(Convert.ToBase64String(UserManager.GetUserAsync(User).Result.ProfilePicture))">
-            }
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
         </li>
-}
-else
-{
-    <li class="nav-item">
-        <a class="nav-link text-dark" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
-    </li>
-}
+        <li class="nav-item">
+            <a class="nav-link text-dark" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
+        </li>
+    }
 </ul>

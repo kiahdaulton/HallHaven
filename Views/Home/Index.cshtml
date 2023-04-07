@@ -9,10 +9,19 @@
 
 @{
     ViewData["Title"] = "Home Page";
+    var loggedInUser = await _userManager.GetUserAsync(User);
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome to Hall Haven</h1>
+    @if (_signInManager.IsSignedIn(User))
+    {
+        <h1 class="display-4">Welcome to Hall Haven</h1>
+        <h1 class="display-4">@loggedInUser.FirstName!</h1>
+    }
+    else
+    {
+        <h1 class="display-4">Welcome to Hall Haven</h1>
+    }
     <img style="width: 200px;" src="/images/HallHavenLogov2.jpg" alt="Hall Haven Logo" />
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
     <p><a asp-action="form">Test form</a></p>
@@ -48,11 +57,11 @@
 
                                 @if (user.ProfilePicture != null)
                                 {
-                                    <img class="bd-placeholder-img card-img-top" width="100%" height="225" alt="User Profile Image"
+                                    <img class="bd-placeholder-img card-img-top" style="width: 100%; height: 275px; object-fit: cover;" alt="User Profile Image"
                                     src="data:image/*;base64,@(Convert.ToBase64String(user.ProfilePicture))">
                                 }
                                 else {
-                                <img class="bd-placeholder-img card-img-top" width="100%" height="225"
+                                    <img class="bd-placeholder-img card-img-top" style="width: 100%; height: 275px; object-fit: contain;"
                                          src="/images/user.png" alt="User Icon">
                                 }
 
@@ -76,7 +85,7 @@
                                         <div class="btn-group">
                                             <button type="button" class="btn btn-default"><img class="icon" src="/images/user.png" alt="User Icon" /></button>
                                             <button type="button" class="btn btn-default"><img class="icon" src="/images/mail.png" alt="Mail Icon" /></button>
-                                            <button type="button" class="btn btn-default"><img class="icon" src="/images/calendar.png" alt="Calendar Icon" /></button>
+                                            @*<button type="button" class="btn btn-default"><img class="icon" src="/images/calendar.png" alt="Calendar Icon" /></button>*@
                                         </div>
                                     </div>
                                 </div>
