@@ -107,25 +107,18 @@ namespace HallHaven.Controllers
             var identityUser = await _userManager.GetUserAsync(User);
             var customId = identityUser.CustomUserId;
 
-            // get hallhavencontext user by id
-            var currentUser = _context.Users.Where(c => c.UserId == customId).ToList();
+            var currentUser = _context.Users.Include(u => u.Gender).FirstOrDefault(u => u.UserId == customId);
+            if (currentUser != null)
+            {
+                var customGender = currentUser.Gender.GenderId;
 
-            //get form by user id
-            var currentUserForm = _context.Forms.Where(c => c.UserId == customId).ToList();
+                ViewData["CreditHourId"] = new SelectList(_context.CreditHours, "CreditHourId", "CreditHourName");
+                ViewData["DormId"] = new SelectList(_context.Dorms, "DormId", "DormName");
+                ViewData["DormId"] = new SelectList(_context.Dorms.Where(d => d.GenderId == customGender).OrderBy(d => d.DormId), "DormId", "DormName");
+                ViewData["MajorId"] = new SelectList(_context.Majors, "MajorId", "MajorName");
+                ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId");
+            }
 
-
-
-            //get form by user id
-            //var currentUserGender = _context.Forms.Where(c => c.GenderId == genderId).ToList();;
-
-
-            //var GenderId = _context.Forms.Where(c => c.GenderId == User.GenderId).ToList();
-
-            ViewData["CreditHourId"] = new SelectList(_context.CreditHours, "CreditHourId", "CreditHourName");
-            ViewData["DormId"] = new SelectList(_context.Dorms, "DormId", "DormName");
-            //ViewData["DormId"] = new SelectList(_context.Dorms.Where(d => d.GenderId == GenderId).OrderBy(d => d.DormName), "DormId", "DormName");
-            ViewData["MajorId"] = new SelectList(_context.Majors, "MajorId", "MajorName");
-            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId");
             return View();
         }
 
