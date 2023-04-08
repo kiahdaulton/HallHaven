@@ -165,9 +165,8 @@ namespace HallHaven.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-
+                // create new instance of user
                 var customUser = new User();
-                var customUserGender = new Gender();
 
                 if (Input.Gender == "Male")
                 {
@@ -183,7 +182,7 @@ namespace HallHaven.Areas.Identity.Pages.Account
                 customUser.LastName = Input.LastName;
                 customUser.Email = Input.Email;
                 customUser.ProfileBio = Input.ProfileBio;
-
+              
 
                 // user table
                 if (Input.ProfilePictureFile != null && Input.ProfilePictureFile.Length > 0)
@@ -199,6 +198,34 @@ namespace HallHaven.Areas.Identity.Pages.Account
                 // generate new user in user table
                 _context.Add(customUser);
                 await _context.SaveChangesAsync();
+
+
+                //// create new instance of form
+                //var customForm = new Form();
+                //// form userId equals user userId
+                //customForm.UserId = customUser.UserId;
+                //// user gender equals dorm gender in dorm table
+                //customForm.GenderId = customUser.GenderId;
+
+                //// generate new form in form table
+                //_context.Add(customForm);
+                //await _context.SaveChangesAsync();
+
+                // create new instance of form
+                var customForm = new Form();
+
+                // form userId equals user userId
+                customForm.UserId = customUser.UserId;
+
+                // user gender equals dorm gender in dorm table
+                customForm.GenderId = customUser.GenderId;
+
+                // generate new form in form table
+                _context.Add(customForm);
+
+                await _context.SaveChangesAsync();
+
+                var customUserForm = customUser.Forms.Where(g => g.User.UserId == customUser.UserId).ToList();
 
 
                 // create identity user

@@ -6,11 +6,11 @@ namespace HallHaven.Models
     public partial class Form
     {
         public int FormId { get; set; }
-        public int DormId { get; set; }
-        public int UserId { get; set; }
-        public int MajorId { get; set; }
-        public int CreditHourId { get; set; }
-        public int GenderId { get; set; }
+        public int? DormId { get; set; }
+        public int? UserId { get; set; }
+        public int? MajorId { get; set; }
+        public int? CreditHourId { get; set; }
+        public int? GenderId { get; set; }
         public bool IsCandiateStudent { get; set; }
         public bool IsStudentAthlete { get; set; }
         public int NeatnessLevel { get; set; }

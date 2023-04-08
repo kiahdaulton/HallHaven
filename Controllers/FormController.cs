@@ -40,6 +40,31 @@ namespace HallHaven.Controllers
             // if user is logged in
             if (userId != null)
             {
+                // get logged in user
+                var user = await _userManager.GetUserAsync(User);
+                //var customUser = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+                // get logged in user's id
+                var customId = user.CustomUserId;
+
+                // get hallhavencontext user by id
+                var currentUser = _context.Users.Where(c => c.UserId == customId).ToList();
+
+
+                //var formGenderId = _context.Forms.Where(c => c.GenderId == Dorm.GenderId).ToList();
+
+
+
+                //.Where(g => g.Dorm.Gender.GenderId == gender)
+
+                // display dorms by gender to form view
+                // where Gender GenderId equals User GenderId 
+                // just include current user in the form
+
+                //var hallHavenContext = _context.Forms.Include(f => f.CreditHour).Include(f => f.Dorm).Where(u => u.Dorm.GenderId == Form.GenderId)
+                //    .Include(f => f.Major).Include(f => f.User).Where(c => c.UserId == customId);
+
+                //return View(await hallHavenContext.ToListAsync());
 
                 // bind form values
                 // ORIGINAL
@@ -76,10 +101,29 @@ namespace HallHaven.Controllers
         }
 
         // GET: Form/Create
-        public IActionResult Create()
+        //public IActionResult Create()
+        public async Task<IActionResult> CreateAsync()
         {
+            var identityUser = await _userManager.GetUserAsync(User);
+            var customId = identityUser.CustomUserId;
+
+            // get hallhavencontext user by id
+            var currentUser = _context.Users.Where(c => c.UserId == customId).ToList();
+
+            //get form by user id
+            var currentUserForm = _context.Forms.Where(c => c.UserId == customId).ToList();
+
+
+
+            //get form by user id
+            //var currentUserGender = _context.Forms.Where(c => c.GenderId == genderId).ToList();;
+
+
+            //var GenderId = _context.Forms.Where(c => c.GenderId == User.GenderId).ToList();
+
             ViewData["CreditHourId"] = new SelectList(_context.CreditHours, "CreditHourId", "CreditHourName");
             ViewData["DormId"] = new SelectList(_context.Dorms, "DormId", "DormName");
+            //ViewData["DormId"] = new SelectList(_context.Dorms.Where(d => d.GenderId == GenderId).OrderBy(d => d.DormName), "DormId", "DormName");
             ViewData["MajorId"] = new SelectList(_context.Majors, "MajorId", "MajorName");
             ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId");
             return View();

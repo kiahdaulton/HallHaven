@@ -12,6 +12,7 @@
     var user = await UserManager.GetUserAsync(User);
 }
 
+@* add profile picture to profile if user is logged in *@
 <ul class="navbar-nav">
     @if (SignInManager.IsSignedIn(User))
     {
@@ -19,7 +20,7 @@
         <li class="nav-item">
             <a id="manage" class="nav-link text-light" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
                 @user.DisplayName's Profile
-                @* add profile picture to profile if user is logged in *@
+                
                 @if (UserManager.GetUserAsync(User).Result.ProfilePicture != null)
                 {
                     <img style="width:40px;height:40px; object-fit:cover; border-radius:30px"
