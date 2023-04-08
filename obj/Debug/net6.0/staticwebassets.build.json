@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "QYHcUyqN50cUUcSqAym3Op4vkTCR4xZnENNnx3k3XKc=",
+  "Hash": "WuIkEfKAtF+m1PK9NqnUrEy3rPc/QNlOpEmPeSucPgM=",
   "Source": "HallHaven",
   "BasePath": "_content/HallHaven",
   "Mode": "Default",
@@ -1154,6 +1154,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\images\\HallHavenLogov2.jpg"
+    },
+    {
+      "Identity": "C:\\Users\\kiahd\\source\\repos\\HallHaven\\wwwroot\\images\\HallHavenLogov2Transparent.png",
+      "SourceId": "HallHaven",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\kiahd\\source\\repos\\HallHaven\\wwwroot\\",
+      "BasePath": "_content/HallHaven",
+      "RelativePath": "images/HallHavenLogov2Transparent.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\HallHavenLogov2Transparent.png"
     },
     {
       "Identity": "C:\\Users\\kiahd\\source\\repos\\HallHaven\\wwwroot\\images\\mail.png",

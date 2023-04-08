@@ -31,7 +31,6 @@
             <img style="width: auto; height: 300px;" src="/images/threeCollegeStudents.jpg" alt="Three colleges students sitting with books." />
         </div>
         <div class="col-12 d-flex justify-content-center" style="margin: 25px 0px 25px 0px;">
-            <button class="btn btn-primary">Search for a Roommate</button>
         </div>
     </div>
 </div>
@@ -83,27 +82,21 @@
 
 
                                 <div class="card-body">
-                                    <p class="card-text">
+                                    <div class="card-text">
                                         <h4 class="d-flex justify-content-center">@user.DisplayName</h4>
                                         <div>@user.UserId</div>
                                         <div>@user.Gender.Gender1</div>
                                         <div>Hall</div>
                                         <div>Classification</div>
                                         <div>Percentage</div>
-                                    </p>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="btn-group">
-                                            <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                                            <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                                        </div>
                                     </div>
+     
                                     <div class="d-flex justify-content-center align-items-center" style="margin-top: 15px;">
                                         <div class="btn-group">
-                                            <button class="btn modalButton" type="button" data-toggle="modal" data-target="#myModal-@user.UserId">
+                                            <button class="btn btn-outline-secondary modalButton" type="button" data-toggle="modal" data-target="#myModal-@user.UserId">
                                                 <img class="icon" src="/images/user.png" alt="User Icon" />
                                             </button>
-                                            <button type="button" class="btn btn-default"><img class="icon" src="/images/mail.png" alt="Mail Icon" /></button>
-                                            @*<button type="button" class="btn btn-default"><img class="icon" src="/images/calendar.png" alt="Calendar Icon" /></button>*@
+                                            <button type="button" class="btn btn-outline-secondary"><img class="icon" src="/images/mail.png" alt="Mail Icon" /></button>
                                         </div>
                                     </div>
                                 </div>
@@ -136,30 +129,6 @@
             var userId = $(this).data("target").split("-")[1];
             $("#myModal-" + userId).modal("hide");
         });
-
-                //$(document).ready(function () {
-                //    $("#CollegeList").on("change", function () {
-                //        $.ajax({
-                //            type: "Post",
-                //            url: "/Home/GetDorm",
-                //            // grab college number and corresponding dorms
-                //            data: { "CollegeId": $("#CollegeList").val() },
-                //            success: function (response) {
-                //                var items = '';
-                //                $(response).each(function () {
-                //                    items += "<option value=" + this.value + ">" + this.text + "</option>";
-                //                })
-                //                $("#StateList").html(items);
-                //            },
-                //            failure: function (response) {
-                //                alert(response.responseText);
-                //            },
-                //            error: function (response) {
-                //                alert(response.responseText);
-                //            }
-                //        });
-                //    })
-                //});
 
     </script>
 }

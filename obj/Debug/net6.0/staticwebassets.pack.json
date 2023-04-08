@@ -21,6 +21,10 @@
       "PackagePath": "staticwebassets\\images\\HallHavenLogov2.jpg"
     },
     {
+      "Id": "C:\\Users\\kiahd\\source\\repos\\HallHaven\\wwwroot\\images\\HallHavenLogov2Transparent.png",
+      "PackagePath": "staticwebassets\\images\\HallHavenLogov2Transparent.png"
+    },
+    {
       "Id": "C:\\Users\\kiahd\\source\\repos\\HallHaven\\wwwroot\\images\\calendar.png",
       "PackagePath": "staticwebassets\\images\\calendar.png"
     },
