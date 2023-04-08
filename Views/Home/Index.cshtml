@@ -27,23 +27,23 @@
     <p><a asp-action="form">Test form</a></p>
 </div>
 
-    <div class="d-flex justify-content-center">
-        <div class="row">
-            <div class="col-12 d-flex justify-content-center">
-                <img style="width: auto; height: 300px;" src="/images/threeCollegeStudents.jpg" alt="Three colleges students sitting with books." />
-            </div>
-            <div class="col-12 d-flex justify-content-center" style="margin: 25px 0px 25px 0px;">
-                <button class="btn btn-primary">Search for a Roommate</button>
-            </div>
+<div class="d-flex justify-content-center">
+    <div class="row">
+        <div class="col-12 d-flex justify-content-center">
+            <img style="width: auto; height: 300px;" src="/images/threeCollegeStudents.jpg" alt="Three colleges students sitting with books." />
+        </div>
+        <div class="col-12 d-flex justify-content-center" style="margin: 25px 0px 25px 0px;">
+            <button class="btn btn-primary">Search for a Roommate</button>
         </div>
     </div>
+</div>
 
 <div class="album py-5">
     <div class="container">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
             @{
+                // logged in user
                 var identityUser = await _userManager.GetUserAsync(User);
-
             }
 
             @if (_signInManager.IsSignedIn(User))
@@ -52,15 +52,33 @@
                 {
                     @foreach (User user in Model)
                     {
+                        // modal popup from user button
+                        <div id="myModal-@user.UserId" class="modal fade">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">@user.DisplayName's Biography</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>@user.ProfileBio</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default closeModalBtn" data-target="#myModal-@user.UserId" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="col">
                             <div class="card shadow-sm">
 
                                 @if (user.ProfilePicture != null)
                                 {
                                     <img class="bd-placeholder-img card-img-top" style="width: 100%; height: 275px; object-fit: cover;" alt="User Profile Image"
-                                    src="data:image/*;base64,@(Convert.ToBase64String(user.ProfilePicture))">
+                                         src="data:image/*;base64,@(Convert.ToBase64String(user.ProfilePicture))">
                                 }
-                                else {
+                                else
+                                {
                                     <img class="bd-placeholder-img card-img-top" style="width: 100%; height: 275px; object-fit: contain;"
                                          src="/images/user.png" alt="User Icon">
                                 }
@@ -83,7 +101,9 @@
                                     </div>
                                     <div class="d-flex justify-content-center align-items-center" style="margin-top: 15px;">
                                         <div class="btn-group">
-                                            <button type="button" class="btn btn-default"><img class="icon" src="/images/user.png" alt="User Icon" /></button>
+                                            <button class="btn btn-default modalButton" type="button" data-toggle="modal" data-target="#myModal-@user.UserId">
+                                                <img class="icon" src="/images/user.png" alt="User Icon" />
+                                            </button>
                                             <button type="button" class="btn btn-default"><img class="icon" src="/images/mail.png" alt="Mail Icon" /></button>
                                             @*<button type="button" class="btn btn-default"><img class="icon" src="/images/calendar.png" alt="Calendar Icon" /></button>*@
                                         </div>
@@ -97,9 +117,51 @@
                 {
                     <div>There are no users.</div>
                 }
-            
+
             }
 
         </div>
     </div>
 </div>
+
+@section Scripts
+    {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".modalButton").click(function () {
+                var userId = $(this).data("target").split("-")[1];
+                $("#myModal-" + userId).modal("show");
+            });
+        });
+
+        $(".closeModalBtn").click(function () {
+            var userId = $(this).data("target").split("-")[1];
+            $("#myModal-" + userId).modal("hide");
+        });
+
+                //$(document).ready(function () {
+                //    $("#CollegeList").on("change", function () {
+                //        $.ajax({
+                //            type: "Post",
+                //            url: "/Home/GetDorm",
+                //            // grab college number and corresponding dorms
+                //            data: { "CollegeId": $("#CollegeList").val() },
+                //            success: function (response) {
+                //                var items = '';
+                //                $(response).each(function () {
+                //                    items += "<option value=" + this.value + ">" + this.text + "</option>";
+                //                })
+                //                $("#StateList").html(items);
+                //            },
+                //            failure: function (response) {
+                //                alert(response.responseText);
+                //            },
+                //            error: function (response) {
+                //                alert(response.responseText);
+                //            }
+                //        });
+                //    })
+                //});
+
+    </script>
+}
