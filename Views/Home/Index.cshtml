@@ -16,7 +16,7 @@
     @if (_signInManager.IsSignedIn(User))
     {
         <h1 class="display-4">Welcome to Hall Haven</h1>
-        <h1 class="display-4">@loggedInUser.FirstName!</h1>
+        <h1 class="display-4">@loggedInUser.DisplayName!</h1>
     }
     else
     {
