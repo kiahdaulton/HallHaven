@@ -11,8 +11,8 @@
     <link rel="stylesheet" href="~/HallHaven.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+    <header style="background-color: #03335F;">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3 myheader">
             <div class="container-fluid">
                 <a class="navbar-brand" href="/">
                     <div class="logo-image">
@@ -27,16 +27,16 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Form" asp-action="Index">Form</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="Form" asp-action="Index">Form</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Index">User</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="User" asp-action="Index">User</a>
                         </li>
                     </ul>
                     <partial name="_LoginPartial"/>

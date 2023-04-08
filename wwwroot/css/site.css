@@ -14,7 +14,7 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
 }
 
 .icon {
@@ -26,6 +26,19 @@ body {
     margin-bottom: 10px;
 }
 
+.card-body {
+    /*background-color: #1e5e96;*/
+    background-color: #03335F;
+    color: #ffffff;
+    /*color: #737373;*/
+    border-color: transparent !important;
+}
+
+.btn:hover {
+    border-color: #03335F;
+}
+
+/*background-color: #1e5e96;*/
 @media only screen and (max-width: 768px) {
 }
 
@@ -33,5 +46,10 @@ body {
 
     .card-img-top {
         height: 50vw;
+    }
+
+    .navbar-expand-sm .navbar-nav {
+        flex-direction: row;
+        align-items: center;
     }
 }

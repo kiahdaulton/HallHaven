@@ -23,8 +23,6 @@
         <h1 class="display-4">Welcome to Hall Haven</h1>
     }
     <img style="width: 200px;" src="/images/HallHavenLogov2.jpg" alt="Hall Haven Logo" />
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-    <p><a asp-action="form">Test form</a></p>
 </div>
 
 <div class="d-flex justify-content-center">
@@ -86,7 +84,7 @@
 
                                 <div class="card-body">
                                     <p class="card-text">
-                                        <div class="d-flex justify-content-center">@user.DisplayName</div>
+                                        <h4 class="d-flex justify-content-center">@user.DisplayName</h4>
                                         <div>@user.UserId</div>
                                         <div>@user.Gender.Gender1</div>
                                         <div>Hall</div>
@@ -101,7 +99,7 @@
                                     </div>
                                     <div class="d-flex justify-content-center align-items-center" style="margin-top: 15px;">
                                         <div class="btn-group">
-                                            <button class="btn btn-default modalButton" type="button" data-toggle="modal" data-target="#myModal-@user.UserId">
+                                            <button class="btn modalButton" type="button" data-toggle="modal" data-target="#myModal-@user.UserId">
                                                 <img class="icon" src="/images/user.png" alt="User Icon" />
                                             </button>
                                             <button type="button" class="btn btn-default"><img class="icon" src="/images/mail.png" alt="Mail Icon" /></button>
