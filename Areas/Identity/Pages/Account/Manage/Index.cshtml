@@ -12,13 +12,13 @@
         <div class="col-md-6">
 
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-floating">
+            <div class="form-floating" style="margin-bottom: 15px;">
                 <input asp-for="Username" class="form-control" disabled />
                 <label asp-for="Username" class="form-label"></label>
             </div>
 
             <label asp-for="Input.ProfileBio"></label>
-            <div class="form-floating">
+            <div style="margin-bottom: 15px;">
                 <textarea asp-for="Input.ProfileBio" class="form-control" aria-required="true">
                 </textarea>
                 <span asp-validation-for="Input.ProfileBio" class="text-danger"></span>

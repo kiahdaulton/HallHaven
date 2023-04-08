@@ -200,17 +200,6 @@ namespace HallHaven.Areas.Identity.Pages.Account
                 await _context.SaveChangesAsync();
 
 
-                //// create new instance of form
-                //var customForm = new Form();
-                //// form userId equals user userId
-                //customForm.UserId = customUser.UserId;
-                //// user gender equals dorm gender in dorm table
-                //customForm.GenderId = customUser.GenderId;
-
-                //// generate new form in form table
-                //_context.Add(customForm);
-                //await _context.SaveChangesAsync();
-
                 // create new instance of form
                 var customForm = new Form();
 
@@ -224,8 +213,6 @@ namespace HallHaven.Areas.Identity.Pages.Account
                 _context.Add(customForm);
 
                 await _context.SaveChangesAsync();
-
-                var customUserForm = customUser.Forms.Where(g => g.User.UserId == customUser.UserId).ToList();
 
 
                 // create identity user

@@ -17,22 +17,23 @@
     @if (SignInManager.IsSignedIn(User))
     {
 
-        <li class="nav-item">
-            <a id="manage" class="nav-link text-light" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
-                @user.FirstName's Profile
-                
-                @if (UserManager.GetUserAsync(User).Result.ProfilePicture != null)
-                {
-                    <img style="width:40px;height:40px; object-fit:cover; border-radius:30px"
-                         src="data:image/*;base64,@(Convert.ToBase64String(UserManager.GetUserAsync(User).Result.ProfilePicture))">
-                }
-            </a>
-        </li>
+@*        <li class="nav-item">
+            <a id="manage" class="nav-link text-light" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@user.FirstName's Profile</a>
+        </li>*@
+
         <li class="nav-item">
             <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
                 <button id="logout" type="submit" class="nav-link btn btn-link text-light">Logout</button>
             </form>
         </li>
+
+        <a id="manage" class="nav-link text-light" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
+            @if (UserManager.GetUserAsync(User).Result.ProfilePicture != null)
+            {
+                <img alt="User Profile Image" class="img-center" style="width:41.6px;height:41.6px; object-fit:cover; margin-bottom: 10px; border-radius:30px"
+                     src="data:image/*;base64,@(Convert.ToBase64String(UserManager.GetUserAsync(User).Result.ProfilePicture))">
+            }
+        </a>
     }
     else
     {
