@@ -50,12 +50,12 @@ namespace HallHaven.Models
         [Required(ErrorMessage = "Please select how much you value your academic studies")]
         public int? AcademicLevel { get; set; }
 
-        [Display(Name = "How much do you value social activities?")]
-        [Required(ErrorMessage = "Please select how much you value social activities")]
+        [Display(Name = "How often do you participate in social activities?")]
+        [Required(ErrorMessage = "Please select how often you participate social activities")]
         public int? SocialLevel { get; set; }
 
-        [Display(Name = "How much do you value sharing personal belongings?")]
-        [Required(ErrorMessage = "Please select how much you value sharing personal belongings")]
+        [Display(Name = "How often would you like to share your personal belongings?")]
+        [Required(ErrorMessage = "Please select how much you would like to share your personal belongings")]
         public int? SharingLevel { get; set; }
 
         [Display(Name = "What level of noise do you prefer in your room while studying?")]
@@ -70,8 +70,8 @@ namespace HallHaven.Models
         [Required(ErrorMessage = "Please select how modest you are in your dorm room")]
         public int? ModestyLevel { get; set; }
 
-        [Display(Name = "What is the average number of belongings you own?")]
-        [Required(ErrorMessage = "Please select the average number of belongings you own")]
+        [Display(Name = "How many belongings do you own?")]
+        [Required(ErrorMessage = "Please select the number of belongings you own")]
         public int? NumberOfBelongings { get; set; }
 
         public virtual CreditHour? CreditHour { get; set; }
