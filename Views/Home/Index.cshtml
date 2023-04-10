@@ -10,6 +10,7 @@
 @{
     ViewData["Title"] = "Home Page";
     var loggedInUser = await _userManager.GetUserAsync(User);
+    var currentUserId = loggedInUser.CustomUserId;
 }
 <div class="d-flex justify-content-center">
     <div class="row">
@@ -34,41 +35,9 @@
     </div>
 </div>
 
-
-@*<div class="text-center">
-    @if (_signInManager.IsSignedIn(User))
-    {
-        <h1 class="display-4">Welcome to Hall Haven</h1>
-        <h1 class="display-4">@loggedInUser.DisplayName!</h1>
-    }
-    else
-    {
-        <h1 class="display-4">Welcome to Hall Haven</h1>
-    }
-    <img style="width: 200px;" src="/images/HallHavenLogov2.jpg" alt="Hall Haven Logo" />
-</div>
-
-<div class="d-flex justify-content-center">
-    <div class="row">
-        <div>
-            <img style="width: 100vw; height: auto; opacity: 0.5;" src="/images/collegeDormwithStudent.jpg" alt="A female student walks beside a college dormitory." />
-        </div>
-        <div class="col-12 d-flex justify-content-center" style="margin: 25px 0px 25px 0px;">
-        </div>
-    </div>
-</div>*@
-
-@*        <div class="col-12 d-flex justify-content-center">
-            <img style="width: auto; height: 300px;" src="/images/threeCollegeStudents.jpg" alt="Three colleges students sitting with books." />
-        </div>*@
-
 <div class="album py-5">
     <div class="container">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-            @{
-                // logged in user
-                var identityUser = await _userManager.GetUserAsync(User);
-            }
 
             @if (_signInManager.IsSignedIn(User))
             {
@@ -114,10 +83,27 @@
                                         <div>@user.UserId</div>
                                         <div>@user.Gender.Gender1</div>
                                         <div>@user.Email</div>
-                                        <div>Hall</div>
+                                        @{
+                                            // get each user's form (if not null) and grab major and dorm to be displayed
+                                            var userForm = @user.Forms.Where(g => g.UserId == @user.UserId).ToList();
+                                            if (userForm.Count() != 0)
+                                            {         
+                                                
+                                                var major = userForm.First().MajorId;
+                                                var dorm = userForm.First().DormId;
+                                                <div>@major</div>
+                                                <div>@dorm</div>
+                                            }
+                                      }
+                                      
                                         <div>Classification</div>
                                         <div>Percentage</div>
                                     </div>
+
+                
+
+
+                                    @*<partial name="_FormPartial" />*@
      
                                     <div class="d-flex justify-content-center align-items-center" style="margin-top: 15px;">
                                         <div class="btn-group">

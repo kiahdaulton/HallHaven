@@ -44,7 +44,11 @@ namespace HallHaven.Controllers
                 var students = _context.Users.ToList();
 
                 // display users by gender to home view
-                var usersByGender = _context.Users.Include(u => u.Gender).Where(g => g.Gender.Gender1 == gender).ToList();
+                var usersByGender = _context.Users
+                    .Include(f => f.Forms)
+                    .Include(f => f.MatchUser1s)
+                    .Include(f => f.MatchUser2s)
+                    .Include(u => u.Gender).Where(g => g.Gender.Gender1 == gender).ToList();
 
                 return View(usersByGender);
             }

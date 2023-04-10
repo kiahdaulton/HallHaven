@@ -5,9 +5,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Edit</h1>
+<h1>Edit Your Compatibility Form</h1>
 
-<h4>Form</h4>
+<h4>Update the values below and submit the form to continue.</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -19,11 +19,11 @@
                 <select asp-for="DormId" class="form-control" asp-items="ViewBag.DormId"></select>
                 <span asp-validation-for="DormId" class="text-danger"></span>
             </div>
-            <div class="form-group">
+@*            <div class="form-group">
                 <label asp-for="UserId" class="control-label"></label>
                 <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId"></select>
                 <span asp-validation-for="UserId" class="text-danger"></span>
-            </div>
+            </div>*@
             <div class="form-group">
                 <label asp-for="MajorId" class="control-label"></label>
                 <select asp-for="MajorId" class="form-control" asp-items="ViewBag.MajorId"></select>
@@ -34,66 +34,178 @@
                 <select asp-for="CreditHourId" class="form-control" asp-items="ViewBag.CreditHourId"></select>
                 <span asp-validation-for="CreditHourId" class="text-danger"></span>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsCandiateStudent" /> @Html.DisplayNameFor(model => model.IsCandiateStudent)
-                </label>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsStudentAthlete" /> @Html.DisplayNameFor(model => model.IsStudentAthlete)
-                </label>
-            </div>
+
+            <label asp-for="IsCandiateStudent" class="control-label">Please select if you are an incoming or returning student</label>
+            <fieldset class="form-group form-floating" style="margin-bottom: 15px;">
+                <div class="row">
+                    <div class="col-sm-10">
+                        <div class="mt-2">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" id="IsCandiateStudentYes" asp-for="IsCandiateStudent" type="radio" value="True" />
+                                <label class="form-check-label" for="IsCandiateStudentYes">Yes</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" id="IsCandiateStudentNo" asp-for="IsCandiateStudent" type="radio" value="False" />
+                                <label class="form-check-label" for="IsCandiateStudentNo">No</label>
+                            </div>
+                        </div>
+                        <span asp-validation-for="IsCandiateStudent" class="text-danger"></span>
+                    </div>
+                </div>
+            </fieldset>
+
+            <label asp-for="IsStudentAthlete" class="control-label">Please select if you are a first semester student athlete</label>
+            <fieldset class="form-group form-floating" style="margin-bottom: 30px;">
+                <div class="row">
+                    <div class="col-sm-10">
+                        <div class="mt-2">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" id="IsStudentAthleteYes" asp-for="IsStudentAthlete" type="radio" value="True" />
+                                <label class="form-check-label" for="IsStudentAthleteYes">Yes</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" id="IsStudentAthleteNo" asp-for="IsStudentAthlete" type="radio" value="False" />
+                                <label class="form-check-label" for="IsStudentAthleteNo">No</label>
+                            </div>
+                        </div>
+                        <span asp-validation-for="IsStudentAthlete" class="text-danger"></span>
+                    </div>
+                </div>
+            </fieldset>
+
+            <h5>The following questions will be ranked from lowest on the left to highest on the right</h5>
+            <hr />
+
             <div class="form-group">
                 <label asp-for="NeatnessLevel" class="control-label"></label>
-                <input asp-for="NeatnessLevel" class="form-control" />
+                <input asp-for="NeatnessLevel" class="form-control-range" type="range" min="1" max="5" step="1" list="neatness-level-labels">
                 <span asp-validation-for="NeatnessLevel" class="text-danger"></span>
+                <datalist id="neatness-level-labels">
+                    <option value="1">Very messy</option>
+                    <option value="2">Somewhat messy</option>
+                    <option value="3">Moderately neat</option>
+                    <option value="4">Very neat</option>
+                    <option value="5">Extremely neat</option>
+                </datalist>
             </div>
+
             <div class="form-group">
                 <label asp-for="VisitorLevel" class="control-label"></label>
-                <input asp-for="VisitorLevel" class="form-control" />
+                <input asp-for="VisitorLevel" class="form-control-range" type="range" min="1" max="5" step="1" list="visitor-level-labels">
                 <span asp-validation-for="VisitorLevel" class="text-danger"></span>
+                <datalist id="visitor-level-labels">
+                    <option value="1">Rarely</option>
+                    <option value="2">Occasionally</option>
+                    <option value="3">Sometimes</option>
+                    <option value="4">Often</option>
+                    <option value="5">Very often</option>
+                </datalist>
             </div>
+
             <div class="form-group">
                 <label asp-for="FitnessLevel" class="control-label"></label>
-                <input asp-for="FitnessLevel" class="form-control" />
+                <input asp-for="FitnessLevel" class="form-control-range" type="range" min="1" max="5" step="1" list="fitness-level-labels">
                 <span asp-validation-for="FitnessLevel" class="text-danger"></span>
+                <datalist id="fitness-level-labels">
+                    <option value="1">Not at all</option>
+                    <option value="2">Very little</option>
+                    <option value="3">Somewhat</option>
+                    <option value="4">Moderately</option>
+                    <option value="5">Extremely</option>
+                </datalist>
             </div>
+
             <div class="form-group">
                 <label asp-for="AcademicLevel" class="control-label"></label>
-                <input asp-for="AcademicLevel" class="form-control" />
+                <input asp-for="AcademicLevel" class="form-control-range" type="range" min="1" max="5" step="1" list="academic-level-labels">
                 <span asp-validation-for="AcademicLevel" class="text-danger"></span>
+                <datalist id="academic-level-labels">
+                    <option value="1">Not at all</option>
+                    <option value="2">Very little</option>
+                    <option value="3">Somewhat</option>
+                    <option value="4">Moderately</option>
+                    <option value="5">Extremely</option>
+                </datalist>
             </div>
+
             <div class="form-group">
                 <label asp-for="SocialLevel" class="control-label"></label>
-                <input asp-for="SocialLevel" class="form-control" />
+                <input asp-for="SocialLevel" class="form-control-range" type="range" min="1" max="5" step="1" list="social-level-labels">
                 <span asp-validation-for="SocialLevel" class="text-danger"></span>
+                <datalist id="social-level-labels">
+                    <option value="1">Rarely</option>
+                    <option value="2">Occasionally</option>
+                    <option value="3">Sometimes</option>
+                    <option value="4">Often</option>
+                    <option value="5">Very often</option>
+                </datalist>
             </div>
+
             <div class="form-group">
                 <label asp-for="SharingLevel" class="control-label"></label>
-                <input asp-for="SharingLevel" class="form-control" />
+                <input asp-for="SharingLevel" class="form-control-range" type="range" min="1" max="5" step="1" list="sharing-level-labels">
                 <span asp-validation-for="SharingLevel" class="text-danger"></span>
+                <datalist id="sharing-level-labels">
+                    <option value="1">Rarely</option>
+                    <option value="2">Occasionally</option>
+                    <option value="3">Sometimes</option>
+                    <option value="4">Often</option>
+                    <option value="5">Very often</option>
+                </datalist>
             </div>
+
             <div class="form-group">
                 <label asp-for="BackgroundNoiseLevel" class="control-label"></label>
-                <input asp-for="BackgroundNoiseLevel" class="form-control" />
+                <input asp-for="BackgroundNoiseLevel" class="form-control-range" type="range" min="1" max="5" step="1" list="background-noise-level-labels">
                 <span asp-validation-for="BackgroundNoiseLevel" class="text-danger"></span>
+                <datalist id="background-noise-level-labels">
+                    <option value="1">Absolute silence</option>
+                    <option value="2">Low noise level</option>
+                    <option value="3">Moderate noise level</option>
+                    <option value="4">High noise level</option>
+                    <option value="5">Any noise level</option>
+                </datalist>
             </div>
+
             <div class="form-group">
                 <label asp-for="BedTimeRanking" class="control-label"></label>
-                <input asp-for="BedTimeRanking" class="form-control" />
+                <input asp-for="BedTimeRanking" class="form-control-range" type="range" min="1" max="5" step="1" list="bedtime-level-labels">
                 <span asp-validation-for="BedTimeRanking" class="text-danger"></span>
+                <datalist id="bedtime-level-labels">
+                    <option value="1">Before 10 pm</option>
+                    <option value="2">Between 10 pm and 12 am</option>
+                    <option value="3">Between 12 am and 2 am</option>
+                    <option value="4">Between 2 am and 4 am</option>
+                    <option value="5">No specific bedtime</option>
+                </datalist>
             </div>
+
             <div class="form-group">
                 <label asp-for="ModestyLevel" class="control-label"></label>
-                <input asp-for="ModestyLevel" class="form-control" />
+                <input asp-for="ModestyLevel" class="form-control-range" type="range" min="1" max="5" step="1" list="modesty-level-labels">
                 <span asp-validation-for="ModestyLevel" class="text-danger"></span>
+                <datalist id="modesty-level-labels">
+                    <option value="1">Very modest</option>
+                    <option value="2">Modest</option>
+                    <option value="3">Neutral</option>
+                    <option value="4">Immodest</option>
+                    <option value="5">Very immodest</option>
+                </datalist>
             </div>
+
             <div class="form-group">
                 <label asp-for="NumberOfBelongings" class="control-label"></label>
-                <input asp-for="NumberOfBelongings" class="form-control" />
+                <input asp-for="NumberOfBelongings" class="form-control-range" type="range" min="1" max="5" step="1" list="numberOfBelongs-labels">
                 <span asp-validation-for="NumberOfBelongings" class="text-danger"></span>
+                <datalist id="numberOfBelongs-labels">
+                    <option value="1">Only the essentials</option>
+                    <option value="2">Not many</option>
+                    <option value="3">Average number</option>
+                    <option value="4">Significant amount</option>
+                    <option value="5">Very many</option>
+                </datalist>
             </div>
+
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>

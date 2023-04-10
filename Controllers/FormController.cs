@@ -94,10 +94,11 @@ namespace HallHaven.Controllers
         //public IActionResult Create()
         public async Task<IActionResult> CreateAsync()
         {
+
+            // get userId and populate form data
             var identityUser = await _userManager.GetUserAsync(User);
             var customId = identityUser.CustomUserId;
 
-            //INCLUDE MORE MODELS HERE!!!!!!!!!!!!
             var currentUser = _context.Users.Include(u => u.Gender).FirstOrDefault(u => u.UserId == customId);
             if (currentUser != null)
             {
