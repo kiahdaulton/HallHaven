@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Xml.Linq;
 
 namespace HallHaven.Models
@@ -14,6 +16,7 @@ namespace HallHaven.Models
         public int? DormId { get; set; }
 
         // hide this in form view
+        [NotMapped]
         public int? UserId { get; set; }
 
         [Display(Name = "Current Major")]

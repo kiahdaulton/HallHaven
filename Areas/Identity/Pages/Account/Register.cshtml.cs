@@ -200,19 +200,19 @@ namespace HallHaven.Areas.Identity.Pages.Account
                 await _context.SaveChangesAsync();
 
 
-                // create new instance of form
-                var customForm = new Form();
+                //// create new instance of form
+                //var customForm = new Form();
 
-                // form userId equals user userId
-                customForm.UserId = customUser.UserId;
+                //// form userId equals user userId
+                //customForm.UserId = customUser.UserId;
 
-                // user gender equals dorm gender in dorm table
-                customForm.GenderId = customUser.GenderId;
+                //// user gender equals dorm gender in dorm table
+                //customForm.GenderId = customUser.GenderId;
 
-                // generate new form in form table
-                _context.Add(customForm);
+                //// generate new form in form table
+                //_context.Add(customForm);
 
-                await _context.SaveChangesAsync();
+                //await _context.SaveChangesAsync();
 
 
                 // create identity user
