@@ -11,8 +11,31 @@
     ViewData["Title"] = "Home Page";
     var loggedInUser = await _userManager.GetUserAsync(User);
 }
+<div class="d-flex justify-content-center">
+    <div class="row">
+        <div style="position: relative;">
 
-<div class="text-center">
+            <img style="width: 100vw; height: auto; opacity: 0.3;" src="/images/collegeDormwithStudent.jpg" alt="A female student walks beside a college dormitory." />
+            <div class="text-overlay">
+                @if (_signInManager.IsSignedIn(User))
+                {
+                    <h1 class="display-4">Welcome to Hall Haven</h1>
+                    <h1 class="display-4">@loggedInUser.DisplayName!</h1>
+                }
+                else
+                {
+                    <h1 class="display-4">Welcome to Hall Haven</h1>
+                }
+            </div>
+            <div class="logo-overlay">
+                <img src="/images/HallHavenLogov2Transparent.png" alt="Hall Haven Logo" />
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@*<div class="text-center">
     @if (_signInManager.IsSignedIn(User))
     {
         <h1 class="display-4">Welcome to Hall Haven</h1>
@@ -27,13 +50,17 @@
 
 <div class="d-flex justify-content-center">
     <div class="row">
-        <div class="col-12 d-flex justify-content-center">
-            <img style="width: auto; height: 300px;" src="/images/threeCollegeStudents.jpg" alt="Three colleges students sitting with books." />
+        <div>
+            <img style="width: 100vw; height: auto; opacity: 0.5;" src="/images/collegeDormwithStudent.jpg" alt="A female student walks beside a college dormitory." />
         </div>
         <div class="col-12 d-flex justify-content-center" style="margin: 25px 0px 25px 0px;">
         </div>
     </div>
-</div>
+</div>*@
+
+@*        <div class="col-12 d-flex justify-content-center">
+            <img style="width: auto; height: 300px;" src="/images/threeCollegeStudents.jpg" alt="Three colleges students sitting with books." />
+        </div>*@
 
 <div class="album py-5">
     <div class="container">

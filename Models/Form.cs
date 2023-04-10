@@ -40,7 +40,7 @@ namespace HallHaven.Models
         [Required(ErrorMessage = "Please select how neat you would like your room to be")]
         public int? NeatnessLevel { get; set; }
 
-        [Display(Name = "how often would you like to have visitors in your room?")]
+        [Display(Name = "How often would you like to have visitors in your room?")]
         [Required(ErrorMessage = "Please select how often you would like to have visitors in your room")]
         public int? VisitorLevel { get; set; }
 

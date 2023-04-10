@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "WuIkEfKAtF+m1PK9NqnUrEy3rPc/QNlOpEmPeSucPgM=",
+  "Hash": "i30Qb61rW5O1Z11nqaB7D1po+379cwlaHSk6TojsgOA=",
   "Source": "HallHaven",
   "BasePath": "_content/HallHaven",
   "Mode": "Default",
@@ -1120,6 +1120,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\images\\calendar.png"
+    },
+    {
+      "Identity": "C:\\Users\\kiahd\\source\\repos\\HallHaven\\wwwroot\\images\\collegeDormwithStudent.jpg",
+      "SourceId": "HallHaven",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\kiahd\\source\\repos\\HallHaven\\wwwroot\\",
+      "BasePath": "_content/HallHaven",
+      "RelativePath": "images/collegeDormwithStudent.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\collegeDormwithStudent.jpg"
     },
     {
       "Identity": "C:\\Users\\kiahd\\source\\repos\\HallHaven\\wwwroot\\images\\HallHavenLogo_v2WithText.jpg",
