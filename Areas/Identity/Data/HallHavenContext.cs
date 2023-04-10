@@ -33,7 +33,6 @@ public class HallHavenContext : IdentityDbContext<HallHavenUser>
         .Property(p => p.DisplayName)
         .HasComputedColumnSql("[FirstName] + ' ' + [LastName]");
 
-
         modelBuilder.Entity<CreditHour>(entity =>
         {
             entity.ToTable("CreditHour");
@@ -85,17 +84,16 @@ public class HallHavenContext : IdentityDbContext<HallHavenUser>
 
             entity.HasOne(d => d.CreditHour)
                 .WithMany(p => p.Forms)
-                .HasForeignKey(d => d.CreditHourId)
-                .OnDelete(DeleteBehavior.ClientSetNull);
+                .HasForeignKey(d => d.CreditHourId);
 
             entity.HasOne(d => d.Dorm)
                 .WithMany(p => p.Forms)
-                .HasForeignKey(d => d.DormId)
-                .OnDelete(DeleteBehavior.ClientSetNull);
+                .HasForeignKey(d => d.DormId);
 
             entity.HasOne(d => d.Major)
                 .WithMany(p => p.Forms)
-                .HasForeignKey(d => d.MajorId);
+                .HasForeignKey(d => d.MajorId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasOne(d => d.User)
                 .WithMany(p => p.Forms)

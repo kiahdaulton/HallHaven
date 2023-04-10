@@ -52,18 +52,13 @@ namespace HallHaven.Controllers
                 // get hallhavencontext user by id
                 var currentUser = _context.Users.Where(c => c.UserId == customId).ToList();
 
-                // display dorms by gender to form view
-                // where Gender GenderId equals User GenderId 
-                // just include current user in the form
-
-                //var hallHavenContext = _context.Forms.Include(f => f.CreditHour).Include(f => f.Dorm).Where(u => u.Dorm.GenderId == Form.GenderId)
-                //    .Include(f => f.Major).Include(f => f.User).Where(c => c.UserId == customId);
-
-                //return View(await hallHavenContext.ToListAsync());
-
                 // bind form values
                 // ORIGINAL
-                var hallHavenContext = _context.Forms.Include(f => f.CreditHour).Include(f => f.Dorm).Include(f => f.Major).Include(f => f.User);
+                var hallHavenContext = _context.Forms
+                    .Include(f => f.CreditHour)
+                    .Include(f => f.Dorm)
+                    .Include(f => f.Major)
+                    .Include(f => f.User);
                 return View(await hallHavenContext.ToListAsync());
             }
             else
@@ -125,7 +120,6 @@ namespace HallHaven.Controllers
         //POST: Form/Create
         //To protect from overposting attacks, enable the specific properties you want to bind to.
         //For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("FormId,DormId,UserId,MajorId,CreditHourId,GenderId,IsCandiateStudent,IsStudentAthlete,NeatnessLevel,VisitorLevel,FitnessLevel,AcademicLevel,SocialLevel,SharingLevel,BackgroundNoiseLevel,BedTimeRanking,ModestyLevel,NumberOfBelongings")] Form form)
@@ -133,74 +127,20 @@ namespace HallHaven.Controllers
             var identityUser = await _userManager.GetUserAsync(User);
             var customId = identityUser.CustomUserId;
 
-            // gets existing form data
-            //var customFormData = _context.Forms.Include(f => f.CreditHour).Include(f => f.Dorm).Include(f => f.Major).Include(f => f.User);
-
-            // check if current user exists
-            //var currentUser = _context.Users.Include(u => u.Gender).FirstOrDefault(u => u.UserId == customId);
-            //if (currentUser != null)
-            //{
-            //    // create new instance of form
-            //    var customForm = new Form();
-
-            //    // form userId equals user userId
-            //    //customForm.UserId = customFormData.First().UserId;
-            //    customForm.Major = form.Major;
-            //    customForm.Dorm = form.Dorm;
-            //    customForm.CreditHour = form.CreditHour;
-            //    customForm.GenderId = form.GenderId;
-            //    customForm.User = form.User;
-            //    customForm.IsCandiateStudent = form.IsCandiateStudent;
-            //    customForm.IsStudentAthlete = form.IsStudentAthlete;
-
-            //    customForm.NeatnessLevel = form.NeatnessLevel;
-            //    customForm.VisitorLevel = form.VisitorLevel;
-            //    customForm.FitnessLevel = form.FitnessLevel;
-            //    customForm.AcademicLevel = form.AcademicLevel;
-            //    customForm.SocialLevel = form.SocialLevel;
-            //    customForm.SharingLevel = form.SharingLevel;
-            //    customForm.BackgroundNoiseLevel = form.BackgroundNoiseLevel;
-            //    customForm.BedTimeRanking = form.BedTimeRanking;
-            //    customForm.ModestyLevel = form.ModestyLevel;
-            //    customForm.NumberOfBelongings = form.NumberOfBelongings;
-
-
-            //    // generate new form in form table
-            //    _context.Add(customForm);
-
-            //    await _context.SaveChangesAsync();
-            //}
-
-
             //get currentUser related to identityUser table
             var currentUser = _context.Users.Include(u => u.Gender).FirstOrDefault(u => u.UserId == customId);
             if (currentUser != null)
 
             {
-                // if user has a form, grab the form
-                if (form.UserId == currentUser.UserId)
-                {
-                    _context.Add(form);
+                // set userId from AspNetUsers loose foreign key instead of asking on the form
+                form.UserId = (int)customId;
 
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
-                }
+                // Add the new Form object to the Forms DbSet
+                _context.Add(form);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
               
-               
-
-            //    if (ModelState.IsValid)
-            //    {
-            //        //form.GenderId = currentUser.GenderId;   
-
-            //        _context.Add(form);
-
-            //        await _context.SaveChangesAsync();
-            //        return RedirectToAction(nameof(Index));
-            //    }
-
-            //}
-
 
             // redisplay form if something went wrong
             ViewData["CreditHourId"] = new SelectList(_context.CreditHours, "CreditHourId", "CreditHourName", form.CreditHourId);

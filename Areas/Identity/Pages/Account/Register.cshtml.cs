@@ -200,21 +200,6 @@ namespace HallHaven.Areas.Identity.Pages.Account
                 await _context.SaveChangesAsync();
 
 
-                //// create new instance of form
-                //var customForm = new Form();
-
-                //// form userId equals user userId
-                //customForm.UserId = customUser.UserId;
-
-                //// user gender equals dorm gender in dorm table
-                //customForm.GenderId = customUser.GenderId;
-
-                //// generate new form in form table
-                //_context.Add(customForm);
-
-                //await _context.SaveChangesAsync();
-
-
                 // create identity user
                 var user = CreateUser();
                 user.FirstName = Input.FirstName;
@@ -245,17 +230,6 @@ namespace HallHaven.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
-
-                    // add profile image
-                    // handle profile image file upload
-                    //if (Input.ProfilePictureFile != null && ProfilePicture.Length > 0)
-                    //{
-                    //    var imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "images", Input.ProfilePictureFile.FileName);
-                    //    using (var stream = new FileStream(imagePath, FileMode.Create))
-                    //    {
-                    //        await Input.ProfilePictureFile.CopyToAsync(stream);
-                    //    }
-                    //}
 
                     // userId is created
                     var userId = await _userManager.GetUserIdAsync(user);

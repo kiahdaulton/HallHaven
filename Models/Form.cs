@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Xml.Linq;
 
 namespace HallHaven.Models
 {
@@ -15,9 +13,8 @@ namespace HallHaven.Models
         [Required(ErrorMessage = "Please select your current dormitory")]
         public int? DormId { get; set; }
 
-        // hide this in form view
         [NotMapped]
-        public int? UserId { get; set; }
+        public int UserId { get; set; }
 
         [Display(Name = "Current Major")]
         [Required(ErrorMessage = "Please enter your current major")]
@@ -28,8 +25,6 @@ namespace HallHaven.Models
         [Display(Name = "Credit Hours")]
         [Required(ErrorMessage = "Please enter your current number of credit hours")]
         public int? CreditHourId { get; set; }
-
-        public int? GenderId { get; set; }
 
         [Display(Name = "Are you currently an incoming student?")]
         [Required(ErrorMessage = "Please select if you are currently an incoming student")]
@@ -79,10 +74,9 @@ namespace HallHaven.Models
         [Required(ErrorMessage = "Please select the average number of belongings you own")]
         public int? NumberOfBelongings { get; set; }
 
-
-        public virtual CreditHour CreditHour { get; set; } = null!;
-        public virtual Dorm Dorm { get; set; } = null!;
-        public virtual Major Major { get; set; } = null!;
+        public virtual CreditHour? CreditHour { get; set; }
+        public virtual Dorm? Dorm { get; set; }
+        public virtual Major? Major { get; set; }
         public virtual User User { get; set; } = null!;
     }
 }

@@ -40,9 +40,6 @@ namespace HallHaven.Controllers
                 // get logged in user's gender
                 var gender = user.Gender;
 
-                // only show users that match the logged in user's gender in the view
-                //var users = _userManager.Users.Where(g => g.Gender == gender).ToList();
-
                 // get list of hall haven context users
                 var students = _context.Users.ToList();
 
@@ -56,9 +53,6 @@ namespace HallHaven.Controllers
                 // display default view if user is not currently logged in
                 return View();
             }
-
-            // this gets and displays username/email
-            //return Content(this.User.GetLoggedInUserName());
         }
 
         public IActionResult UsersList()

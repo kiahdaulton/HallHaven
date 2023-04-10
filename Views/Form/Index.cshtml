@@ -14,9 +14,6 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.GenderId)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.IsCandiateStudent)
             </th>
             <th>
@@ -70,9 +67,6 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.GenderId)
-            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.IsCandiateStudent)
             </td>

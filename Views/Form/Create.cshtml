@@ -22,31 +22,14 @@
                 <label asp-for="DormId" class="control-label"></label>
                 <select asp-for="DormId" class ="form-control" asp-items="ViewBag.DormId"></select>
             </div>
-            <div class="form-group">
+@*            <div class="form-group">
                 <label asp-for="UserId" class="control-label"></label>
                 <select asp-for="UserId" class ="form-control" asp-items="ViewBag.UserId"></select>
-            </div>
+            </div>*@
             <div class="form-group">
                 <label asp-for="MajorId" class="control-label"></label>
                 <select asp-for="MajorId" class ="form-control" asp-items="ViewBag.MajorId"></select>
             </div>
-
-@*            <div class="form-group">
-                <label asp-for="GenderId" class="control-label"></label>
-                <input asp-for="GenderId" class="form-control" />
-                <span asp-validation-for="GenderId" class="text-danger"></span>
-            </div>*@
-
-@*            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsCandiateStudent" /> @Html.DisplayNameFor(model => model.IsCandiateStudent)
-                </label>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsStudentAthlete" /> @Html.DisplayNameFor(model => model.IsStudentAthlete)
-                </label>
-            </div>*@
 
             <label asp-for="IsCandiateStudent" class="control-label">Please select if you are an incoming or returning student</label>
             <fieldset class="form-group form-floating" style="margin-bottom: 15px;">
