@@ -10,7 +10,7 @@
 @{
     ViewData["Title"] = "Home Page";
     var loggedInUser = await _userManager.GetUserAsync(User);
-    var currentUserId = loggedInUser.CustomUserId;
+    //var currentUserId = loggedInUser.CustomUserId;
 }
 <div class="d-flex justify-content-center">
     <div class="row">
@@ -88,22 +88,33 @@
                                             var userForm = @user.Forms.Where(g => g.UserId == @user.UserId).ToList();
                                             if (userForm.Count() != 0)
                                             {         
-                                                
+                                                // get user majorId, dormId, and creditHourId
                                                 var major = userForm.First().MajorId;
                                                 var dorm = userForm.First().DormId;
-                                                <div>@major</div>
-                                                <div>@dorm</div>
+                                                var creditHour = userForm.First().CreditHourId;
+
+                                                // find user dorm name
+                                                var userDorm = _context.Dorms.Where(g => g.DormId == @dorm).ToList();
+                                                var dormName = userDorm.First().DormName;
+
+                                                // get credit hour classification
+                                                var credits = _context.CreditHours.Where(g => g.CreditHourId == @creditHour).ToList();
+                                                var classification = credits.First().Classification;
+
+                                                // find user major name
+                                                var userMajor = _context.Majors.Where(g => g.MajorId == @major).ToList();
+                                                var majorName = userMajor.First().MajorName;
+
+                                                <div>Major: @majorName</div>
+                                                <div>Dorm: @dormName</div>
+                                                <div>Year: @classification</div>
                                             }
                                       }
-                                      
-                                        <div>Classification</div>
+                                        
                                         <div>Percentage</div>
                                     </div>
 
-                
-
-
-                                    @*<partial name="_FormPartial" />*@
+                                   @*<partial name="_FormPartial" />*@
      
                                     <div class="d-flex justify-content-center align-items-center" style="margin-top: 15px;">
                                         <div class="btn-group">
