@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using HallHaven.Data;
 using HallHaven.Areas.Identity.Data;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using HallHaven.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
@@ -17,6 +19,10 @@ builder.Services.AddControllersWithViews();
 
 // Add get user service
 builder.Services.AddHttpContextAccessor();
+
+// Email service
+builder.Services.AddTransient<IEmailSender, SendGridEmailSender>();
+builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration);
 
 var app = builder.Build();
 

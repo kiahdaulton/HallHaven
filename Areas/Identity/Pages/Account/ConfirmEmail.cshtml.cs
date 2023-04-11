@@ -45,7 +45,9 @@ namespace HallHaven.Areas.Identity.Pages.Account
 
             code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
             var result = await _userManager.ConfirmEmailAsync(user, code);
+            //message displayed after user confirms email
             StatusMessage = result.Succeeded ? "Thank you for confirming your email." : "Error confirming your email.";
+            // change to redirect to login page???
             return Page();
         }
     }
