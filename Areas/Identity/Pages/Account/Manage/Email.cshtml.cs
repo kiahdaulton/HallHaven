@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using HallHaven.Areas.Identity.Data;
+using HallHaven.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -20,15 +21,18 @@ namespace HallHaven.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<HallHavenUser> _userManager;
         private readonly SignInManager<HallHavenUser> _signInManager;
+        private readonly HallHavenContext _context;
         private readonly IEmailSender _emailSender;
 
         public EmailModel(
             UserManager<HallHavenUser> userManager,
             SignInManager<HallHavenUser> signInManager,
+            HallHavenContext context,
             IEmailSender emailSender)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _context = context;
             _emailSender = emailSender;
         }
 
@@ -119,15 +123,18 @@ namespace HallHaven.Areas.Identity.Pages.Account.Manage
                 var userId = await _userManager.GetUserIdAsync(user);
                 var code = await _userManager.GenerateChangeEmailTokenAsync(user, Input.NewEmail);
                 code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+
+
                 var callbackUrl = Url.Page(
-                    "/Account/ConfirmEmailChange",
-                    pageHandler: null,
-                    values: new { area = "Identity", userId = userId, email = Input.NewEmail, code = code },
-                    protocol: Request.Scheme);
-                await _emailSender.SendEmailAsync(
+                "/Account/ConfirmEmailChange",
+                pageHandler: null,
+                values: new { area = "Identity", userId = userId, email = Input.NewEmail, code = code },
+                protocol: Request.Scheme);
+                    await _emailSender.SendEmailAsync(
                     Input.NewEmail,
-                    "Confirm your email",
-                    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    "Confirm your Hall Haven email",
+                    $"Hello valued Hall Haven user. Please confirm your Hall Haven account by clicking the following link: <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>confirm your email</a>.");
+                
 
                 StatusMessage = "Confirmation link to change email sent. Please check your email.";
                 return RedirectToPage();
