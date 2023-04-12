@@ -6,6 +6,7 @@
 @inject SignInManager<HallHavenUser> _signInManager
 @inject UserManager<HallHavenUser> _userManager
 @inject HallHaven.Data.HallHavenContext _context
+@model HomeViewModel
 
 @{
     ViewData["Title"] = "Home Page";
@@ -35,15 +36,32 @@
     </div>
 </div>
 
+@using (Html.BeginForm())
+{
+    @Html.DropDownListFor(m => m.FormViewModel.SelectedDormId, Model.FormViewModel.Dorms, "Select a dorm")
+    @Html.DropDownListFor(m => m.FormViewModel.SelectedCreditHourId, Model.FormViewModel.CreditHours, "Select a credit hour")
+    @Html.DropDownListFor(m => m.FormViewModel.SelectedMajorId, Model.FormViewModel.Majors, "Select a major")
+    <input type="submit" value="Submit" />
+}
+
+
+@*@using (Html.BeginForm("Index", "Form", FormMethod.Get))
+{
+    @Html.DropDownListFor(m => m.Dorms, Model.Dorms, "-- Select a dorm --")
+    @Html.DropDownListFor(m => m.CreditHours, Model.CreditHours, "-- Select a credit hour --")
+    @Html.DropDownListFor(m => m.Majors, Model.Majors, "-- Select a major --")
+    <button type="submit">Search</button>
+}*@
+
 <div class="album py-5">
     <div class="container">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
 
             @if (_signInManager.IsSignedIn(User))
             {
-                @if (Model.Count != null)
+                @if (Model.Users.Count != null)
                 {
-                    @foreach (User user in Model)
+                    @foreach (User user in Model.Users)
                     {
                         // modal popup from user button
                         <div id="myModal-@user.UserId" class="modal fade">

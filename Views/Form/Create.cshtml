@@ -16,12 +16,15 @@
 
             <div class="form-group">
                 <label asp-for="CreditHourId" class="control-label"></label>
-                <select asp-for="CreditHourId" class="form-control" asp-items="ViewBag.CreditHourId"></select>
+                <select asp-for="CreditHourId" onchange="handleSelectChange(this)" class="form-control" asp-items="ViewBag.CreditHourId"></select>
             </div>
             <div class="form-group">
                 <label asp-for="DormId" class="control-label"></label>
-                <select asp-for="DormId" class ="form-control" asp-items="ViewBag.DormId"></select>
+                <select asp-for="DormId" id="dormSelect" name="dormSelectName" class="form-control" asp-items="ViewBag.DormId"></select>
             </div>
+
+            @*<partial id="dormSelect" name="_DormOptions" />*@
+
 @*            <div class="form-group">
                 <label asp-for="UserId" class="control-label"></label>
                 <select asp-for="UserId" class ="form-control" asp-items="ViewBag.UserId"></select>
@@ -215,24 +218,65 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        //await Html.RenderPartialAsync("_DormOptions");
+        //Html.RenderPartial("_DormOptions");
+    }
+
 
     @* dynamically get dorms by selected credit hour *@
     <script>
         $(document).ready(function () {
-            $("#CreditHourId").change(function () {
-                var selectedCreditHourId = $(this).val();
+        //    $("#CreditHourId").change(function () {
+        //        var selectedCreditHourId = $(this).val();
+        //        $.ajax({
+        //            type: "GET",
+        //            url: "/Controller/GetDormsByCreditHourAsync?selectedCreditHourId=" + selectedCreditHourId,
+        //            success: function (data) {
+        //                $("#DormId").empty();
+        //                $.each(data, function (index, item) {
+        //                    $("#DormId").append('<option value="' + item.value + '">' + item.text + '</option>');
+        //                });
+        //            }
+        //        });
+        //    });
+        });
+
+        // get credit hour dropdown value on form change
+        //function handleSelectChange(selectElement) {
+        //    var selectedValue = selectElement.value;
+
+        //    // Find the other select element
+        //    var dormSelect = document.querySelector('select[name="dormSelectName"]');
+        //    // if credithours from credithour model of user equals 3 or 4 (junior or senior)
+        //    if (selectedValue == "3" || selectedValue == "4") {
+        //        // then display dorms from dorm model where credit hour equals 3 (junior AND senior dorms)
+        //        // Set the options of the dorm select element
+        //        dormSelect.innerHTML = '<option value="juniorDorm">Junior Dorm</option><option value="seniorDorm">Senior Dorm</option>';
+        //    } else {
+        //        // Clear the options of the dorm select element
+        //        dormSelect.innerHTML = '';
+        //    }
+
+        //}
+
+        function handleSelectChange(selectElement) {
+            var selectedValue = selectElement.value;
+            // if credit hours from credit hour model of user equals 3 or 4 (junior or senior)
+            if (selectedValue == "3" || selectedValue == "4") {
+                // Make an AJAX request to get the dorm options
                 $.ajax({
-                    type: "GET",
-                    url: "/Controller/GetDormsByCreditHourAsync?selectedCreditHourId=" + selectedCreditHourId,
+                    url: '@Url.Action("GetDormOptions", "FormController")',
+                    type: 'GET',
+                    data: { creditHourId: selectedValue },
                     success: function (data) {
-                        $("#DormId").empty();
-                        $.each(data, function (index, item) {
-                            $("#DormId").append('<option value="' + item.value + '">' + item.text + '</option>');
-                        });
+                        // Update the dorm select element with the returned options
+                        $('#dormSelect').html(data);
                     }
                 });
-            });
-        });
+            }
+        }
+
     </script>
 
 }

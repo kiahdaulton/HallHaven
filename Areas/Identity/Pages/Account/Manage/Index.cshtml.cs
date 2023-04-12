@@ -117,11 +117,13 @@ namespace HallHaven.Areas.Identity.Pages.Account.Manage
                 await _userManager.UpdateAsync(user);
             }
 
+            // save new profile bio
             if (Input.ProfileBio != user.ProfileBio)
             {
                 user.ProfileBio = Input.ProfileBio;
             }
 
+            // this method doesn't save new bio
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";
             return RedirectToPage();

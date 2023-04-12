@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.CodeAnalysis.Scripting;
 using static System.Collections.Specialized.BitVector32;
+using Microsoft.Data.SqlClient;
 
 namespace HallHaven.Controllers
 {
@@ -38,6 +39,7 @@ namespace HallHaven.Controllers
         public async Task<IActionResult> Index()
         {
             var userId = User.GetLoggedInUserId<string>();
+            //GetHomeDropdowns();
 
             // if user is logged in
             if (userId != null)
@@ -66,6 +68,25 @@ namespace HallHaven.Controllers
                 // display default view if user is not currently logged in
                 return View();
             }
+        }
+        [HttpGet]
+        public IActionResult GetHomeDropdowns()
+        {
+            // populate formViewModel
+            var dorms = _context.Dorms.ToList();
+            var creditHours = _context.CreditHours.ToList();
+            var majors = _context.Majors.ToList();
+            var dormsList = new SelectList(dorms, "DormId", "DormName");
+            var creditHoursList = new SelectList(creditHours, "CreditHourId", "CreditHourName");
+            var majorsList = new SelectList(majors, "MajorId", "MajorName");
+
+            var viewModel = new FormViewModel
+            {
+                Dorms = dormsList,
+                CreditHours = creditHoursList,
+                Majors = majorsList
+            };
+            return View(viewModel);
         }
 
         // GET: Form/Details/5
@@ -107,6 +128,8 @@ namespace HallHaven.Controllers
                 // get credit hours
                 var creditHours = _context.CreditHours.ToList();
             
+                // if credithours from credithour model of user equals 3 or 4 (junior or senior)
+                // then display dorms from dorm model where credit hour equals 3 (junior AND senior dorms)
 
                 ViewData["CreditHourId"] = new SelectList(_context.CreditHours, "CreditHourId", "CreditHourName");
                 // display dorms by user's gender
@@ -130,56 +153,93 @@ namespace HallHaven.Controllers
 
             //get currentUser related to identityUser table
             var currentUser = _context.Users.Include(u => u.Gender).FirstOrDefault(u => u.UserId == customId);
+            int customGender = currentUser.Gender.GenderId;
             if (currentUser != null)
-
             {
                 // set userId from AspNetUsers loose foreign key instead of asking on the form
                 form.UserId = (int)customId;
 
-                // Add the new Form object to the Forms DbSet
+                // Check if a row with the same userId already exists in the database
+                var existingForm = _context.Forms.FirstOrDefault(f => f.UserId == form.UserId);
+
+                // if form has already been created
+                if (existingForm != null)
+                {
+                    // A row with the same userId already exists, return an error message
+                    ModelState.AddModelError("UserId", "A form with the same userId already exists.");
+                    // redisplay form if something went wrong
+                    ViewData["CreditHourId"] = new SelectList(_context.CreditHours, "CreditHourId", "CreditHourName");
+                    // display dorms by user's gender
+                    ViewData["DormId"] = new SelectList(_context.Dorms.Where(d => d.GenderId == customGender).OrderBy(d => d.DormId), "DormId", "DormName");
+                    ViewData["MajorId"] = new SelectList(_context.Majors, "MajorId", "MajorName").OrderBy(x => x.Text);
+                    ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId");
+                    return View(form);
+                }
+
+                // No existing row with the same userId, proceed with saving the form submission
                 _context.Add(form);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
+
+                // begin matching algorithm
+                // create new match model
+                // compare values of inputs
+                // save logged in user id as User1Id
+
             }
 
-            // ADD CHECK TO ONLY DISPLAY ONE FORM
-            // LIMIT TO ONE FORM SUBMISSION
-              
 
             // redisplay form if something went wrong
-            ViewData["CreditHourId"] = new SelectList(_context.CreditHours, "CreditHourId", "CreditHourName", form.CreditHourId);
-            ViewData["DormId"] = new SelectList(_context.Dorms, "DormId", "DormName", form.DormId);
-            ViewData["MajorId"] = new SelectList(_context.Majors, "MajorId", "MajorName", form.MajorId).OrderBy(x => x.Text);
-            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId", form.UserId);
+            ViewData["CreditHourId"] = new SelectList(_context.CreditHours, "CreditHourId", "CreditHourName");
+            // display dorms by user's gender
+            ViewData["DormId"] = new SelectList(_context.Dorms.Where(d => d.GenderId == customGender).OrderBy(d => d.DormId), "DormId", "DormName");
+            ViewData["MajorId"] = new SelectList(_context.Majors, "MajorId", "MajorName").OrderBy(x => x.Text);
+            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId");
 
             return View(form);
         }
 
-        // get dorms by credit hours
-        public async Task<IActionResult> GetDormsByCreditHourAsync(int selectedCreditHourId)
+        [HttpGet]
+        public IActionResult GetDormOptions(int creditHourId)
         {
-            var identityUser = await _userManager.GetUserAsync(User);
-            var customId = identityUser.CustomUserId;
+            // if credit hours from credit hour model of user equals 3 or 4 (junior or senior)
 
-            var currentUser = _context.Users.Include(u => u.Gender).FirstOrDefault(u => u.UserId == customId);
-            if (currentUser != null)
+            // Retrieve the dorm options from the database based on the selected credit hour value
+            var dormOptions = _context.Dorms.Where(d => d.CreditHourId == creditHourId).Select(d => new SelectListItem
             {
-                // get gender id of current user
-                int customGender = currentUser.Gender.GenderId;
+                Value = d.DormId.ToString(),
+                Text = d.DormName
+            }).ToList();
 
-                var dorms = _context.Dorms
-                    .Where(d => d.GenderId == customGender && d.CreditHourId == selectedCreditHourId)
-                    .OrderBy(d => d.DormId)
-                    .ToList();
-
-                var dormsSelectList = new SelectList(dorms, "DormId", "DormName");
-
-
-                return Json(dormsSelectList);
-            }
-
-            return NotFound();
+            // Return the dorm options as a partial view
+            return PartialView("_DormOptions", dormOptions);
         }
+
+        // get dorms by credit hours
+        //public async Task<IActionResult> GetDormsByCreditHourAsync(int selectedCreditHourId)
+        //{
+        //    var identityUser = await _userManager.GetUserAsync(User);
+        //    var customId = identityUser.CustomUserId;
+
+        //    var currentUser = _context.Users.Include(u => u.Gender).FirstOrDefault(u => u.UserId == customId);
+        //    if (currentUser != null)
+        //    {
+        //        // get gender id of current user
+        //        int customGender = currentUser.Gender.GenderId;
+
+        //        var dorms = _context.Dorms
+        //            .Where(d => d.GenderId == customGender && d.CreditHourId == selectedCreditHourId)
+        //            .OrderBy(d => d.DormId)
+        //            .ToList();
+
+        //        var dormsSelectList = new SelectList(dorms, "DormId", "DormName");
+
+
+        //        return Json(dormsSelectList);
+        //    }
+
+        //    return NotFound();
+        //}
 
         // GET: Form/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -233,6 +293,7 @@ namespace HallHaven.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["CreditHourId"] = new SelectList(_context.CreditHours, "CreditHourId", "CreditHourName", form.CreditHourId);
             ViewData["DormId"] = new SelectList(_context.Dorms, "DormId", "DormName", form.DormId);
             ViewData["MajorId"] = new SelectList(_context.Majors, "MajorId", "MajorName", form.MajorId).OrderBy(x => x.Text); ;

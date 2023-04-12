@@ -1,0 +1,13 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using HallHaven.Areas.Identity.Data
+
+@inject SignInManager<HallHavenUser> SignInManager
+@inject UserManager<HallHavenUser> UserManager
+@inject HallHaven.Data.HallHavenContext _context
+
+@model List<SelectListItem>
+
+@foreach (var option in Model)
+{
+    <option value="@option.Value">@option.Text</option>
+}
