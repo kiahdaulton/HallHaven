@@ -36,22 +36,22 @@
     </div>
 </div>
 
-@using (Html.BeginForm())
-{
-    @Html.DropDownListFor(m => m.FormViewModel.SelectedDormId, Model.FormViewModel.Dorms, "Select a dorm")
-    @Html.DropDownListFor(m => m.FormViewModel.SelectedCreditHourId, Model.FormViewModel.CreditHours, "Select a credit hour")
-    @Html.DropDownListFor(m => m.FormViewModel.SelectedMajorId, Model.FormViewModel.Majors, "Select a major")
-    <input type="submit" value="Submit" />
-}
+<form method="post" asp-controller="Home" asp-action="Index">
+    @Html.AntiForgeryToken()
 
+    <!-- add hidden inputs for selected dropdown values -->
+@*    @Html.HiddenFor(m => m.FormViewModel.SelectedDormId)
+    @Html.HiddenFor(m => m.FormViewModel.SelectedCreditHourId)
+    @Html.HiddenFor(m => m.FormViewModel.SelectedMajorId)*@
 
-@*@using (Html.BeginForm("Index", "Form", FormMethod.Get))
-{
-    @Html.DropDownListFor(m => m.Dorms, Model.Dorms, "-- Select a dorm --")
-    @Html.DropDownListFor(m => m.CreditHours, Model.CreditHours, "-- Select a credit hour --")
-    @Html.DropDownListFor(m => m.Majors, Model.Majors, "-- Select a major --")
-    <button type="submit">Search</button>
-}*@
+    <!-- dropdowns for filtering -->
+    @Html.DropDownListFor(m => m.FormViewModel.SelectedDormId, Model.FormViewModel.Dorms, "All Dorms", new { @class = "form-control" })
+    @Html.DropDownListFor(m => m.FormViewModel.SelectedCreditHourId, Model.FormViewModel.CreditHours, "All Credit Hours", new { @class = "form-control" })
+    @Html.DropDownListFor(m => m.FormViewModel.SelectedMajorId, Model.FormViewModel.Majors, "All Majors", new { @class = "form-control" })
+
+    <button type="submit" class="btn btn-primary">Filter</button>
+    @*<input type="submit" value="Filter" />*@
+</form>
 
 <div class="album py-5">
     <div class="container">
@@ -173,5 +173,11 @@
             $("#myModal-" + userId).modal("hide");
         });
 
+        $(function () {
+            // set hidden input values when dropdowns change
+            $('select').on('change', function () {
+                $('input[type=hidden][name=' + $(this).attr('id') + ']').val($(this).val());
+            });
+        });
     </script>
 }

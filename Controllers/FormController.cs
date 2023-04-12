@@ -69,25 +69,26 @@ namespace HallHaven.Controllers
                 return View();
             }
         }
-        [HttpGet]
-        public IActionResult GetHomeDropdowns()
-        {
-            // populate formViewModel
-            var dorms = _context.Dorms.ToList();
-            var creditHours = _context.CreditHours.ToList();
-            var majors = _context.Majors.ToList();
-            var dormsList = new SelectList(dorms, "DormId", "DormName");
-            var creditHoursList = new SelectList(creditHours, "CreditHourId", "CreditHourName");
-            var majorsList = new SelectList(majors, "MajorId", "MajorName");
 
-            var viewModel = new FormViewModel
-            {
-                Dorms = dormsList,
-                CreditHours = creditHoursList,
-                Majors = majorsList
-            };
-            return View(viewModel);
-        }
+        //[HttpGet]
+        //public IActionResult GetHomeDropdowns()
+        //{
+        //    // populate formViewModel
+        //    var dorms = _context.Dorms.ToList();
+        //    var creditHours = _context.CreditHours.ToList();
+        //    var majors = _context.Majors.ToList();
+        //    var dormsList = new SelectList(dorms, "DormId", "DormName");
+        //    var creditHoursList = new SelectList(creditHours, "CreditHourId", "CreditHourName");
+        //    var majorsList = new SelectList(majors, "MajorId", "MajorName");
+
+        //    var viewModel = new FormViewModel
+        //    {
+        //        Dorms = dormsList,
+        //        CreditHours = creditHoursList,
+        //        Majors = majorsList
+        //    };
+        //    return View(viewModel);
+        //}
 
         // GET: Form/Details/5
         public async Task<IActionResult> Details(int? id)

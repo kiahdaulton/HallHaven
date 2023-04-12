@@ -8,6 +8,8 @@ namespace HallHaven.Models
         public SelectList CreditHours { get; set; }
         public SelectList Majors { get; set; }
 
+
+        //public IEnumerable<SelectListItem> SelectedDormId { get; set; }
         public int SelectedDormId { get; set; }
         public int SelectedCreditHourId { get; set; }
         public int SelectedMajorId { get; set; }
