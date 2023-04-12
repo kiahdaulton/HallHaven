@@ -38,16 +38,22 @@
 
 @if (_signInManager.IsSignedIn(User))
 {
-    <form method="post" asp-controller="Home" asp-action="Index">
-        @Html.AntiForgeryToken()
+    <div class="album py-5" id="filterWrap">
+        @*<div class="container">*@
+            @*<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">*@
+                <form method="post" asp-controller="Home" asp-action="Index" id="filterForm">
+                    @Html.AntiForgeryToken()
 
-        <!-- dropdowns for filtering -->
-    @Html.DropDownListFor(m => m.FormViewModel.SelectedDormId, Model.FormViewModel.Dorms, "All Dorms", new { @class = "form-control" })
-        @Html.DropDownListFor(m => m.FormViewModel.SelectedCreditHourId, Model.FormViewModel.CreditHours, "All Credit Hours", new { @class = "form-control" })
-        @Html.DropDownListFor(m => m.FormViewModel.SelectedMajorId, Model.FormViewModel.Majors, "All Majors", new { @class = "form-control" })
+                    <!-- dropdowns for filtering -->
+                    @Html.DropDownListFor(m => m.FormViewModel.SelectedDormId, Model.FormViewModel.Dorms, "All Dorms", new { @class = "form-control" })
+                    @Html.DropDownListFor(m => m.FormViewModel.SelectedCreditHourId, Model.FormViewModel.CreditHours, "All Credit Hours", new { @class = "form-control" })
+                    @Html.DropDownListFor(m => m.FormViewModel.SelectedMajorId, Model.FormViewModel.Majors, "All Majors", new { @class = "form-control" })
 
-        <button type="submit" class="btn btn-primary">Filter</button>
-    </form>
+                    <button type="submit" class="btn btn-primary">Filter</button>
+                </form>
+            @*</div>*@
+        @*</div>*@
+    </div>
 }
 else
 {

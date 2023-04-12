@@ -122,13 +122,24 @@ input[type="range"] {
     margin-top: 10px;
 }
 
-/* #1e5e96 */
+#filterWrap {
+    display: flex;
+    justify-content: space-evenly;
+}
 
+#filterForm {
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+}
+
+/* #1e5e96 */
 .card-body {
     background-color: #03335F;
     color: #ffffff;
     border-color: transparent !important;
 }
+
 
 @media only screen and (max-width: 1400px) {
     .logo-overlay {
