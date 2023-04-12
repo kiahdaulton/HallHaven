@@ -36,22 +36,24 @@
     </div>
 </div>
 
-<form method="post" asp-controller="Home" asp-action="Index">
-    @Html.AntiForgeryToken()
+@if (_signInManager.IsSignedIn(User))
+{
+    <form method="post" asp-controller="Home" asp-action="Index">
+        @Html.AntiForgeryToken()
 
-    <!-- add hidden inputs for selected dropdown values -->
- @*   @Html.HiddenFor(m => m.FormViewModel.SelectedDormId)
-    @Html.HiddenFor(m => m.FormViewModel.SelectedCreditHourId)
-    @Html.HiddenFor(m => m.FormViewModel.SelectedMajorId)*@
-
-    <!-- dropdowns for filtering -->
+        <!-- dropdowns for filtering -->
     @Html.DropDownListFor(m => m.FormViewModel.SelectedDormId, Model.FormViewModel.Dorms, "All Dorms", new { @class = "form-control" })
-    @Html.DropDownListFor(m => m.FormViewModel.SelectedCreditHourId, Model.FormViewModel.CreditHours, "All Credit Hours", new { @class = "form-control" })
-    @Html.DropDownListFor(m => m.FormViewModel.SelectedMajorId, Model.FormViewModel.Majors, "All Majors", new { @class = "form-control" })
+        @Html.DropDownListFor(m => m.FormViewModel.SelectedCreditHourId, Model.FormViewModel.CreditHours, "All Credit Hours", new { @class = "form-control" })
+        @Html.DropDownListFor(m => m.FormViewModel.SelectedMajorId, Model.FormViewModel.Majors, "All Majors", new { @class = "form-control" })
 
-    <button type="submit" class="btn btn-primary">Filter</button>
-    @*<input type="submit" value="Filter" />*@
-</form>
+        <button type="submit" class="btn btn-primary">Filter</button>
+    </form>
+}
+else
+{
+ // display no filtering
+}
+
 
 <div class="album py-5">
     <div class="container">
