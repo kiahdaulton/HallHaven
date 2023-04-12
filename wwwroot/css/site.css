@@ -108,12 +108,26 @@ input[type="range"] {
     margin: 0;
 }
 
+#FormViewModel_SelectedDormId {
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+#FormViewModel_SelectedCreditHourId {
+    margin-bottom: 10px;
+}
+
+#FormViewModel_SelectedMajorId {
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
 /* #1e5e96 */
 
 .card-body {
-background-color: #03335F;
-color: #ffffff;
-border-color: transparent !important;
+    background-color: #03335F;
+    color: #ffffff;
+    border-color: transparent !important;
 }
 
 @media only screen and (max-width: 1400px) {
