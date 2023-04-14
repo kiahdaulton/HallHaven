@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.CodeAnalysis.Scripting;
 using static System.Collections.Specialized.BitVector32;
 using Microsoft.Data.SqlClient;
+using Microsoft.AspNetCore.SignalR;
 
 namespace HallHaven.Controllers
 {
@@ -140,14 +141,15 @@ namespace HallHaven.Controllers
                 // set userId from AspNetUsers loose foreign key instead of asking on the form
                 form.UserId = (int)customId;
 
+
                 // Check if a row with the same userId already exists in the database
                 var existingForm = _context.Forms.FirstOrDefault(f => f.UserId == form.UserId);
 
                 // if form has already been created
                 if (existingForm != null)
                 {
-                    // A row with the same userId already exists, return an error message
-                    ModelState.AddModelError("UserId", "A form with the same userId already exists.");
+                    // A row with the same userId already exists, return an error message!!!!!!
+                    ModelState.AddModelError("UserId", "You have already submitted a form. Please edit your existing form instead.");
                     // redisplay form if something went wrong
                     ViewData["CreditHourId"] = new SelectList(_context.CreditHours, "CreditHourId", "CreditHourName");
                     // display dorms by user's gender
@@ -196,32 +198,6 @@ namespace HallHaven.Controllers
             return PartialView("_DormOptions", dormOptions);
         }
 
-        // get dorms by credit hours
-        //public async Task<IActionResult> GetDormsByCreditHourAsync(int selectedCreditHourId)
-        //{
-        //    var identityUser = await _userManager.GetUserAsync(User);
-        //    var customId = identityUser.CustomUserId;
-
-        //    var currentUser = _context.Users.Include(u => u.Gender).FirstOrDefault(u => u.UserId == customId);
-        //    if (currentUser != null)
-        //    {
-        //        // get gender id of current user
-        //        int customGender = currentUser.Gender.GenderId;
-
-        //        var dorms = _context.Dorms
-        //            .Where(d => d.GenderId == customGender && d.CreditHourId == selectedCreditHourId)
-        //            .OrderBy(d => d.DormId)
-        //            .ToList();
-
-        //        var dormsSelectList = new SelectList(dorms, "DormId", "DormName");
-
-
-        //        return Json(dormsSelectList);
-        //    }
-
-        //    return NotFound();
-        //}
-
         // GET: Form/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -229,7 +205,7 @@ namespace HallHaven.Controllers
             {
                 return NotFound();
             }
-
+            // find form by form id
             var form = await _context.Forms.FindAsync(id);
             if (form == null)
             {
@@ -237,50 +213,85 @@ namespace HallHaven.Controllers
             }
             ViewData["CreditHourId"] = new SelectList(_context.CreditHours, "CreditHourId", "CreditHourName", form.CreditHourId);
             ViewData["DormId"] = new SelectList(_context.Dorms, "DormId", "DormName", form.DormId);
-            ViewData["MajorId"] = new SelectList(_context.Majors, "MajorId", "MajorName", form.MajorId).OrderBy(x => x.Text); ;
+            ViewData["MajorId"] = new SelectList(_context.Majors, "MajorId", "MajorName", form.MajorId).OrderBy(x => x.Text);
             ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId", form.UserId);
             return View(form);
         }
 
-        // POST: Form/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //// POST: Form/Edit/5
+        //// To protect from overposting attacks, enable the specific properties you want to bind to.
+        //// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Edit(int id, [Bind("FormId,DormId,UserId,MajorId,CreditHourId,GenderId,IsCandiateStudent,IsStudentAthlete,NeatnessLevel,VisitorLevel,FitnessLevel,AcademicLevel,SocialLevel,SharingLevel,BackgroundNoiseLevel,BedTimeRanking,ModestyLevel,NumberOfBelongings")] Form form)
+        //{
+        //    if (id != form.FormId)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    //if (ModelState.IsValid)
+        //    //{
+        //        try
+        //        {
+        //            _context.Update(form);
+        //            await _context.SaveChangesAsync();
+        //        }
+        //        catch (DbUpdateConcurrencyException)
+        //        {
+        //            if (!FormExists(form.FormId))
+        //            {
+        //                return NotFound();
+        //            }
+        //            else
+        //            {
+        //                throw;
+        //            }
+        //        }
+        //        return RedirectToAction(nameof(Index));
+        //    //}
+
+        //    ViewData["CreditHourId"] = new SelectList(_context.CreditHours, "CreditHourId", "CreditHourName", form.CreditHourId);
+        //    ViewData["DormId"] = new SelectList(_context.Dorms, "DormId", "DormName", form.DormId);
+        //    ViewData["MajorId"] = new SelectList(_context.Majors, "MajorId", "MajorName", form.MajorId).OrderBy(x => x.Text);
+        //    ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId", form.UserId);
+        //    return View(form);
+        //}
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("FormId,DormId,UserId,MajorId,CreditHourId,GenderId,IsCandiateStudent,IsStudentAthlete,NeatnessLevel,VisitorLevel,FitnessLevel,AcademicLevel,SocialLevel,SharingLevel,BackgroundNoiseLevel,BedTimeRanking,ModestyLevel,NumberOfBelongings")] Form form)
         {
-            if (id != form.FormId)
+
+            var existingForm = _context.Forms.Find(form.FormId);
+            if (existingForm == null)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(form);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!FormExists(form.FormId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
+            // update existing form with new data
+            existingForm.DormId = form.DormId;
+            existingForm.MajorId = form.MajorId;
+            existingForm.CreditHourId = form.CreditHourId;
+            existingForm.AcademicLevel = form.AcademicLevel;
+            existingForm.SocialLevel = form.SocialLevel;
+            existingForm.NeatnessLevel = form.NeatnessLevel;
+            existingForm.FitnessLevel = form.FitnessLevel;
+            existingForm.VisitorLevel = form.VisitorLevel;
+            existingForm.BackgroundNoiseLevel = form.BackgroundNoiseLevel;
+            existingForm.BedTimeRanking = form.BedTimeRanking;
+            existingForm.IsCandiateStudent = form.IsCandiateStudent;
+            existingForm.IsStudentAthlete = form.IsStudentAthlete;
+            existingForm.NumberOfBelongings = form.NumberOfBelongings;
+            existingForm.ModestyLevel = form.ModestyLevel;
+            existingForm.SharingLevel = form.SharingLevel;
+            //existingForm.UserId = form.UserId;
 
-            ViewData["CreditHourId"] = new SelectList(_context.CreditHours, "CreditHourId", "CreditHourName", form.CreditHourId);
-            ViewData["DormId"] = new SelectList(_context.Dorms, "DormId", "DormName", form.DormId);
-            ViewData["MajorId"] = new SelectList(_context.Majors, "MajorId", "MajorName", form.MajorId).OrderBy(x => x.Text); ;
-            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId", form.UserId);
-            return View(form);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
+
 
         // GET: Form/Delete/5
         public async Task<IActionResult> Delete(int? id)
