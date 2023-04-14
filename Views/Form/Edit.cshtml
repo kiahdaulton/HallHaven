@@ -19,11 +19,6 @@
                 <select asp-for="DormId" class="form-control" asp-items="ViewBag.DormId"></select>
                 <span asp-validation-for="DormId" class="text-danger"></span>
             </div>
-@*            <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId"></select>
-                <span asp-validation-for="UserId" class="text-danger"></span>
-            </div>*@
             <div class="form-group">
                 <label asp-for="MajorId" class="control-label"></label>
                 <select asp-for="MajorId" class="form-control" asp-items="ViewBag.MajorId"></select>
@@ -206,16 +201,17 @@
                 </datalist>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" style="padding-top: 15px;">
+                <a asp-action="Index" class="btn btn-secondary">Back</a>
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
-<div>
+@*<div>
     <a asp-action="Index">Back to List</a>
-</div>
+</div>*@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

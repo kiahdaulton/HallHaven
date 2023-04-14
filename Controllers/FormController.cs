@@ -162,7 +162,8 @@ namespace HallHaven.Controllers
                 // No existing row with the same userId, proceed with saving the form submission
                 _context.Add(form);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Home");
+                //return RedirectToAction(nameof(Index));
 
                 // begin matching algorithm
                 // create new match model

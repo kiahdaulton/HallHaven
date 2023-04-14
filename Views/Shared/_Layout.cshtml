@@ -1,4 +1,11 @@
-﻿<!DOCTYPE html>
+﻿@using HallHaven.Areas.Identity.Data;
+@using Microsoft.AspNetCore.Identity;
+@using HallHaven.Models;
+@using System.Security.Claims;
+
+@inject UserManager<HallHavenUser> _userManager
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -35,6 +42,35 @@
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="User" asp-action="Index">User</a>
                         </li>
+                        @*  display nav item if user has filled out form 
+                            pass in user's form id in url
+                        *@
+@*                        @{
+                            @model IEnumerable<HallHaven.Models.Form>
+                            @if (Model != null)
+                            {
+                                @foreach (var item in Model)
+                                {
+                                    var identityUser = await _userManager.GetUserAsync(User);
+                                    var customId = identityUser.CustomUserId;
+
+                                    @if (item.UserId == customId)
+                                    {
+                                        <li class="nav-item">
+                                            <a class="nav-link text-light" asp-area="" asp-route-id="@item.FormId" asp-controller="Form" asp-action="Edit">Edit Form</a>
+                                        </li>
+                                    }
+                                }
+                            } else
+                            {
+                                // display no nav item
+                            }
+
+                        }*@
+@*                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="Form" asp-action="Edit">Edit Form</a>
+                        </li>*@
+                      
                     </ul>
                     <partial name="_LoginPartial"/>
                 </div>

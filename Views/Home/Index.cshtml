@@ -28,6 +28,7 @@
                     <h1 class="display-4">Welcome to Hall Haven</h1>
                 }
             </div>
+            <link rel="preload" href="/images/HallHavenLogov2Transparent.png" as="image">
             <div class="logo-overlay">
                 <img src="/images/HallHavenLogov2Transparent.png" alt="Hall Haven Logo" />
             </div>
@@ -38,7 +39,7 @@
 @* Display filtering dropdowns if user is logged in *@
 @if (_signInManager.IsSignedIn(User))
 {
-    <div class="album py-5" id="filterWrap">
+    <div class="album py-5 d-none" id="filterWrap">
         @*<div class="container">*@
             @*<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">*@
                 <form method="post" asp-controller="Home" asp-action="Index" id="filterForm">
@@ -197,6 +198,15 @@ else
             $('select').on('change', function () {
                 $('input[type=hidden][name=' + $(this).attr('id') + ']').val($(this).val());
             });
+        });
+
+        // display logo once page fully loads
+        $(document).ready(function () {
+            $('.logo-overlay').fadeIn('slow');
+            $('.text-overlay').fadeIn('slow');
+            $('.album').fadeIn('slow');
+            const myForm = document.getElementById('filterWrap');
+            myForm.classList.remove('d-none');         
         });
     </script>
 }
