@@ -218,46 +218,6 @@ namespace HallHaven.Controllers
             return View(form);
         }
 
-        //// POST: Form/Edit/5
-        //// To protect from overposting attacks, enable the specific properties you want to bind to.
-        //// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Edit(int id, [Bind("FormId,DormId,UserId,MajorId,CreditHourId,GenderId,IsCandiateStudent,IsStudentAthlete,NeatnessLevel,VisitorLevel,FitnessLevel,AcademicLevel,SocialLevel,SharingLevel,BackgroundNoiseLevel,BedTimeRanking,ModestyLevel,NumberOfBelongings")] Form form)
-        //{
-        //    if (id != form.FormId)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    //if (ModelState.IsValid)
-        //    //{
-        //        try
-        //        {
-        //            _context.Update(form);
-        //            await _context.SaveChangesAsync();
-        //        }
-        //        catch (DbUpdateConcurrencyException)
-        //        {
-        //            if (!FormExists(form.FormId))
-        //            {
-        //                return NotFound();
-        //            }
-        //            else
-        //            {
-        //                throw;
-        //            }
-        //        }
-        //        return RedirectToAction(nameof(Index));
-        //    //}
-
-        //    ViewData["CreditHourId"] = new SelectList(_context.CreditHours, "CreditHourId", "CreditHourName", form.CreditHourId);
-        //    ViewData["DormId"] = new SelectList(_context.Dorms, "DormId", "DormName", form.DormId);
-        //    ViewData["MajorId"] = new SelectList(_context.Majors, "MajorId", "MajorName", form.MajorId).OrderBy(x => x.Text);
-        //    ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId", form.UserId);
-        //    return View(form);
-        //}
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("FormId,DormId,UserId,MajorId,CreditHourId,GenderId,IsCandiateStudent,IsStudentAthlete,NeatnessLevel,VisitorLevel,FitnessLevel,AcademicLevel,SocialLevel,SharingLevel,BackgroundNoiseLevel,BedTimeRanking,ModestyLevel,NumberOfBelongings")] Form form)
@@ -291,7 +251,6 @@ namespace HallHaven.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-
 
         // GET: Form/Delete/5
         public async Task<IActionResult> Delete(int? id)

@@ -15,6 +15,9 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using HallHaven.Data;
+using Microsoft.EntityFrameworkCore;
+using System.Text.Encodings.Web;
 
 namespace HallHaven.Areas.Identity.Pages.Account
 {
@@ -22,11 +25,15 @@ namespace HallHaven.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<HallHavenUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly HallHavenContext _context;
+        private readonly UserManager<HallHavenUser> _userManager;
 
-        public LoginModel(SignInManager<HallHavenUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<HallHavenUser> signInManager, ILogger<LoginModel> logger, HallHavenContext context, UserManager<HallHavenUser> userManager)
         {
             _signInManager = signInManager;
             _logger = logger;
+            _context = context;
+            _userManager = userManager;
         }
 
         /// <summary>
@@ -102,6 +109,7 @@ namespace HallHaven.Areas.Identity.Pages.Account
             ReturnUrl = returnUrl;
         }
 
+        [Authorize]
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
@@ -115,7 +123,18 @@ namespace HallHaven.Areas.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User logged in.");
+                    // get current user
+                    var user = await _signInManager.UserManager.FindByEmailAsync(Input.Email);
+
+                    if (user != null)
+                    {
+                        var form = await _context.Forms.FirstOrDefaultAsync(f => f.UserId == user.CustomUserId);
+                        if (form == null)
+                        {
+                            // if form has not been filled out, redirect to create form page
+                            return RedirectToAction("Create", "Form");
+                        }
+                    }
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
