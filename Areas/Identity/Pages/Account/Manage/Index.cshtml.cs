@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using HallHaven.Areas.Identity.Data;
+using HallHaven.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -17,13 +18,16 @@ namespace HallHaven.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<HallHavenUser> _userManager;
         private readonly SignInManager<HallHavenUser> _signInManager;
+        private readonly HallHavenContext _context;
 
         public IndexModel(
             UserManager<HallHavenUser> userManager,
-            SignInManager<HallHavenUser> signInManager)
+            SignInManager<HallHavenUser> signInManager,
+            HallHavenContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _context = context;
         }
 
         /// <summary>
@@ -105,6 +109,15 @@ namespace HallHaven.Areas.Identity.Pages.Account.Manage
                 return Page();
             }
 
+            // need to update users table as well as the identity aspnetusers table so that each new
+            // user bio and image displays properly
+            // or just pull those fields from identity to begin with
+
+            // get logged in user's id
+            var customId = user.CustomUserId;
+
+            // get hallhavencontext user by id
+            var currentUser = _context.Users.Where(c => c.UserId == customId).ToList();
 
             // add user profile picture
             if (Request.Form.Files.Count > 0)
@@ -114,17 +127,25 @@ namespace HallHaven.Areas.Identity.Pages.Account.Manage
                 {
                     await file.CopyToAsync(dataStream);
                     user.ProfilePicture = dataStream.ToArray();
+                    currentUser.First().ProfilePicture = dataStream.ToArray();
                 }
-                await _userManager.UpdateAsync(user);
             }
 
             // save new profile bio
             if (Input.ProfileBio != user.ProfileBio)
             {
                 user.ProfileBio = Input.ProfileBio;
+                currentUser.First().ProfileBio = user.ProfileBio;
             }
 
-            // this method doesn't save new bio
+            // update identity user
+            await _userManager.UpdateAsync(user);
+
+            // save hallhaven context user
+            _context.Add(currentUser);
+            await _context.SaveChangesAsync();
+
+            // this method refreshes the user on screen
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";
             return RedirectToPage();
