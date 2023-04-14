@@ -4,9 +4,11 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Principal;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using HallHaven.Areas.Identity.Data;
+using HallHaven.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -36,6 +38,12 @@ namespace HallHaven.Areas.Identity.Pages.Account.Manage
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
+        public bool HideProfile { get; set; }
+
+        /// <summary>
+        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
+        ///     directly from your code. This API may change or be removed in future releases.
+        /// </summary>
         [TempData]
         public string StatusMessage { get; set; }
 
@@ -56,7 +64,19 @@ namespace HallHaven.Areas.Identity.Pages.Account.Manage
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>    
+            public bool HideProfile { get; set; }
         }
-      
+
+
+        // if user is logged in
+        //   var identityUser = await _userManager.GetUserAsync(User);
+        //   var customId = identityUser.CustomUserId;
+        // get user where user id equals identity custom user id
+
+        // @if(user.UserId == customId)
+        //  {
+        //      // hide the logged in user to ALL users
+        //  }
+
     }
 }

@@ -11,7 +11,6 @@
 @{
     ViewData["Title"] = "Home Page";
     var loggedInUser = await _userManager.GetUserAsync(User);
-    //var currentUserId = loggedInUser.CustomUserId;
 }
 <div class="d-flex justify-content-center">
     <div class="row">
@@ -36,6 +35,7 @@
     </div>
 </div>
 
+@* Display filtering dropdowns if user is logged in *@
 @if (_signInManager.IsSignedIn(User))
 {
     <div class="album py-5" id="filterWrap">
@@ -64,8 +64,6 @@ else
 <div class="album py-5">
     <div class="container">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-
-
             @if (_signInManager.IsSignedIn(User))
             {
                 @if (Model.Users.Count != null)
@@ -80,11 +78,11 @@ else
                         @* if user id equals signed in user id *@
                         @if (user.UserId == customId)
                         {
-                            @* hide the logged in user*@
+                            // hide the logged in user
                         }
                         else
                         {
-                            @* display everyone else *@
+                            // display everyone else
                             // modal popup from user button
                             <div id="myModal-@user.UserId" class="modal fade">
                                 <div class="modal-dialog">
@@ -150,11 +148,9 @@ else
                                                     <div>Year: @classification</div>
                                                 }
                                             }
-
+                                            
                                             <div>Percentage</div>
                                         </div>
-
-                                        @*<partial name="_FormPartial" />*@
 
                                         <div class="d-flex justify-content-center align-items-center" style="margin-top: 15px;">
                                             <div class="btn-group">

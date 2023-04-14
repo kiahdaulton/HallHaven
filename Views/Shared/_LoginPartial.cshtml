@@ -6,8 +6,6 @@
 @inject UserManager<HallHavenUser> UserManager
 @inject HallHaven.Data.HallHavenContext _context
 
-@* Hello @UserManager.GetUserName(User)! *@
-
 @{
     var user = await UserManager.GetUserAsync(User);
 }
@@ -16,11 +14,6 @@
 <ul class="navbar-nav">
     @if (SignInManager.IsSignedIn(User))
     {
-
-@*        <li class="nav-item">
-            <a id="manage" class="nav-link text-light" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@user.FirstName's Profile</a>
-        </li>*@
-
         <li class="nav-item">
             <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
                 <button id="logout" type="submit" class="nav-link btn btn-link text-light">Logout</button>

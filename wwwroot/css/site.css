@@ -133,6 +133,11 @@ input[type="range"] {
     flex-direction: column;
 }
 
+.register-login-image {
+    width: 400px;
+    height: auto;
+}
+
 /* #1e5e96 */
 .card-body {
     background-color: #03335F;
@@ -211,6 +216,10 @@ input[type="range"] {
         }
         .text-overlay h1 {
             font-size: 25px;
+        }
+
+        .register-login-image {
+            width: 200px;
         }
     }
 

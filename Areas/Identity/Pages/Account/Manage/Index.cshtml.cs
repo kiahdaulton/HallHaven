@@ -62,6 +62,7 @@ namespace HallHaven.Areas.Identity.Pages.Account.Manage
 
             [Display(Name = "Profile Picture")]
             public byte[] ProfilePicture { get; set; }
+
         }
 
         private async Task LoadAsync(HallHavenUser user)
