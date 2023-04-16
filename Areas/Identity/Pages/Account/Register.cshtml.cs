@@ -99,21 +99,11 @@ namespace HallHaven.Areas.Identity.Pages.Account
             [BindProperty]
             public string Gender { get; set; }
 
-            //[Required(ErrorMessage = "Please select your profile picture")]
-            ////[DataType(DataType.Upload)]
-            //[Display(Name = "Profile Picture")]
-            //public byte[] ProfilePicture { get; set; }
-
-
             [Required(ErrorMessage = "Please select a profile picture.")]
             [Display(Name = "Profile Picture")]
             public IFormFile ProfilePictureFile { get; set; }
 
             public byte[] ProfilePicture { get; set; }
-
-
-            //[ValidateNever]
-            //public string? ImageUrl { get; set; }
 
             [Required(ErrorMessage = "Please enter your profile biography")]
             [Display(Name = "Profile Biography")]
