@@ -141,6 +141,14 @@ namespace HallHaven.Controllers
             return View();
         }
 
+        [HttpPost]
+        public IActionResult HideProfile(string hideProfile)
+        {
+            // test
+            var test = hideProfile;
+            return View(hideProfile);
+        }
+
         public IActionResult UsersList()
         {
             var users = _userManager.Users.ToList();

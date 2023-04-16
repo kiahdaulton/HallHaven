@@ -8,54 +8,57 @@
 <h3>@ViewData["Title"]</h3>
 
 @* change to radio button with values of true and false *@
-@*<label class="control-label">Would you like to hide your profile from other students?</label>
+<label class="control-label">Would you like to hide your profile from other students?</label>
 <fieldset class="form-group form-floating" style="margin-bottom: 15px;">
     <div class="row">
         <div class="col-sm-10">
             <div class="mt-2">
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" id="HideProfileTrue" asp-for="HideProfileTrue" type="radio" value="True" />
+                    <input class="form-check-input" onchange="hideProfile(this)" id="HideProfileTrue" asp-for="Input.HideProfile" type="radio" value="True" />
                     <label class="form-check-label" for="HideProfileTrue">Yes</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" id="HideProfileFalse" asp-for="HideProfileFalse" type="radio" value="False" />
+                    <input class="form-check-input" id="HideProfileFalse" asp-for="Input.HideProfile" type="radio" value="False" />
                     <label class="form-check-label" for="HideProfileFalse">No</label>
                 </div>
             </div>
-            <span asp-validation-for="HideProfile" class="text-danger"></span>
+            <span asp-validation-for="Input.HideProfile" class="text-danger"></span>
         </div>
     </div>
-</fieldset>*@
+</fieldset>
 
-<div class="row">
+@*<div class="row">
     <div class="col-md-6">
         <label>Please click to hide your profile once you find a roommate</label>
         <button id="hide-profile-button" type="submit" onchange="hideProfile(this)" class="w-100 btn btn-lg btn-primary">Hide my profile</button>
     </div>
-</div>
+</div>*@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
 
-        function hideProfile(selectElement) {
-                var selectedValue = selectElement.value;
-                // if credit hours from credit hour model of user equals 3 or 4 (junior or senior)
-                if (selectedValue == true) {
-                    // Make an AJAX request to get the dorm options
-                    $.ajax({
-                        url: '@Url.Action("HideProfile", "HomeController")',
-                    type: 'GET',
-                    data: { hideProfileTrue: selectedValue },
-                    success: function (data) {
-                        // Update the radio element with the returned options
-                        $('#hide-profile-button').html(data);
+        function hideProfile(selectedRadio) {
+            var selectedValue = selectedRadio.value;
+            if (selectedValue == "True") {
+                // Make an AJAX request to hide the current user's profile
+                $.ajax({
+                    url: '@Url.Action("HideProfile", "Home")',
+                    type: 'POST',
+                    data: { hideProfile: true },
+                    success: function () {
+                        // Show a success message
+                        $('#HideProfileTrue').html("Your profile has been hidden from other students.");
+                    },
+                    error: function () {
+                        // Display error message
+                        $('#HideProfileTrue').html("There was an error hiding your profile. Please try again.");
                     }
                 });
             } else {
-                // error message
+                // Display error message
+                $('#HideProfileFalse').html("There was an error hiding your profile. Please try again.");
             }
         }
-
     </script>
 }

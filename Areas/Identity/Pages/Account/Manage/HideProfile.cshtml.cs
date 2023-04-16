@@ -8,6 +8,7 @@ using System.Security.Principal;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using HallHaven.Areas.Identity.Data;
+using HallHaven.Data;
 using HallHaven.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -19,13 +20,16 @@ namespace HallHaven.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<HallHavenUser> _userManager;
         private readonly SignInManager<HallHavenUser> _signInManager;
+        private readonly HallHavenContext _context;
 
         public HideProfileModel(
             UserManager<HallHavenUser> userManager,
-            SignInManager<HallHavenUser> signInManager)
+            SignInManager<HallHavenUser> signInManager,
+            HallHavenContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _context = context;
         }
 
         /// <summary>
@@ -33,12 +37,6 @@ namespace HallHaven.Areas.Identity.Pages.Account.Manage
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
         public string Username { get; set; }
-
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
-        public bool HideProfile { get; set; }
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -66,7 +64,6 @@ namespace HallHaven.Areas.Identity.Pages.Account.Manage
             /// </summary>    
             public bool HideProfile { get; set; }
         }
-
 
         // if user is logged in
         //   var identityUser = await _userManager.GetUserAsync(User);

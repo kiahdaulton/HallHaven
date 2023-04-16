@@ -164,85 +164,84 @@ namespace HallHaven.Controllers
                 _context.Add(form);
                 await _context.SaveChangesAsync();
 
-                // begin matching algorithm
-                // create new instance of match
-                var match = new Match();
-                // set user1 in form to logged in user id
-                match.User1Id = form.UserId;
-                // set user 1 as logged in user
-                match.User1 = _context.Users.Include(u => u.Gender).FirstOrDefault(u => u.UserId == customId);
-                //match.User2 = _context.Users.Include(u => u.Gender).FirstOrDefault();
+                //// begin matching algorithm
+                //// create new instance of match
+                //var match = new Match();
+                //// set user1 in form to logged in user id
+                //match.User1Id = form.UserId;
+                //// set user 1 as logged in user
+                //match.User1 = _context.Users.Include(u => u.Gender).FirstOrDefault(u => u.UserId == customId);
+                ////match.User2 = _context.Users.Include(u => u.Gender).FirstOrDefault();
 
-                if (match.User1 != null)
-                {
-                    var gender = match.User1.Gender.Gender1;
+                //if (match.User1 != null)
+                //{
+                //    var gender = match.User1.Gender.Gender1;
 
-                    var usersByGender = _context.Users
-                        .Include(f => f.Forms)
-                        .Include(f => f.MatchUser1s)
-                        .Include(f => f.MatchUser2s)
-                        .Include(u => u.Gender)
-                        .Where(g => g.Gender.Gender1 == gender);
+                //    var usersByGender = _context.Users
+                //        .Include(f => f.Forms)
+                //        .Include(f => f.MatchUser1s)
+                //        .Include(f => f.MatchUser2s)
+                //        .Include(u => u.Gender)
+                //        .Where(g => g.Gender.Gender1 == gender);
 
-                    foreach(User userByGender in usersByGender)
-                    {
-                        // if user isn't current user
-                        if (userByGender.UserId != customId)
-                        {
-                            // iterate through user by gender list
-                            //userByGender.MatchUser2s.Add(match);
+                //    foreach(User userByGender in usersByGender)
+                //    {
+                //        // if user isn't current user
+                //        if (userByGender.UserId != customId)
+                //        {
+                //            // iterate through user by gender list
+                //            //userByGender.MatchUser2s.Add(match);
 
-                            // set user 2 id as user id in list
-                            match.User2Id = userByGender.UserId;
-                            // set user 2 to user in list
-                            match.User2 = userByGender;
+                //            // set user 2 id as user id in list
+                //            match.User2Id = userByGender.UserId;
+                //            // set user 2 to user in list
+                //            match.User2 = userByGender;
 
-                            // set user's user id for each potential match
-                            match.User1Id = form.UserId;
+                //            // set user's user id for each potential match
+                //            match.User1Id = form.UserId;
 
-                            // compare form fields
-                            if (form != null)
-                            {
-                                int equalFields = 0;
-                                int totalFields = Request.Form.Keys.Count;
+                //            // compare form fields
+                //            if (form != null)
+                //            {
+                //                int equalFields = 0;
+                //                int totalFields = Request.Form.Keys.Count;
 
-                                // for each field in form
-                                // add special case for user id which is not shown to the user
-                                // add special cases for isCandiateStudent and IsStudentAthlete
-                                foreach (var fieldName in Request.Form.Keys)
-                                {
-                                    // find current field value from user form
-                                    var currentValue = form.GetType().GetProperty(fieldName)?.GetValue(form);
-                                    // get value of user2's form of the same field
-                                    var matchValue = match.User2.Forms.First().GetType().GetProperty(fieldName)?.GetValue(match.User2.Forms.First());
+                //                // for each field in form
+                //                // add special case for user id which is not shown to the user
+                //                // add special cases for isCandiateStudent and IsStudentAthlete
+                //                foreach (var fieldName in Request.Form.Keys)
+                //                {
+                //                    // find current field value from user form
+                //                    var currentValue = form.GetType().GetProperty(fieldName)?.GetValue(form);
+                //                    // get value of user2's form of the same field
+                //                    var matchValue = match.User2.Forms.First().GetType().GetProperty(fieldName)?.GetValue(match.User2.Forms.First());
 
-                                    // if the user's form field isn't empty and user2's form field isn't empty
-                                    // and the user's form field is the SAME as user2's
-                                    if (currentValue != null && matchValue != null && currentValue.Equals(matchValue))
-                                    {
-                                        // add to the equal fields variable
-                                        equalFields++;
-                                    }
-                                }
+                //                    // if the user's form field isn't empty and user2's form field isn't empty
+                //                    // and the user's form field is the SAME as user2's
+                //                    if (currentValue != null && matchValue != null && currentValue.Equals(matchValue))
+                //                    {
+                //                        // add to the equal fields variable
+                //                        equalFields++;
+                //                    }
+                //                }
 
-                                // similarity percentage is equal to the number of equal fields among users divided by the number of total fields in the form
-                                // SimilarityPercentage = (number of equal fields / total number of fields) *100
-                                float similarityPercentage = (float)equalFields / totalFields * 100;
-                                match.SimilarityPercentage = similarityPercentage;
+                //                // similarity percentage is equal to the number of equal fields among users divided by the number of total fields in the form
+                //                // SimilarityPercentage = (number of equal fields / total number of fields) *100
+                //                float similarityPercentage = (float)equalFields / totalFields * 100;
+                //                match.SimilarityPercentage = similarityPercentage;
 
-                                // save match for each user by gender
-                                _context.Add(match);
-                                await _context.SaveChangesAsync();
-                            }
-                        }
-                    }
+                //                // save match for each user by gender
+                //                _context.Add(match);
+                //                await _context.SaveChangesAsync();
+                //            }
+                //        }
+                //    }
 
-                }
+                //}
 
                 return RedirectToAction("Index", "Home");
                 //return RedirectToAction(nameof(Index));
            }
-
 
             // redisplay form if something went wrong
             ViewData["CreditHourId"] = new SelectList(_context.CreditHours, "CreditHourId", "CreditHourName");
