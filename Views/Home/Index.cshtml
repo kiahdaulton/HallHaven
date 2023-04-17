@@ -144,13 +144,26 @@ else
                                                     var userMajor = _context.Majors.Where(g => g.MajorId == @major).ToList();
                                                     var majorName = userMajor.First().MajorName;
 
+                                                    // find similarity percentage
+                                                    //var simPercent = _context.Matches.First().SimilarityPercentage;
+                                                    // where iterated user is equal to iterated user                                         
+
                                                     <div>Major: @majorName</div>
                                                     <div>Dorm: @dormName</div>
                                                     <div>Year: @classification</div>
+
+                                                    // get currentMatch where the logged in user is User1Id
+                                                    // User2Id is iterated user
+                                                    var currentMatch = _context.Matches.Where(m => m.User2Id == @user.UserId).ToList();
+                                                    if (currentMatch.Count() != 0)
+                                                    {
+                                                        // get percentage where User1Id is the logged in user
+                                                        var simPercent = currentMatch.Where(m => m.User1Id == customId).First().SimilarityPercentage;
+                                                        <div>Percentage: @simPercent</div>
+                                                    }                                
                                                 }
                                             }
                                             
-                                            <div>Percentage</div>
                                         </div>
 
                                         <div class="d-flex justify-content-center align-items-center" style="margin-top: 15px;">
