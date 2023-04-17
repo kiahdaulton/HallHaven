@@ -223,8 +223,24 @@ namespace HallHaven.Controllers
                                     // add special cases for isCandiateStudent and IsStudentAthlete
                                     foreach (var fieldName in Request.Form.Keys)
                                     {
-                                        // find current field value from user form
-                                        var currentValue = form.GetType().GetProperty(fieldName)?.GetValue(form);
+                                        if (fieldName == "UserId")
+                                        {
+                                            //skip  
+                                        }
+                                        if (fieldName == "IsCandiateStudent")
+                                        {
+                                            // only match with incoming students
+                                            // if selected is true
+                                            // then only match with other candiate students
+                                        }
+                                        if (fieldName == "IsStudentAthlete")
+                                        {
+                                        // only match incoming student athletes with incoming student athletes
+                                        // IsCandiateStudent IsStudentAthlete must both be true
+                                        }
+
+                                    // find current field value from user form
+                                    var currentValue = form.GetType().GetProperty(fieldName)?.GetValue(form);
                                         // get value of user2's form of the same field
                                         var matchValue = match.User2.Forms.First().GetType().GetProperty(fieldName)?.GetValue(match.User2.Forms.First());
 

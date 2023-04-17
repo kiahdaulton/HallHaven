@@ -146,15 +146,24 @@ else
                                                     <div>Dorm: @dormName</div>
                                                     <div>Year: @classification</div>
 
-                                                    // get currentMatch where the logged in user is User1Id
-                                                    // User2Id is iterated user
-                                                    var currentMatch = _context.Matches.Where(m => m.User2Id == @user.UserId).ToList();
-                                                    if (currentMatch.Count() != 0)
+                                                    var currentMatch = _context.Matches.Where(m => m.User1Id == customId);
+                                                    if (currentMatch.Any())
                                                     {
-                                                        // get percentage where User1Id is the logged in user
-                                                        var simPercent = currentMatch.Where(m => m.User1Id == customId).First().SimilarityPercentage;
-                                                        <div>Percentage: @simPercent</div>
-                                                    }                                
+                                                        // get percentage user2Id is the current iterated user
+                                                        var match = currentMatch.FirstOrDefault(m => m.User2Id == @user.UserId);
+                                                        if (match != null)
+                                                        {
+                                                            var simPercent = match.SimilarityPercentage;
+                                                            <div>Percentage: @simPercent%</div>
+                                                            
+                                                        }
+                                                        else
+                                                        {
+                                                            // Handle the case where no matching element is found
+                                                            // hide user
+
+                                                        }
+                                                    }
                                                 }
                                             }
                                             

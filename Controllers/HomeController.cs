@@ -44,7 +44,7 @@ namespace HallHaven.Controllers
                     .Include(u => u.Gender)
                     .Where(g => g.Gender.Gender1 == gender)
                     // sort by highest overall sim percentage
-                    .OrderByDescending(f => f.MatchUser2s.Max(mu2 => mu2.SimilarityPercentage));
+                    .OrderByDescending(f => f.MatchUser1s.Max(mu1 => mu1.SimilarityPercentage));
 
                 // populate formViewModel
                 var dorms = await _context.Dorms.Where(g => g.Gender.Gender1 == gender).ToListAsync();
@@ -107,7 +107,7 @@ namespace HallHaven.Controllers
                     .Include(f => f.MatchUser2s)
                     .Include(u => u.Gender).Where(g => g.Gender.Gender1 == gender)
                     // sort by highest overall sim percentage
-                    .OrderByDescending(f => f.MatchUser2s.Max(mu2 => mu2.SimilarityPercentage));
+                    .OrderByDescending(f => f.MatchUser1s.Max(mu1 => mu1.SimilarityPercentage));
 
                 var userModelData = await users.ToListAsync(); // Retrieve the data for the user model
 
