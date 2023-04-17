@@ -167,16 +167,19 @@ namespace HallHaven.Controllers
                 // begin matching algorithm
                 // create new instance of match
                 var match = new Match();
+
                 // set user1 in form to logged in user id
                 match.User1Id = form.UserId;
                 // set user 1 as logged in user
                 match.User1 = _context.Users.Include(u => u.Gender).FirstOrDefault(u => u.UserId == customId);
 
+                // if logged in user exists
                 if (match.User1 != null)
                 {
+                    // get logged in user's gender
                     var gender = match.User1.Gender.Gender1;
 
-                    // only get users that have submitted a form
+                    // get all users by gender
                     var usersByGender = _context.Users
                         .Include(f => f.Forms)
                         .Include(f => f.MatchUser1s)
@@ -185,6 +188,7 @@ namespace HallHaven.Controllers
                         .Where(g => g.Gender.Gender1 == gender).ToList();
 
                     // add a constraint where only one distinct userId1 and userId2 can be entered
+                    // for each user in the list
                     foreach (User userByGender in usersByGender)
                     {
                         // ONLY DO MATCHING SEQUENCE IF USERS HAVE FILLED OUT A FORM
@@ -197,6 +201,9 @@ namespace HallHaven.Controllers
                             // user has an existing form
                             if (userByGenderForm.Count != 0)
                             {
+                                // set matchId primary key to 0 to reset existing form
+                                match.MatchId = 0;
+
                                 // iterate through user by gender list
 
                                 // set user 2 id as user id in list
@@ -204,40 +211,39 @@ namespace HallHaven.Controllers
                                 // set user 2 to user in list
                                 match.User2 = userByGender;
 
-                                // set user's user id for each potential match
-                                match.User1Id = form.UserId;
+                                // if the user has not already been matched (given a compatibility percentage)
+                                // write update method if the value is equal to true and the user wants to update their compatibility form
 
                                 // compare form fields
-                                int equalFields = 0;
-                                int totalFields = Request.Form.Keys.Count;
+                                    int equalFields = 0;
+                                    int totalFields = Request.Form.Keys.Count;
 
-                                // for each field in form
-                                // add special case for user id which is not shown to the user
-                                // add special cases for isCandiateStudent and IsStudentAthlete
-                                foreach (var fieldName in Request.Form.Keys)
-                                {
-                                    // find current field value from user form
-                                    var currentValue = form.GetType().GetProperty(fieldName)?.GetValue(form);
-                                    // get value of user2's form of the same field
-                                    var matchValue = match.User2.Forms.First().GetType().GetProperty(fieldName)?.GetValue(match.User2.Forms.First());
-
-                                    // if the user's form field isn't empty and user2's form field isn't empty
-                                    // and the user's form field is the SAME as user2's
-                                    if (currentValue != null && matchValue != null && currentValue.Equals(matchValue))
+                                    // for each field in form
+                                    // add special case for user id which is not shown to the user
+                                    // add special cases for isCandiateStudent and IsStudentAthlete
+                                    foreach (var fieldName in Request.Form.Keys)
                                     {
-                                        // add to the equal fields variable
-                                        equalFields++;
+                                        // find current field value from user form
+                                        var currentValue = form.GetType().GetProperty(fieldName)?.GetValue(form);
+                                        // get value of user2's form of the same field
+                                        var matchValue = match.User2.Forms.First().GetType().GetProperty(fieldName)?.GetValue(match.User2.Forms.First());
+
+                                        // if the user's form field isn't empty and user2's form field isn't empty
+                                        // and the user's form field is the SAME as user2's
+                                        if (currentValue != null && matchValue != null && currentValue.Equals(matchValue))
+                                        {
+                                            // add to the equal fields variable
+                                            equalFields++;
+                                        }                                  
                                     }
-                                }
+                                    // similarity percentage is equal to the number of equal fields among users divided by the number of total fields in the form
+                                    // SimilarityPercentage = (number of equal fields / total number of fields) *100
+                                    float similarityPercentage = (float)equalFields / totalFields * 100;
+                                    match.SimilarityPercentage = similarityPercentage;
 
-                                // similarity percentage is equal to the number of equal fields among users divided by the number of total fields in the form
-                                // SimilarityPercentage = (number of equal fields / total number of fields) *100
-                                float similarityPercentage = (float)equalFields / totalFields * 100;
-                                match.SimilarityPercentage = similarityPercentage;
-
-                                // save match for each user by gender
-                                _context.Add(match);
-                                await _context.SaveChangesAsync();
+                                    // save match for each user by gender
+                                    _context.Add(match);
+                                    await _context.SaveChangesAsync();                   
                             }
                         }
                     }
