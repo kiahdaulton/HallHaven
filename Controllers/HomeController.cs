@@ -42,7 +42,9 @@ namespace HallHaven.Controllers
                     .Include(f => f.MatchUser1s)
                     .Include(f => f.MatchUser2s)
                     .Include(u => u.Gender)
-                    .Where(g => g.Gender.Gender1 == gender);
+                    .Where(g => g.Gender.Gender1 == gender)
+                    // sort by highest overall sim percentage
+                    .OrderByDescending(f => f.MatchUser2s.Max(mu2 => mu2.SimilarityPercentage));
 
                 // populate formViewModel
                 var dorms = await _context.Dorms.Where(g => g.Gender.Gender1 == gender).ToListAsync();
@@ -57,17 +59,17 @@ namespace HallHaven.Controllers
                 // apply filters
                 if (formViewModel.SelectedDormId != 0)
                 {
-                    usersByGender = usersByGender.Where(u => u.Forms.Any(f => f.DormId == formViewModel.SelectedDormId));
+                    usersByGender = (IOrderedQueryable<User>)usersByGender.Where(u => u.Forms.Any(f => f.DormId == formViewModel.SelectedDormId));
                 }
 
                 if (formViewModel.SelectedCreditHourId != 0)
                 {
-                    usersByGender = usersByGender.Where(u => u.Forms.Any(f => f.CreditHourId == formViewModel.SelectedCreditHourId));
+                    usersByGender = (IOrderedQueryable<User>)usersByGender.Where(u => u.Forms.Any(f => f.CreditHourId == formViewModel.SelectedCreditHourId));
                 }
 
                 if (formViewModel.SelectedMajorId != 0)
                 {
-                    usersByGender = usersByGender.Where(u => u.Forms.Any(f => f.MajorId == formViewModel.SelectedMajorId));
+                    usersByGender = (IOrderedQueryable<User>)usersByGender.Where(u => u.Forms.Any(f => f.MajorId == formViewModel.SelectedMajorId));
                 }
 
 
@@ -103,7 +105,9 @@ namespace HallHaven.Controllers
                     .Include(f => f.Forms)
                     .Include(f => f.MatchUser1s)
                     .Include(f => f.MatchUser2s)
-                    .Include(u => u.Gender).Where(g => g.Gender.Gender1 == gender);
+                    .Include(u => u.Gender).Where(g => g.Gender.Gender1 == gender)
+                    // sort by highest overall sim percentage
+                    .OrderByDescending(f => f.MatchUser2s.Max(mu2 => mu2.SimilarityPercentage));
 
                 var userModelData = await users.ToListAsync(); // Retrieve the data for the user model
 

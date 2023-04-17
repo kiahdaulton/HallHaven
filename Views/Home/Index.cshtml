@@ -119,8 +119,6 @@ else
                                     <div class="card-body">
                                         <div class="card-text">
                                             <h4 class="d-flex justify-content-center" style="text-align: center">@user.DisplayName</h4>
-                                            <div>@user.UserId</div>
-                                            <div>@user.Gender.Gender1</div>
                                             <div>@user.Email</div>
                                             @{
                                                 // get each user's form (if not null) and grab major and dorm to be displayed
@@ -142,11 +140,7 @@ else
 
                                                     // find user major name
                                                     var userMajor = _context.Majors.Where(g => g.MajorId == @major).ToList();
-                                                    var majorName = userMajor.First().MajorName;
-
-                                                    // find similarity percentage
-                                                    //var simPercent = _context.Matches.First().SimilarityPercentage;
-                                                    // where iterated user is equal to iterated user                                         
+                                                    var majorName = userMajor.First().MajorName;                                    
 
                                                     <div>Major: @majorName</div>
                                                     <div>Dorm: @dormName</div>
