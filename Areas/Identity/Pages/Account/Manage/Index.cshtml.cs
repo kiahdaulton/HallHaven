@@ -121,7 +121,7 @@ namespace HallHaven.Areas.Identity.Pages.Account.Manage
             var customId = user.CustomUserId;
 
             // get hallhavencontext user by id
-            var currentUser = _context.Users.Where(c => c.UserId == customId);
+            var currentUser = _context.Users.Where(c => c.UserId == customId).ToList();
 
             // add user profile picture
             if (Request.Form.Files.Count > 0)

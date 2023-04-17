@@ -35,7 +35,7 @@ namespace HallHaven.Controllers
         //    return View(await hallHavenContext.ToListAsync());
         //}
 
-       // GET: Forms
+        // GET: Forms
         [Authorize]
         public async Task<IActionResult> Index()
         {
@@ -109,7 +109,7 @@ namespace HallHaven.Controllers
                 int customGender = currentUser.Gender.GenderId;
                 // get credit hours
                 var creditHours = _context.CreditHours.ToList();
-            
+
                 // if credithours from credithour model of user equals 3 or 4 (junior or senior)
                 // then display dorms from dorm model where credit hour equals 3 (junior AND senior dorms)
 
@@ -171,12 +171,12 @@ namespace HallHaven.Controllers
                 match.User1Id = form.UserId;
                 // set user 1 as logged in user
                 match.User1 = _context.Users.Include(u => u.Gender).FirstOrDefault(u => u.UserId == customId);
-                //match.User2 = _context.Users.Include(u => u.Gender).FirstOrDefault();
 
                 if (match.User1 != null)
                 {
                     var gender = match.User1.Gender.Gender1;
 
+                    // only get users that have submitted a form
                     var usersByGender = _context.Users
                         .Include(f => f.Forms)
                         .Include(f => f.MatchUser1s)
@@ -184,26 +184,30 @@ namespace HallHaven.Controllers
                         .Include(u => u.Gender)
                         .Where(g => g.Gender.Gender1 == gender).ToList();
 
+                    // add a constraint where only one distinct userId1 and userId2 can be entered
                     foreach (User userByGender in usersByGender)
                     {
+                        // ONLY DO MATCHING SEQUENCE IF USERS HAVE FILLED OUT A FORM
+                        // does the user have an existing form?
+                        var userByGenderForm = userByGender.Forms.Where(f => f.UserId == userByGender.UserId).ToList();
+
                         // if user isn't current user
                         if (userByGender.UserId != customId)
                         {
-                            // iterate through user by gender list
-                            //userByGender.MatchUser2s.Add(match);
-
-                            // set user 2 id as user id in list
-                            match.User2Id = userByGender.UserId;
-                            // set user 2 to user in list
-                            match.User2 = userByGender;
-
-                            // set user's user id for each potential match
-                            match.User1Id = form.UserId;
-
-                            //ONLY DO MATCHING SEQUENCE IF USERS HAVE FILLED OUT A FORM
-                            // compare form fields
-                            if (form != null)
+                            // user has an existing form
+                            if (userByGenderForm.Count != 0)
                             {
+                                // iterate through user by gender list
+
+                                // set user 2 id as user id in list
+                                match.User2Id = userByGender.UserId;
+                                // set user 2 to user in list
+                                match.User2 = userByGender;
+
+                                // set user's user id for each potential match
+                                match.User1Id = form.UserId;
+
+                                // compare form fields
                                 int equalFields = 0;
                                 int totalFields = Request.Form.Keys.Count;
 
@@ -237,13 +241,11 @@ namespace HallHaven.Controllers
                             }
                         }
                     }
-
                 }
 
-                await _context.SaveChangesAsync();
                 return RedirectToAction("Index", "Home");
                 //return RedirectToAction(nameof(Index));
-           }
+            }
 
             // redisplay form if something went wrong
             ViewData["CreditHourId"] = new SelectList(_context.CreditHours, "CreditHourId", "CreditHourName");
@@ -253,9 +255,10 @@ namespace HallHaven.Controllers
             ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId");
 
             return View(form);
+        
         }
 
-        [HttpGet]
+    [HttpGet]
         public IActionResult GetDormOptions(int creditHourId)
         {
             // if credit hours from credit hour model of user equals 3 or 4 (junior or senior)
