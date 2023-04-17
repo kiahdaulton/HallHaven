@@ -11,6 +11,7 @@ using HallHaven.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using HallHaven.Models;
 
 namespace HallHaven.Areas.Identity.Pages.Account.Manage
 {
@@ -120,7 +121,7 @@ namespace HallHaven.Areas.Identity.Pages.Account.Manage
             var customId = user.CustomUserId;
 
             // get hallhavencontext user by id
-            var currentUser = _context.Users.Where(c => c.UserId == customId).ToList();
+            var currentUser = _context.Users.Where(c => c.UserId == customId);
 
             // add user profile picture
             if (Request.Form.Files.Count > 0)
@@ -130,7 +131,10 @@ namespace HallHaven.Areas.Identity.Pages.Account.Manage
                 {
                     await file.CopyToAsync(dataStream);
                     user.ProfilePicture = dataStream.ToArray();
-                    currentUser.First().ProfilePicture = dataStream.ToArray();
+                    if (currentUser != null)
+                    {
+                        currentUser.First().ProfilePicture = dataStream.ToArray();
+                    }
                 }
             }
 
@@ -138,14 +142,18 @@ namespace HallHaven.Areas.Identity.Pages.Account.Manage
             if (Input.ProfileBio != user.ProfileBio)
             {
                 user.ProfileBio = Input.ProfileBio;
-                currentUser.First().ProfileBio = user.ProfileBio;
+                if (currentUser != null)
+                {
+                    currentUser.First().ProfileBio = user.ProfileBio;
+                }
             }
 
             // update identity user
             await _userManager.UpdateAsync(user);
+            await _context.SaveChangesAsync();
 
             // save hallhaven context user
-            _context.Add(currentUser);
+            _context.Update(currentUser);
             await _context.SaveChangesAsync();
 
             // this method refreshes the user on screen
