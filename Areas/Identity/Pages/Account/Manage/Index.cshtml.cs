@@ -153,8 +153,8 @@ namespace HallHaven.Areas.Identity.Pages.Account.Manage
             await _context.SaveChangesAsync();
 
             // save hallhaven context user
-            _context.Update(currentUser);
-            await _context.SaveChangesAsync();
+            //_context.Update(currentUser);
+            //await _context.SaveChangesAsync();
 
             // this method refreshes the user on screen
             await _signInManager.RefreshSignInAsync(user);
