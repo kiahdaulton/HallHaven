@@ -215,8 +215,9 @@ namespace HallHaven.Controllers
                                 // write update method if the value is equal to true and the user wants to update their compatibility form
 
                                 // compare form fields
-                                    int equalFields = 0;
-                                    int totalFields = Request.Form.Keys.Count;
+                                int equalFields = 0;
+                                // subtract 2 for User and Form Id
+                                int totalFields = Request.Form.Keys.Count - 2;
 
                                     // for each field in form
                                     // add special case for user id which is not shown to the user
@@ -226,6 +227,10 @@ namespace HallHaven.Controllers
                                         if (fieldName == "UserId")
                                         {
                                             //skip  
+                                        }
+                                        if (fieldName == "FormId")
+                                        {
+                                            //skip
                                         }
                                         if (fieldName == "IsCandiateStudent")
                                         {
@@ -396,7 +401,8 @@ namespace HallHaven.Controllers
                             {
                                 // compare updated form fields
                                 int equalFields = 0;
-                                int totalFields = Request.Form.Keys.Count;
+                                // subtract 2 for User and Form Id
+                                int totalFields = Request.Form.Keys.Count - 2;
 
                                 // for each field in form
                                 // add special case for user id which is not shown to the user
@@ -406,6 +412,10 @@ namespace HallHaven.Controllers
                                     if (fieldName == "UserId")
                                     {
                                         //skip  
+                                    }
+                                    if (fieldName == "FormId")
+                                    {
+                                        //skip
                                     }
                                     if (fieldName == "IsCandiateStudent")
                                     {
@@ -418,20 +428,24 @@ namespace HallHaven.Controllers
                                         // only match incoming student athletes with incoming student athletes
                                         // IsCandiateStudent IsStudentAthlete must both be true
                                     }
-
-                                    // find current field value from user form
-                                    var currentValue = form.GetType().GetProperty(fieldName)?.GetValue(form);
-                                    // get value of user2's form of the same field
-                                    var matchValue = existingMatch.User2.Forms.First().GetType().GetProperty(fieldName)?.GetValue(existingMatch.User2.Forms.First());
-
-                                    // if the user's form field isn't empty and user2's form field isn't empty
-                                    // and the user's form field is the SAME as user2's
-                                    if (currentValue != null && matchValue != null && currentValue.Equals(matchValue))
+                                    // valid fieldName, run matching
+                                    else
                                     {
-                                        // add to the equal fields variable
-                                        equalFields++;
+                                        // find current field value from user form
+                                        var currentValue = form.GetType().GetProperty(fieldName)?.GetValue(form);
+                                        // get value of user2's form of the same field
+                                        var matchValue = existingMatch.User2.Forms.First().GetType().GetProperty(fieldName)?.GetValue(existingMatch.User2.Forms.First());
+
+                                        // if the user's form field isn't empty and user2's form field isn't empty
+                                        // and the user's form field is the SAME as user2's
+                                        if (currentValue != null && matchValue != null && currentValue.Equals(matchValue))
+                                        {
+                                            // add to the equal fields variable
+                                            equalFields++;
+                                        }
                                     }
                                 }
+
                                 // similarity percentage is equal to the number of equal fields among users divided by the number of total fields in the form
                                 // SimilarityPercentage = (number of equal fields / total number of fields) *100
                                 float similarityPercentage = (float)equalFields / totalFields * 100;

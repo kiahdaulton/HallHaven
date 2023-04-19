@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Claims;
 using static HallHaven.Models.ClaimsPrincipalExtensions;
@@ -35,6 +36,7 @@ namespace HallHaven.Controllers
             if (userId != null)
             {
                 var user = await _userManager.GetUserAsync(User);
+                var customId = user.CustomUserId;
                 var gender = user.Gender;
 
                 var usersByGender = _context.Users
@@ -44,7 +46,8 @@ namespace HallHaven.Controllers
                     .Include(u => u.Gender)
                     .Where(g => g.Gender.Gender1 == gender)
                     // sort by highest overall sim percentage
-                    .OrderByDescending(f => f.MatchUser1s.Max(mu1 => mu1.SimilarityPercentage));
+                    // get logged in user's matches
+                    .OrderByDescending(f => f.MatchUser2s.Where(u => u.User1Id == customId).Max(mu1 => mu1.SimilarityPercentage));
 
                 // populate formViewModel
                 var dorms = await _context.Dorms.Where(g => g.Gender.Gender1 == gender).ToListAsync();
@@ -96,6 +99,7 @@ namespace HallHaven.Controllers
             {
                 // get logged in user
                 var user = await _userManager.GetUserAsync(User);
+                var customId = user.CustomUserId;
 
                 // get logged in user's gender
                 var gender = user.Gender;
@@ -107,7 +111,8 @@ namespace HallHaven.Controllers
                     .Include(f => f.MatchUser2s)
                     .Include(u => u.Gender).Where(g => g.Gender.Gender1 == gender)
                     // sort by highest overall sim percentage
-                    .OrderByDescending(f => f.MatchUser1s.Max(mu1 => mu1.SimilarityPercentage));
+                    // get user1Id as the logged in user
+                    .OrderByDescending(f => f.MatchUser2s.Where(u => u.User1Id == customId).Max(mu1 => mu1.SimilarityPercentage));
 
                 var userModelData = await users.ToListAsync(); // Retrieve the data for the user model
 

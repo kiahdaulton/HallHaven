@@ -67,7 +67,7 @@ else
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
             @if (_signInManager.IsSignedIn(User))
             {
-                @if (Model.Users.Count != null)
+                @if (Model.Users.Count != 0)
                 {
                     @foreach (User user in Model.Users)
                     {
@@ -154,7 +154,9 @@ else
                                                         if (match != null)
                                                         {
                                                             var simPercent = match.SimilarityPercentage;
-                                                            <div>Percentage: @simPercent%</div>
+                                                            // round to two decimal places
+                                                            var roundedPercent = Math.Round(simPercent, 2);
+                                                            <div>Percentage: @roundedPercent%</div>
                                                             
                                                         }
                                                         else
