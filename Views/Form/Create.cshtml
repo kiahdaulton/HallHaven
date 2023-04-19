@@ -18,12 +18,14 @@
             <div class="form-group">
                 <label asp-for="CreditHourId" class="control-label"></label>
                 <select asp-for="CreditHourId" class="form-control" asp-items="ViewBag.CreditHourId"></select>
+                <span asp-validation-for="CreditHourId" class="text-danger"></span>
             </div>
             @*onchange="handleSelectChange(this)"*@
 
             <div class="form-group">
                 <label asp-for="DormId" class="control-label"></label>
                 <select asp-for="DormId" class="form-control" asp-items="ViewBag.DormId"></select>
+                <span asp-validation-for="DormId" class="text-danger"></span>
             </div>
             @*id="dormSelect" name="dormSelectName"*@
 
@@ -32,6 +34,7 @@
             <div class="form-group">
                 <label asp-for="MajorId" class="control-label"></label>
                 <select asp-for="MajorId" class ="form-control" asp-items="ViewBag.MajorId"></select>
+                <span asp-validation-for="MajorId" class="text-danger"></span>
             </div>
 
             <label asp-for="IsCandiateStudent" class="control-label">Please select if you are an incoming or returning student</label>

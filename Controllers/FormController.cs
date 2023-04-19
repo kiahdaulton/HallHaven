@@ -21,6 +21,7 @@ namespace HallHaven.Controllers
     {
         private readonly HallHavenContext _context;
         private readonly UserManager<HallHavenUser> _userManager;
+        private bool _isMatched = false;
 
         public FormController(HallHavenContext context, UserManager<HallHavenUser> userManager)
         {
@@ -115,7 +116,13 @@ namespace HallHaven.Controllers
 
                 ViewData["CreditHourId"] = new SelectList(_context.CreditHours, "CreditHourId", "CreditHourName");
                 // display dorms by user's gender
-                ViewData["DormId"] = new SelectList(_context.Dorms.Where(d => d.GenderId == customGender).OrderBy(d => d.DormId), "DormId", "DormName");
+                //ViewData["DormId"] = new SelectList(_context.Dorms.Where(d => d.GenderId == customGender).OrderBy(d => d.DormId), "DormId", "DormName");
+                //ViewData["DormId"] = new SelectList(_context.Dorms.Where(d => d.GenderId == customGender).OrderBy(d => d.DormId), "DormId", "DormName", 0);
+                var dorms = _context.Dorms.Where(d => d.GenderId == customGender).OrderBy(d => d.DormId).ToList();
+                dorms.Insert(0, new Dorm { DormId = 0, DormName = "Select Dorm" });
+
+                ViewData["DormId"] = new SelectList(dorms, "DormId", "DormName", 0);
+
                 ViewData["MajorId"] = new SelectList(_context.Majors, "MajorId", "MajorName").OrderBy(x => x.Text);
                 ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId");
             }
@@ -130,6 +137,7 @@ namespace HallHaven.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("FormId,DormId,UserId,MajorId,CreditHourId,GenderId,IsCandiateStudent,IsStudentAthlete,NeatnessLevel,VisitorLevel,FitnessLevel,AcademicLevel,SocialLevel,SharingLevel,BackgroundNoiseLevel,BedTimeRanking,ModestyLevel,NumberOfBelongings")] Form form)
         {
+
             var identityUser = await _userManager.GetUserAsync(User);
             var customId = identityUser.CustomUserId;
 
@@ -150,10 +158,15 @@ namespace HallHaven.Controllers
                 {
                     // A row with the same userId already exists, return an error message
                     ModelState.AddModelError("UserId", "You have already submitted a form. Please edit your existing form instead.");
+
                     // redisplay form if something went wrong
                     ViewData["CreditHourId"] = new SelectList(_context.CreditHours, "CreditHourId", "CreditHourName");
                     // display dorms by user's gender
-                    ViewData["DormId"] = new SelectList(_context.Dorms.Where(d => d.GenderId == customGender).OrderBy(d => d.DormId), "DormId", "DormName");
+                    //ViewData["DormId"] = new SelectList(_context.Dorms.Where(d => d.GenderId == customGender).OrderBy(d => d.DormId), "DormId", "DormName");
+                    var dorms = _context.Dorms.Where(d => d.GenderId == customGender).OrderBy(d => d.DormId).ToList();
+                    dorms.Insert(0, new Dorm { DormId = 0, DormName = "Select Dorm" });
+                    ViewData["DormId"] = new SelectList(dorms, "DormId", "DormName", 0);
+
                     ViewData["MajorId"] = new SelectList(_context.Majors, "MajorId", "MajorName").OrderBy(x => x.Text);
                     ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId");
                     return View(form);
@@ -216,21 +229,17 @@ namespace HallHaven.Controllers
 
                                 // compare form fields
                                 int equalFields = 0;
-                                // subtract 2 for User and Form Id
-                                int totalFields = Request.Form.Keys.Count - 2;
+                                // subtract 3 for User Id, Form Id, and __RequestVerificationToken
+                                int totalFields = Request.Form.Keys.Count - 3;
 
                                     // for each field in form
                                     // add special case for user id which is not shown to the user
                                     // add special cases for isCandiateStudent and IsStudentAthlete
                                     foreach (var fieldName in Request.Form.Keys)
                                     {
-                                        if (fieldName == "UserId")
+                                        if (fieldName == "UserId" || fieldName == "FormId" || fieldName == "__RequestVerificationToken")
                                         {
-                                            //skip  
-                                        }
-                                        if (fieldName == "FormId")
-                                        {
-                                            //skip
+                                            continue; // skip these fields
                                         }
                                         if (fieldName == "IsCandiateStudent")
                                         {
@@ -240,22 +249,25 @@ namespace HallHaven.Controllers
                                         }
                                         if (fieldName == "IsStudentAthlete")
                                         {
-                                        // only match incoming student athletes with incoming student athletes
-                                        // IsCandiateStudent IsStudentAthlete must both be true
+                                            // only match incoming student athletes with incoming student athletes
+                                            // IsCandiateStudent IsStudentAthlete must both be true
                                         }
-
-                                    // find current field value from user form
-                                    var currentValue = form.GetType().GetProperty(fieldName)?.GetValue(form);
-                                        // get value of user2's form of the same field
-                                        var matchValue = match.User2.Forms.First().GetType().GetProperty(fieldName)?.GetValue(match.User2.Forms.First());
-
-                                        // if the user's form field isn't empty and user2's form field isn't empty
-                                        // and the user's form field is the SAME as user2's
-                                        if (currentValue != null && matchValue != null && currentValue.Equals(matchValue))
+                                        // valid fieldName, run matching
+                                        else
                                         {
-                                            // add to the equal fields variable
-                                            equalFields++;
-                                        }                                  
+                                            // find current field value from user form
+                                            var currentValue = form.GetType().GetProperty(fieldName)?.GetValue(form);
+                                            // get value of user2's form of the same field
+                                            var matchValue = match.User2.Forms.First().GetType().GetProperty(fieldName)?.GetValue(match.User2.Forms.First());
+
+                                            // if the user's form field isn't empty and user2's form field isn't empty
+                                            // and the user's form field is the SAME as user2's
+                                            if (currentValue != null && matchValue != null && currentValue.Equals(matchValue))
+                                            {
+                                                // add to the equal fields variable
+                                                equalFields++;
+                                            }
+                                        }   
                                     }
                                     // similarity percentage is equal to the number of equal fields among users divided by the number of total fields in the form
                                     // SimilarityPercentage = (number of equal fields / total number of fields) *100
@@ -389,7 +401,6 @@ namespace HallHaven.Controllers
                     // for each user in the list
                     foreach (User userByGender in usersByGender)
                     {
-                        // ONLY DO MATCHING SEQUENCE IF USERS HAVE FILLED OUT A FORM
                         // does the user have an existing form?
                         var userByGenderForm = userByGender.Forms.Where(f => f.UserId == userByGender.UserId).ToList();
 
@@ -401,27 +412,41 @@ namespace HallHaven.Controllers
                             {
                                 // compare updated form fields
                                 int equalFields = 0;
-                                // subtract 2 for User and Form Id
-                                int totalFields = Request.Form.Keys.Count - 2;
+                                // // subtract 3 for User Id, Form Id, and __RequestVerificationToken
+                                // total of 15 fields on the form
+                                int totalFields = Request.Form.Keys.Count - 3;
 
                                 // for each field in form
                                 // add special case for user id which is not shown to the user
-                                // add special cases for isCandiateStudent and IsStudentAthlete
+                                // add special cases for isCandiateStudent and IsStudentAthlete 
                                 foreach (var fieldName in Request.Form.Keys)
                                 {
-                                    if (fieldName == "UserId")
+                                    if (fieldName == "UserId" || fieldName == "FormId" || fieldName == "__RequestVerificationToken")
                                     {
-                                        //skip  
-                                    }
-                                    if (fieldName == "FormId")
-                                    {
-                                        //skip
+                                        continue; // skip these fields
                                     }
                                     if (fieldName == "IsCandiateStudent")
                                     {
                                         // only match with incoming students
                                         // if selected is true
                                         // then only match with other candiate students
+                                        if (userByGenderForm.First().IsCandiateStudent == true)
+                                        {
+                                            // find current IsCandiateStudent value from user form
+                                            var currentValue = form.GetType().GetProperty(fieldName)?.GetValue(form);
+                                            if (currentValue == "true")
+                                            {
+                                                // match with only those whose value is true
+                                                _isMatched = true;
+
+                                                //var usersByGenderAndCandiate = _context.Users
+                                                //    .Include(f => f.Forms)
+                                                //    .Include(f => f.MatchUser1s)
+                                                //    .Include(f => f.MatchUser2s)
+                                                //    .Include(u => u.Gender)
+                                                //    .Where(g => g.Gender.Gender1 == gender && g.Forms.Any(f => f.IsCandiateStudent)).ToList();
+                                            }
+                                        }
                                     }
                                     if (fieldName == "IsStudentAthlete")
                                     {

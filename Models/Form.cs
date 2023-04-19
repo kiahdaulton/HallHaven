@@ -11,6 +11,7 @@ namespace HallHaven.Models
 
         [Display(Name = "Current Dorm")]
         [Required(ErrorMessage = "Please select your current dormitory")]
+        [Range(1, int.MaxValue, ErrorMessage = "Please select a valid dormitory")]
         public int DormId { get; set; }
 
         [NotMapped]
@@ -24,6 +25,7 @@ namespace HallHaven.Models
         // link number of credit hours to classificaton ex: freshman, sophomore, etc.
         [Display(Name = "Credit Hours")]
         [Required(ErrorMessage = "Please enter your current number of credit hours")]
+        [Range(1, int.MaxValue, ErrorMessage = "Please select a valid number of credit hours")]
         public int CreditHourId { get; set; }
 
         [Display(Name = "Are you currently an incoming student?")]
