@@ -108,13 +108,14 @@ namespace HallHaven.Controllers
             {
                 // get gender id of current user
                 int customGender = currentUser.Gender.GenderId;
-                // get credit hours
-                var creditHours = _context.CreditHours.ToList();
 
                 // if credithours from credithour model of user equals 3 or 4 (junior or senior)
                 // then display dorms from dorm model where credit hour equals 3 (junior AND senior dorms)
 
-                ViewData["CreditHourId"] = new SelectList(_context.CreditHours, "CreditHourId", "CreditHourName");
+                //ViewData["CreditHourId"] = new SelectList(_context.CreditHours, "CreditHourId", "CreditHourName");
+                var creditHours = _context.CreditHours.ToList();
+                creditHours.Insert(0, new CreditHour { CreditHourId = 0, CreditHourName = "Select Number of Credit Hours" });
+                ViewData["CreditHourId"] = new SelectList(creditHours, "CreditHourId", "CreditHourName", 0);
                 // display dorms by user's gender
                 //ViewData["DormId"] = new SelectList(_context.Dorms.Where(d => d.GenderId == customGender).OrderBy(d => d.DormId), "DormId", "DormName");
                 //ViewData["DormId"] = new SelectList(_context.Dorms.Where(d => d.GenderId == customGender).OrderBy(d => d.DormId), "DormId", "DormName", 0);
@@ -160,12 +161,16 @@ namespace HallHaven.Controllers
                     ModelState.AddModelError("UserId", "You have already submitted a form. Please edit your existing form instead.");
 
                     // redisplay form if something went wrong
-                    ViewData["CreditHourId"] = new SelectList(_context.CreditHours, "CreditHourId", "CreditHourName");
+                    //ViewData["CreditHourId"] = new SelectList(_context.CreditHours, "CreditHourId", "CreditHourName");
+                    var creditHours = _context.CreditHours.ToList();
+                    creditHours.Insert(0, new CreditHour { CreditHourId = 0, CreditHourName = "Select Number of Credit Hours" });
+                    ViewData["CreditHourId"] = new SelectList(creditHours, "CreditHourId", "CreditHourName", 0);
+
                     // display dorms by user's gender
-                    //ViewData["DormId"] = new SelectList(_context.Dorms.Where(d => d.GenderId == customGender).OrderBy(d => d.DormId), "DormId", "DormName");
-                    var dorms = _context.Dorms.Where(d => d.GenderId == customGender).OrderBy(d => d.DormId).ToList();
-                    dorms.Insert(0, new Dorm { DormId = 0, DormName = "Select Dorm" });
-                    ViewData["DormId"] = new SelectList(dorms, "DormId", "DormName", 0);
+                    ViewData["DormId"] = new SelectList(_context.Dorms.Where(d => d.GenderId == customGender).OrderBy(d => d.DormId), "DormId", "DormName");
+                    //var dorms = _context.Dorms.Where(d => d.GenderId == customGender).OrderBy(d => d.DormId).ToList();
+                    //dorms.Insert(0, new Dorm { DormId = 0, DormName = "Select Dorm" });
+                    //ViewData["DormId"] = new SelectList(dorms, "DormId", "DormName", 0);
 
                     ViewData["MajorId"] = new SelectList(_context.Majors, "MajorId", "MajorName").OrderBy(x => x.Text);
                     ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId");
@@ -298,20 +303,25 @@ namespace HallHaven.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetDormOptions(int creditHourId)
+        // pass in the creditHour amount clicked by user and the user's gender
+        // displays dorms in dropdown on form by the selected credit hour and gender
+        public IActionResult GetDormsByCreditHour(int creditHourId, int genderId)
         {
-            // if credit hours from credit hour model of user equals 3 or 4 (junior or senior)
-
-            // Retrieve the dorm options from the database based on the selected credit hour value
-            var dormOptions = _context.Dorms.Where(d => d.CreditHourId == creditHourId).Select(d => new SelectListItem
+            // if user is an upperclassmen with 91+ hours
+            if (creditHourId == 4)
             {
-                Value = d.DormId.ToString(),
-                Text = d.DormName
-            }).ToList();
-
-            // Return the dorm options as a partial view
-            return PartialView("_DormOptions", dormOptions);
+                // select junior and senior dorms by gender
+                int credit = 3;
+                var dorms = _context.Dorms.Where(d => d.CreditHourId == credit && d.GenderId == genderId).ToList();
+                return Json(dorms);
+            }
+            else
+            {
+                var dorms = _context.Dorms.Where(d => d.CreditHourId == creditHourId && d.GenderId == genderId).ToList();
+                return Json(dorms);
+            }
         }
+
 
         // GET: Form/Edit/5
         public async Task<IActionResult> Edit(int? id)

@@ -1,8 +1,21 @@
-﻿@model HallHaven.Models.Form
+﻿@using HallHaven.Areas.Identity.Data;
+@using Microsoft.AspNetCore.Identity;
+@using HallHaven.Models;
+@using System.Security.Claims;
+
+@model HallHaven.Models.Form
+@inject UserManager<HallHavenUser> _userManager
 
 @{
     ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var user = await _userManager.GetUserAsync(User);
+    var customId = user.CustomUserId;
+    var gender = user.Gender;
+    int userGenderId = gender == "Male" ? 1 : 2;
+    int test = userGenderId;
+    //int userGenderId = gender == "Male" ? 1 : 2;
 }
 
 <h1 style="padding-top: 15px;">Roommate Compatibility Form</h1>
@@ -20,16 +33,12 @@
                 <select asp-for="CreditHourId" class="form-control" asp-items="ViewBag.CreditHourId"></select>
                 <span asp-validation-for="CreditHourId" class="text-danger"></span>
             </div>
-            @*onchange="handleSelectChange(this)"*@
 
             <div class="form-group">
                 <label asp-for="DormId" class="control-label"></label>
                 <select asp-for="DormId" class="form-control" asp-items="ViewBag.DormId"></select>
                 <span asp-validation-for="DormId" class="text-danger"></span>
             </div>
-            @*id="dormSelect" name="dormSelectName"*@
-
-            @*<partial id="dormSelect" name="_DormOptions" />*@
 
             <div class="form-group">
                 <label asp-for="MajorId" class="control-label"></label>
@@ -227,57 +236,26 @@
     @* dynamically get dorms by selected credit hour *@
     <script>
         $(document).ready(function () {
-        //    $("#CreditHourId").change(function () {
-        //        var selectedCreditHourId = $(this).val();
-        //        $.ajax({
-        //            type: "GET",
-        //            url: "/Controller/GetDormsByCreditHourAsync?selectedCreditHourId=" + selectedCreditHourId,
-        //            success: function (data) {
-        //                $("#DormId").empty();
-        //                $.each(data, function (index, item) {
-        //                    $("#DormId").append('<option value="' + item.value + '">' + item.text + '</option>');
-        //                });
-        //            }
-        //        });
-        //    });
+            $("#CreditHourId").change(function () {
+                var creditHourId = $(this).val();
+                var genderId = @userGenderId;
+                $.ajax({
+                    type: "GET",
+                    url: "/Form/GetDormsByCreditHour",
+                    data: { creditHourId: creditHourId, genderId: genderId },
+                    success: function (response) {
+                        $("#DormId").empty();
+                        $("#DormId").append('<option>Select Dorm</option>');
+                        $.each(response, function (i, dorm) {
+                            $("#DormId").append('<option value="' + dorm.dormId + '">' + dorm.dormName + '</option>');
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            });
         });
-
-        // get credit hour dropdown value on form change
-        //function handleSelectChange(selectElement) {
-        //    var selectedValue = selectElement.value;
-
-        //    // Find the other select element
-        //    var dormSelect = document.querySelector('select[name="dormSelectName"]');
-        //    // if credithours from credithour model of user equals 3 or 4 (junior or senior)
-        //    if (selectedValue == "3" || selectedValue == "4") {
-        //        // then display dorms from dorm model where credit hour equals 3 (junior AND senior dorms)
-        //        // Set the options of the dorm select element
-        //        dormSelect.innerHTML = '<option value="juniorDorm">Junior Dorm</option><option value="seniorDorm">Senior Dorm</option>';
-        //    } else {
-        //        // Clear the options of the dorm select element
-        //        dormSelect.innerHTML = '';
-        //    }
-
-        //}
-
-        // won't post
-        //function handleSelectChange(selectElement) {
-        //    var selectedValue = selectElement.value;
-        //    // if credit hours from credit hour model of user equals 3 or 4 (junior or senior)
-        //    if (selectedValue == "3" || selectedValue == "4") {
-        //        // Make an AJAX request to get the dorm options
-        //        $.ajax({
-        //            url: '@Url.Action("GetDormOptions", "FormController")',
-        //            type: 'GET',
-        //            data: { creditHourId: selectedValue },
-        //            success: function (data) {
-        //                // Update the dorm select element with the returned options
-        //                $('#dormSelect').html(data);
-        //            }
-        //        });
-        //    }
-        //}
-
     </script>
 
 }
