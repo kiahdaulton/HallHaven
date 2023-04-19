@@ -117,12 +117,6 @@ namespace HallHaven.Areas.Identity.Pages.Account.Manage
             // user bio and image displays properly
             // or just pull those fields from identity to begin with
 
-            // get logged in user's id
-            var customId = user.CustomUserId;
-
-            // get hallhavencontext user by id
-            var currentUser = _context.Users.Where(c => c.UserId == customId).ToList();
-
             // add user profile picture
             if (Request.Form.Files.Count > 0)
             {
@@ -131,10 +125,6 @@ namespace HallHaven.Areas.Identity.Pages.Account.Manage
                 {
                     await file.CopyToAsync(dataStream);
                     user.ProfilePicture = dataStream.ToArray();
-                    if (currentUser != null)
-                    {
-                        currentUser.First().ProfilePicture = dataStream.ToArray();
-                    }
                 }
             }
 
@@ -142,19 +132,45 @@ namespace HallHaven.Areas.Identity.Pages.Account.Manage
             if (Input.ProfileBio != user.ProfileBio)
             {
                 user.ProfileBio = Input.ProfileBio;
-                if (currentUser != null)
-                {
-                    currentUser.First().ProfileBio = user.ProfileBio;
-                }
             }
 
             // update identity user
             await _userManager.UpdateAsync(user);
             await _context.SaveChangesAsync();
 
+            // update user table
+
+            // get logged in user's id
+            var customId = user.CustomUserId;
+
+            // get hallhavencontext user by id
+            User currentUser = _context.Users.SingleOrDefault(c => c.UserId == customId);
+
+            if (currentUser != null)
+            {
+                // save new profile bio
+                if (Input.ProfileBio != currentUser.ProfileBio)
+                {
+                    currentUser.ProfileBio = Input.ProfileBio;
+
+                }
+
+                // add user profile picture
+                if (Request.Form.Files.Count > 0)
+                {
+                    IFormFile file = Request.Form.Files.FirstOrDefault();
+                    using (var dataStream = new MemoryStream())
+                    {
+                        await file.CopyToAsync(dataStream);             
+                        currentUser.ProfilePicture = dataStream.ToArray();
+                        
+                    }
+                }
+            }
+
             // save hallhaven context user
-            //_context.Update(currentUser);
-            //await _context.SaveChangesAsync();
+            _context.Update(currentUser);
+            await _context.SaveChangesAsync();
 
             // this method refreshes the user on screen
             await _signInManager.RefreshSignInAsync(user);
