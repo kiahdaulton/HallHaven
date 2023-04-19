@@ -280,7 +280,7 @@ namespace HallHaven.Controllers
         
         }
 
-    [HttpGet]
+        [HttpGet]
         public IActionResult GetDormOptions(int creditHourId)
         {
             // if credit hours from credit hour model of user equals 3 or 4 (junior or senior)
@@ -343,9 +343,107 @@ namespace HallHaven.Controllers
             existingForm.NumberOfBelongings = form.NumberOfBelongings;
             existingForm.ModestyLevel = form.ModestyLevel;
             existingForm.SharingLevel = form.SharingLevel;
-            //existingForm.UserId = form.UserId;
 
             await _context.SaveChangesAsync();
+
+
+            // re-run algorithm with saved data
+
+            // get user
+            var identityUser = await _userManager.GetUserAsync(User);
+            var customId = identityUser.CustomUserId;
+
+            // get matches by logged in user
+            var existingMatches = _context.Matches.Where(u => u.User1Id == customId).ToList();
+            if (existingMatches == null)
+            {
+                return NotFound();
+            }
+
+            foreach (Match existingMatch in existingMatches)
+            {
+
+                // set user 1 as logged in user
+                existingMatch.User1 = _context.Users.Include(u => u.Gender).FirstOrDefault(u => u.UserId == customId);
+
+                // if logged in user exists
+                if (existingMatch.User1 != null)
+                {
+                    // get logged in user's gender
+                    var gender = existingMatch.User1.Gender.Gender1;
+
+                    // get all users by gender
+                    var usersByGender = _context.Users
+                        .Include(f => f.Forms)
+                        .Include(f => f.MatchUser1s)
+                        .Include(f => f.MatchUser2s)
+                        .Include(u => u.Gender)
+                        .Where(g => g.Gender.Gender1 == gender).ToList();
+
+                    // add a constraint where only one distinct userId1 and userId2 can be entered
+                    // for each user in the list
+                    foreach (User userByGender in usersByGender)
+                    {
+                        // ONLY DO MATCHING SEQUENCE IF USERS HAVE FILLED OUT A FORM
+                        // does the user have an existing form?
+                        var userByGenderForm = userByGender.Forms.Where(f => f.UserId == userByGender.UserId).ToList();
+
+                        // if user isn't current user
+                        if (userByGender.UserId != customId)
+                        {
+                            // user has an existing form
+                            if (userByGenderForm.Count != 0)
+                            {
+                                // compare updated form fields
+                                int equalFields = 0;
+                                int totalFields = Request.Form.Keys.Count;
+
+                                // for each field in form
+                                // add special case for user id which is not shown to the user
+                                // add special cases for isCandiateStudent and IsStudentAthlete
+                                foreach (var fieldName in Request.Form.Keys)
+                                {
+                                    if (fieldName == "UserId")
+                                    {
+                                        //skip  
+                                    }
+                                    if (fieldName == "IsCandiateStudent")
+                                    {
+                                        // only match with incoming students
+                                        // if selected is true
+                                        // then only match with other candiate students
+                                    }
+                                    if (fieldName == "IsStudentAthlete")
+                                    {
+                                        // only match incoming student athletes with incoming student athletes
+                                        // IsCandiateStudent IsStudentAthlete must both be true
+                                    }
+
+                                    // find current field value from user form
+                                    var currentValue = form.GetType().GetProperty(fieldName)?.GetValue(form);
+                                    // get value of user2's form of the same field
+                                    var matchValue = existingMatch.User2.Forms.First().GetType().GetProperty(fieldName)?.GetValue(existingMatch.User2.Forms.First());
+
+                                    // if the user's form field isn't empty and user2's form field isn't empty
+                                    // and the user's form field is the SAME as user2's
+                                    if (currentValue != null && matchValue != null && currentValue.Equals(matchValue))
+                                    {
+                                        // add to the equal fields variable
+                                        equalFields++;
+                                    }
+                                }
+                                // similarity percentage is equal to the number of equal fields among users divided by the number of total fields in the form
+                                // SimilarityPercentage = (number of equal fields / total number of fields) *100
+                                float similarityPercentage = (float)equalFields / totalFields * 100;
+                                existingMatch.SimilarityPercentage = similarityPercentage;
+
+                                // update the context with the new matches
+                                await _context.SaveChangesAsync();
+                            }
+                        }
+                    }
+                }
+            }
 
             return RedirectToAction(nameof(Index));
         }

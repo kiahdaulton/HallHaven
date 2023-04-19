@@ -113,10 +113,6 @@ namespace HallHaven.Areas.Identity.Pages.Account.Manage
                 return Page();
             }
 
-            // need to update users table as well as the identity aspnetusers table so that each new
-            // user bio and image displays properly
-            // or just pull those fields from identity to begin with
-
             // add user profile picture
             if (Request.Form.Files.Count > 0)
             {
