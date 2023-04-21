@@ -27,6 +27,7 @@ namespace HallHaven.Controllers
             _userManager = userManager;
         }
 
+        // after submit of filter button
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> IndexAsync(FormViewModel formViewModel)
@@ -75,6 +76,29 @@ namespace HallHaven.Controllers
                     usersByGender = (IOrderedQueryable<User>)usersByGender.Where(u => u.Forms.Any(f => f.MajorId == formViewModel.SelectedMajorId));
                 }
 
+                // get hallhavencontext user by id
+                var currentUser = _context.Users.Where(c => c.UserId == customId)
+                    .Include(f => f.Forms.Where(f => f.UserId == customId))
+                    .Include(f => f.MatchUser1s)
+                    .Include(f => f.MatchUser2s)
+                    .Include(u => u.Gender)
+                    .ToList();
+
+                // get any user where IsCandiateStudent is true
+                var usersByGenderAndCandiate = (IOrderedQueryable<User>)usersByGender.Where(u => u.Forms.Any(f => f.IsCandiateStudent == true));
+                var test = usersByGenderAndCandiate.ToList();
+
+                if (currentUser != null)
+                {
+                    // apply IsCandiateStudent and IsStudentAthlete filters from the form
+                    // if current user is a candiate student
+                    if (currentUser.First().Forms.First().IsCandiateStudent == true)
+                    {
+                        // only show users that are candiate students
+                        usersByGender = usersByGenderAndCandiate;
+                    }
+                }
+
 
                 var homeViewModel = new HomeViewModel
                 {
@@ -88,7 +112,7 @@ namespace HallHaven.Controllers
             return View();
         }
 
-
+        // load users
         public async Task<IActionResult> IndexAsync()
         {
             // current user Guid
