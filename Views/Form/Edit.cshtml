@@ -1,8 +1,19 @@
-﻿@model HallHaven.Models.Form
+﻿@using HallHaven.Areas.Identity.Data;
+@using Microsoft.AspNetCore.Identity;
+@using HallHaven.Models;
+@using System.Security.Claims;
+
+@model HallHaven.Models.Form
+@inject UserManager<HallHavenUser> _userManager
 
 @{
     ViewData["Title"] = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var user = await _userManager.GetUserAsync(User);
+    var customId = user.CustomUserId;
+    var gender = user.Gender;
+    int userGenderId = gender == "Male" ? 1 : 2;
 }
 
 <h1 style="padding-top: 15px;">Edit Your Compatibility Form</h1>
@@ -14,6 +25,13 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="FormId" />
+
+            <div class="form-group">
+                <label asp-for="CreditHourId" class="control-label"></label>
+                <select asp-for="CreditHourId" class="form-control" asp-items="ViewBag.CreditHourId"></select>
+                <span asp-validation-for="CreditHourId" class="text-danger"></span>
+            </div>
+
             <div class="form-group">
                 <label asp-for="DormId" class="control-label"></label>
                 <select asp-for="DormId" class="form-control" asp-items="ViewBag.DormId"></select>
@@ -23,11 +41,6 @@
                 <label asp-for="MajorId" class="control-label"></label>
                 <select asp-for="MajorId" class="form-control" asp-items="ViewBag.MajorId"></select>
                 <span asp-validation-for="MajorId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreditHourId" class="control-label"></label>
-                <select asp-for="CreditHourId" class="form-control" asp-items="ViewBag.CreditHourId"></select>
-                <span asp-validation-for="CreditHourId" class="text-danger"></span>
             </div>
 
             <label asp-for="IsCandiateStudent" class="control-label">Please select if you are an incoming or returning student</label>
@@ -215,4 +228,80 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    @* dynamically get dorms by selected credit hour *@
+@*    <script>
+        $(document).ready(function () {
+            $("#CreditHourId").change(function () {
+                var creditHourId = $(this).val();
+                var genderId = @userGenderId;
+                $.ajax({
+                    type: "GET",
+                    url: "/Form/GetDormsByCreditHour",
+                    data: { creditHourId: creditHourId, genderId: genderId },
+                    success: function (response) {
+                        $("#DormId").empty();
+                        $("#DormId").append('<option>Select Dorm</option>');
+                        $.each(response, function (i, dorm) {
+                            $("#DormId").append('<option value="' + dorm.dormId + '">' + dorm.dormName + '</option>');
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            });
+        });*@
+    
+    <script>
+        $(document).ready(function () {
+            // get the saved credit hour value
+            var savedCreditHourId = $("#CreditHourId").val();
+            var genderId = @userGenderId;
+            // call the GetDormsByCreditHour action method with the saved credit hour value
+            $.ajax({
+                type: "GET",
+                url: "/Form/GetDormsByCreditHour",
+                data: { creditHourId: savedCreditHourId, genderId: genderId },
+                success: function (response) {
+                    // clear the dropdown and add the "Select Dorm" option
+                    $("#DormId").empty();
+                    $("#DormId").append('<option>Select Dorm</option>');
+                    // add the appropriate dorm options
+                    $.each(response, function (i, dorm) {
+                        $("#DormId").append('<option value="' + dorm.dormId + '">' + dorm.dormName + '</option>');
+                    });
+                    // select the saved dorm value
+                    var savedDormId = $("#DormId").data("saved-dorm-id");
+                    if (savedDormId) {
+                        $("#DormId").val(savedDormId);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+
+            // handle credit hour changes
+            $("#CreditHourId").change(function () {
+                var creditHourId = $(this).val();
+                $.ajax({
+                    type: "GET",
+                    url: "/Form/GetDormsByCreditHour",
+                    data: { creditHourId: creditHourId, genderId: genderId },
+                    success: function (response) {
+                        $("#DormId").empty();
+                        $("#DormId").append('<option>Select Dorm</option>');
+                        $.each(response, function (i, dorm) {
+                            $("#DormId").append('<option value="' + dorm.dormId + '">' + dorm.dormName + '</option>');
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            });
+        });
+
+    </script>
 }

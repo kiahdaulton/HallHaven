@@ -447,7 +447,7 @@ namespace HallHaven.Controllers
                                             if (currentValue == "true")
                                             {
                                                 // match with only those whose value is true
-                                                _isMatched = true;
+                                                //_isMatched = true;
 
                                                 //var usersByGenderAndCandiate = _context.Users
                                                 //    .Include(f => f.Forms)
