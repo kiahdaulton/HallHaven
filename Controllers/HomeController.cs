@@ -96,24 +96,34 @@ namespace HallHaven.Controllers
 
                 if (currentUser != null)
                 {
-                    // apply IsCandiateStudent and IsStudentAthlete filters from the form
-                    // if current user is a candiate student
-                    if (currentUser.First().Forms.First().IsCandiateStudent == true)
+                    // if current user's form is not empty
+                    if (currentUser.First().Forms.Count() != 0)
                     {
-                        // get student atheletes
-                        if (currentUser.First().Forms.First().IsStudentAthlete == true)
+                        // apply IsCandiateStudent and IsStudentAthlete filters from the form
+                        // if current user is a candiate student
+                        if (currentUser.First().Forms.First().IsCandiateStudent == true)
                         {
-                            // new incoming student athlete
-                            // if the student is a candiate student and a student athelete
-                            // show students who are candiate students and are atheletes
-                            usersByGender = usersByGenderCandiateAthlete;
+                            // get student atheletes
+                            if (currentUser.First().Forms.First().IsStudentAthlete == true)
+                            {
+                                // new incoming student athlete
+                                // if the student is a candiate student and a student athelete
+                                // show students who are candiate students and are atheletes
+                                usersByGender = usersByGenderCandiateAthlete;
 
+                            }
+                            else
+                            {
+                                // only show users that are candiate students AND not student atheletes
+                                usersByGender = usersByGenderAndCandiate;
+                            }
                         }
-                        else
-                        {
-                            // only show users that are candiate students AND not student atheletes
-                            usersByGender = usersByGenderAndCandiate;
-                        }
+                    }
+                    else
+                    {
+                        // current user's form is empty, so set the user model data to an empty list
+                        // user should fill out a form first and not see any users
+                        usersByGender = new List<User>();
                     }
                 }
 
@@ -173,24 +183,34 @@ namespace HallHaven.Controllers
 
                     if (currentUser != null)
                     {
-                        // apply IsCandiateStudent and IsStudentAthlete filters from the form
-                        // if current user is a candiate student
-                        if (currentUser.First().Forms.First().IsCandiateStudent == true)
+                        // if current user's form is not empty
+                        if (currentUser.First().Forms.Count() != 0)
                         {
-                            // get student atheletes
-                            if (currentUser.First().Forms.First().IsStudentAthlete == true)
+                            // apply IsCandiateStudent and IsStudentAthlete filters from the form
+                            // if current user is a candiate student
+                            if (currentUser.First().Forms.First().IsCandiateStudent == true)
                             {
-                                // new incoming student athlete
-                                // if the student is a candiate student and a student athelete
-                                // show students who are candiate students and are atheletes
-                                userModelData = usersByGenderCandiateAthlete;
+                                // get student atheletes
+                                if (currentUser.First().Forms.First().IsStudentAthlete == true)
+                                {
+                                    // new incoming student athlete
+                                    // if the student is a candiate student and a student athelete
+                                    // show students who are candiate students and are atheletes
+                                    userModelData = usersByGenderCandiateAthlete;
 
+                                }
+                                else
+                                {
+                                    // only show users that are candiate students AND not student atheletes
+                                    userModelData = usersByGenderAndCandiate;
+                                }
                             }
-                            else
-                            {
-                                // only show users that are candiate students AND not student atheletes
-                                userModelData = usersByGenderAndCandiate;
-                            }
+                        }
+                        else
+                        {
+                            // current user's form is empty, so set the user model data to an empty list
+                            // user should fill out a form first and not see any users
+                            userModelData = new List<User>();
                         }
                     }
 
@@ -220,7 +240,7 @@ namespace HallHaven.Controllers
                         FormViewModel = formViewModelData
                     };
 
-                    int testSelectedDormId = homeViewModel.FormViewModel.SelectedDormId;
+                    //int testSelectedDormId = homeViewModel.FormViewModel.SelectedDormId;
 
                     return View(homeViewModel);
                 }

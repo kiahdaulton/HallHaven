@@ -79,6 +79,7 @@ else
                         }
                         else
                         {
+
                             // display everyone else
                             // modal popup from user button
                             <div id="myModal-@user.UserId" class="modal fade">
@@ -96,12 +97,12 @@ else
                                     </div>
                                 </div>
                             </div>
-                            // email modal
+                            @*email modal*@
                             <div id="emailModal-@user.UserId" class="modal fade">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h4 class="modal-title">@user.DisplayName's Email</h4>
+                                            <h4 class="modal-title">Send @user.DisplayName an Email</h4>
                                         </div>
                                         <div class="modal-body">
                                             @*<p>@user.Email</p>*@
@@ -169,7 +170,7 @@ else
 
                                                     // find user major name
                                                     var userMajor = _context.Majors.Where(g => g.MajorId == @major).ToList();
-                                                    var majorName = userMajor.First().MajorName;                                    
+                                                    var majorName = userMajor.First().MajorName;
 
                                                     <div>Major: @majorName</div>
                                                     <div>Dorm: @dormName</div>
@@ -186,7 +187,7 @@ else
                                                             // round to two decimal places
                                                             var roundedPercent = Math.Round(simPercent, 2);
                                                             <div>Percentage: @roundedPercent%</div>
-                                                            
+
                                                         }
                                                         else
                                                         {
@@ -197,7 +198,7 @@ else
                                                     }
                                                 }
                                             }
-                                            
+
                                         </div>
 
                                         <div class="d-flex justify-content-center align-items-center" style="margin-top: 15px;">
@@ -206,22 +207,29 @@ else
                                                     <img class="icon" src="/images/user.png" alt="User Icon" />
                                                 </button>
                                                 <button type="button" class="btn btn-outline-secondary emailModalButton" data-toggle="modal" data-target="#emailModal-@user.UserId">
-                                                    <img class="icon" src="/images/mail.png" alt="Mail Icon" /></button>
+                                                    <img class="icon" src="/images/mail.png" alt="Mail Icon" />
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
                         }
                     }
                 }
                 else
                 {
-                    <div>There are were no students found. Try searching again.</div>
+                    <div class="row">
+                        <div class="col-12">
+                            There were no students found. Try searching again or filling out the roommate compatibility form.
+                        </div>
+                    </div>
+
+                    @*<div>There were no students found. Try searching again or filling out the roommate compatibility form.</div>*@
                 }
 
             }
-
         </div>
     </div>
 </div>
