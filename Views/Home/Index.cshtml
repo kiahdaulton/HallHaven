@@ -36,6 +36,11 @@
     </div>
 </div>
 
+@* Add user input to the email form *@
+<form method="post" action="/Home/SendEmail">
+    <button type="submit" class="btn btn-primary">Send Email</button>
+</form>
+
 @* Display filtering dropdowns if user is logged in *@
 @if (_signInManager.IsSignedIn(User))
 {
@@ -115,7 +120,7 @@ else
                                     <div class="card-body">
                                         <div class="card-text">
                                             <h4 class="d-flex justify-content-center" style="text-align: center">@user.DisplayName</h4>
-                                            @*<div>@user.Email</div>*@
+                                            <div>@user.Email</div>
                                             @{
                                                 // get each user's form (if not null) and grab major and dorm to be displayed
                                                 var userForm = @user.Forms.Where(g => g.UserId == @user.UserId).ToList();

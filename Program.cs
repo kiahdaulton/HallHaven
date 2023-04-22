@@ -24,6 +24,8 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddTransient<IEmailSender, SendGridEmailSender>();
 builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration);
 
+builder.Services.AddTransient<SendStudentEmail>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

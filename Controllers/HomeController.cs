@@ -1,6 +1,7 @@
 ﻿using HallHaven.Areas.Identity.Data;
 using HallHaven.Data;
 using HallHaven.Models;
+using HallHaven.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -20,12 +21,14 @@ namespace HallHaven.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly HallHavenContext _context;
         private readonly UserManager<HallHavenUser> _userManager;
+        private readonly SendStudentEmail _sendStudentEmail;
 
-        public HomeController(ILogger<HomeController> logger, HallHavenContext context, UserManager<HallHavenUser> userManager)
+        public HomeController(ILogger<HomeController> logger, HallHavenContext context, UserManager<HallHavenUser> userManager, SendStudentEmail sendStudentEmail)
         {
             _logger = logger;
             _context = context;
             _userManager = userManager;
+            _sendStudentEmail = sendStudentEmail;
         }
 
         // after submit of filter button
@@ -241,6 +244,15 @@ namespace HallHaven.Controllers
             currentUser.First().IsHidden = hideProfile;
             _context.SaveChanges(); 
             return Ok();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SendEmail()
+        {
+            // pass in the user's data from the card to the email here
+            await _sendStudentEmail.SendEmailAsync("kiahdaulton@gmail.com", "Test Subject", "Test Message");
+            //return View();
+            return RedirectToAction(nameof(Index));
         }
 
         public IActionResult UsersList()
