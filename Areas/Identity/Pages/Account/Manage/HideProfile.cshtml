@@ -42,6 +42,41 @@
     <partial name="_ValidationScriptsPartial" />
     <script>
 
+        //function hideProfile(selectedRadio, customId) {
+        //    var selectedValue = selectedRadio.value;
+        //    if (selectedValue == "True") {
+        //        // Make an AJAX request to hide the current user's profile
+        //        $.ajax({
+        //            url: "/Home/HideProfile",
+        //            type: 'GET',
+        //            data: { hideProfile: true, customId: customId },
+        //            success: function (response) {
+        //                // Show a success message
+        //                $('#HideProfileTrue').html("Your profile has been hidden from other students.");
+        //            },
+        //            error: function () {
+        //                // Display error message
+        //                $('#HideProfileTrue').html("There was an error hiding your profile. Please try again.");
+        //            }
+        //        });
+        //    } else {
+        //        // Make an AJAX request to show the current user's profile
+        //        $.ajax({
+        //            url: "/Home/HideProfile",
+        //            type: 'GET',
+        //            data: { hideProfile: false, customId: customId },
+        //            success: function (response) {
+        //                // Show a success message
+        //                $('#HideProfileFalse').html("Your profile is now visible to other students.");
+        //            },
+        //            error: function () {
+        //                // Display error message
+        //                $('#HideProfileFalse').html("There was an error showing your profile. Please try again.");
+        //            }
+        //        });
+        //    }
+        //}
+
         function hideProfile(selectedRadio, customId) {
             var selectedValue = selectedRadio.value;
             if (selectedValue == "True") {
@@ -53,6 +88,8 @@
                     success: function (response) {
                         // Show a success message
                         $('#HideProfileTrue').html("Your profile has been hidden from other students.");
+                        $('#HideProfileTrue').siblings('.form-check-inline').find('.form-check-input').prop('checked', true);
+                        $('#HideProfileFalse').siblings('.form-check-inline').find('.form-check-input').prop('checked', false);
                     },
                     error: function () {
                         // Display error message
@@ -68,6 +105,8 @@
                     success: function (response) {
                         // Show a success message
                         $('#HideProfileFalse').html("Your profile is now visible to other students.");
+                        $('#HideProfileFalse').siblings('.form-check-inline').find('.form-check-input').prop('checked', true);
+                        $('#HideProfileTrue').siblings('.form-check-inline').find('.form-check-input').prop('checked', false);
                     },
                     error: function () {
                         // Display error message
