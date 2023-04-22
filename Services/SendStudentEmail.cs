@@ -18,27 +18,10 @@ namespace HallHaven.Services
             var client = new SendGridClient(_configuration["SendGridStudentKey"]);
             var from = new EmailAddress("kiahdaulton@gmail.com", "Hall Haven");
             var to = new EmailAddress(email);
-            var msg = MailHelper.CreateSingleEmail(from, to, subject, message, message);
+            var plainTextContent = message;
+            var htmlContent = message + "<br /><br /><i>This is a message from Hall Haven. If you do not wish to receive emails, please hide your profile in your account settings.</i>";
+            var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
             var response = await client.SendEmailAsync(msg);
         }
-
-        //private static void Main()
-        //{
-        //    Execute().Wait();
-        //}
-
-        //static async Task Execute()
-        //{
-        //    var apiKey = Environment.GetEnvironmentVariable("SendGridStudentKey");
-        //    var client = new SendGridClient(apiKey);
-        //    var from = new EmailAddress("kiahdaulton@gmail.com", "Hall Haven");
-        //    var subject = "Sending with SendGrid is Fun";
-        //    var to = new EmailAddress("kiahdaulton@gmail.com", "Hall Haven User");
-        //    var plainTextContent = "and easy to do anywhere, even with C#";
-        //    var htmlContent = "<strong>and easy to do anywhere, even with C#</strong>";
-        //    var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
-        //    var response = await client.SendEmailAsync(msg);
-        //}
-    
     }
 }

@@ -247,12 +247,20 @@ namespace HallHaven.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SendEmail()
+        public async Task<IActionResult> SendEmail(string recipient, string subject, string message)
         {
-            // pass in the user's data from the card to the email here
-            await _sendStudentEmail.SendEmailAsync("kiahdaulton@gmail.com", "Test Subject", "Test Message");
-            //return View();
-            return RedirectToAction(nameof(Index));
+            if(string.IsNullOrEmpty(recipient))
+            {
+                //ModelState.AddModelError("UserId", "You have already submitted a form. Please edit your existing form instead.");
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                // pass in the user's data from the card to the email here
+                await _sendStudentEmail.SendEmailAsync(recipient, subject, message);
+                // close modal instead of redirect?
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         public IActionResult UsersList()
