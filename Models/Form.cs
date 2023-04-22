@@ -28,8 +28,8 @@ namespace HallHaven.Models
         [Range(1, int.MaxValue, ErrorMessage = "Please select a valid number of credit hours")]
         public int CreditHourId { get; set; }
 
-        [Display(Name = "Are you currently an incoming student?")]
-        [Required(ErrorMessage = "Please select if you are currently an incoming student")]
+        [Display(Name = "Are you a new incoming student?")]
+        [Required(ErrorMessage = "Please select if you are a new incoming student")]
         public bool IsCandiateStudent { get; set; }
 
         [Display(Name = "Are you currently a student athlete?")]

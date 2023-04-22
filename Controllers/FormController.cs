@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HallHaven.Data;
@@ -10,10 +6,6 @@ using HallHaven.Models;
 using HallHaven.Areas.Identity.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.CodeAnalysis.Scripting;
-using static System.Collections.Specialized.BitVector32;
-using Microsoft.Data.SqlClient;
-using Microsoft.AspNetCore.SignalR;
 
 namespace HallHaven.Controllers
 {
@@ -21,7 +13,6 @@ namespace HallHaven.Controllers
     {
         private readonly HallHavenContext _context;
         private readonly UserManager<HallHavenUser> _userManager;
-        private bool _isMatched = false;
 
         public FormController(HallHavenContext context, UserManager<HallHavenUser> userManager)
         {
@@ -29,19 +20,11 @@ namespace HallHaven.Controllers
             _userManager = userManager;
         }
 
-        // GET: Form
-        //public async Task<IActionResult> Index()
-        //{
-        //    var hallHavenContext = _context.Forms.Include(f => f.CreditHour).Include(f => f.Dorm).Include(f => f.Major).Include(f => f.User);
-        //    return View(await hallHavenContext.ToListAsync());
-        //}
-
         // GET: Forms
         [Authorize]
         public async Task<IActionResult> Index()
         {
             var userId = User.GetLoggedInUserId<string>();
-            //GetHomeDropdowns();
 
             // if user is logged in
             if (userId != null)
@@ -53,7 +36,7 @@ namespace HallHaven.Controllers
                 // get logged in user's id
                 var customId = user.CustomUserId;
 
-                // get hallhavencontext user by id
+                // get logged in user by id
                 var currentUser = _context.Users.Where(c => c.UserId == customId).ToList();
 
                 // bind form values
@@ -95,7 +78,6 @@ namespace HallHaven.Controllers
         }
 
         // GET: Form/Create
-        //public IActionResult Create()
         public async Task<IActionResult> CreateAsync()
         {
 
@@ -111,19 +93,15 @@ namespace HallHaven.Controllers
 
                 // if credithours from credithour model of user equals 3 or 4 (junior or senior)
                 // then display dorms from dorm model where credit hour equals 3 (junior AND senior dorms)
-
-                //ViewData["CreditHourId"] = new SelectList(_context.CreditHours, "CreditHourId", "CreditHourName");
                 var creditHours = _context.CreditHours.ToList();
                 creditHours.Insert(0, new CreditHour { CreditHourId = 0, CreditHourName = "Select Number of Credit Hours" });
                 ViewData["CreditHourId"] = new SelectList(creditHours, "CreditHourId", "CreditHourName", 0);
+
                 // display dorms by user's gender
-                //ViewData["DormId"] = new SelectList(_context.Dorms.Where(d => d.GenderId == customGender).OrderBy(d => d.DormId), "DormId", "DormName");
-                //ViewData["DormId"] = new SelectList(_context.Dorms.Where(d => d.GenderId == customGender).OrderBy(d => d.DormId), "DormId", "DormName", 0);
                 var dorms = _context.Dorms.Where(d => d.GenderId == customGender).OrderBy(d => d.DormId).ToList();
                 dorms.Insert(0, new Dorm { DormId = 0, DormName = "Select Dorm" });
 
                 ViewData["DormId"] = new SelectList(dorms, "DormId", "DormName", 0);
-
                 ViewData["MajorId"] = new SelectList(_context.Majors, "MajorId", "MajorName").OrderBy(x => x.Text);
                 ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId");
             }
@@ -168,10 +146,6 @@ namespace HallHaven.Controllers
 
                     // display dorms by user's gender
                     ViewData["DormId"] = new SelectList(_context.Dorms.Where(d => d.GenderId == customGender).OrderBy(d => d.DormId), "DormId", "DormName");
-                    //var dorms = _context.Dorms.Where(d => d.GenderId == customGender).OrderBy(d => d.DormId).ToList();
-                    //dorms.Insert(0, new Dorm { DormId = 0, DormName = "Select Dorm" });
-                    //ViewData["DormId"] = new SelectList(dorms, "DormId", "DormName", 0);
-
                     ViewData["MajorId"] = new SelectList(_context.Majors, "MajorId", "MajorName").OrderBy(x => x.Text);
                     ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId");
                     return View(form);
@@ -239,23 +213,11 @@ namespace HallHaven.Controllers
 
                                     // for each field in form
                                     // add special case for user id which is not shown to the user
-                                    // add special cases for isCandiateStudent and IsStudentAthlete
                                     foreach (var fieldName in Request.Form.Keys)
                                     {
                                         if (fieldName == "UserId" || fieldName == "FormId" || fieldName == "__RequestVerificationToken")
                                         {
                                             continue; // skip these fields
-                                        }
-                                        if (fieldName == "IsCandiateStudent")
-                                        {
-                                            // only match with incoming students
-                                            // if selected is true
-                                            // then only match with other candiate students
-                                        }
-                                        if (fieldName == "IsStudentAthlete")
-                                        {
-                                            // only match incoming student athletes with incoming student athletes
-                                            // IsCandiateStudent IsStudentAthlete must both be true
                                         }
                                         // valid fieldName, run matching
                                         else
@@ -288,7 +250,6 @@ namespace HallHaven.Controllers
                 }
 
                 return RedirectToAction("Index", "Home");
-                //return RedirectToAction(nameof(Index));
             }
 
             // redisplay form if something went wrong
@@ -434,34 +395,6 @@ namespace HallHaven.Controllers
                                     if (fieldName == "UserId" || fieldName == "FormId" || fieldName == "__RequestVerificationToken")
                                     {
                                         continue; // skip these fields
-                                    }
-                                    if (fieldName == "IsCandiateStudent")
-                                    {
-                                        // only match with incoming students
-                                        // if selected is true
-                                        // then only match with other candiate students
-                                        if (userByGenderForm.First().IsCandiateStudent == true)
-                                        {
-                                            // find current IsCandiateStudent value from user form
-                                            var currentValue = form.GetType().GetProperty(fieldName)?.GetValue(form);
-                                            if (currentValue == "true")
-                                            {
-                                                // match with only those whose value is true
-                                                //_isMatched = true;
-
-                                                //var usersByGenderAndCandiate = _context.Users
-                                                //    .Include(f => f.Forms)
-                                                //    .Include(f => f.MatchUser1s)
-                                                //    .Include(f => f.MatchUser2s)
-                                                //    .Include(u => u.Gender)
-                                                //    .Where(g => g.Gender.Gender1 == gender && g.Forms.Any(f => f.IsCandiateStudent)).ToList();
-                                            }
-                                        }
-                                    }
-                                    if (fieldName == "IsStudentAthlete")
-                                    {
-                                        // only match incoming student athletes with incoming student athletes
-                                        // IsCandiateStudent IsStudentAthlete must both be true
                                     }
                                     // valid fieldName, run matching
                                     else

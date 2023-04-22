@@ -43,7 +43,7 @@
                 <span asp-validation-for="MajorId" class="text-danger"></span>
             </div>
 
-            <label asp-for="IsCandiateStudent" class="control-label">Please select if you are an incoming or returning student</label>
+            <label asp-for="IsCandiateStudent" class="control-label"></label>
             <fieldset class="form-group form-floating" style="margin-bottom: 15px;">
                 <div class="row">
                     <div class="col-sm-10">
@@ -62,7 +62,7 @@
                 </div>
             </fieldset>
 
-            <label asp-for="IsStudentAthlete" class="control-label">Please select if you are a first semester student athlete</label>
+            <label asp-for="IsStudentAthlete" class="control-label"></label>
             <fieldset class="form-group form-floating" style="margin-bottom: 30px;">
                 <div class="row">
                     <div class="col-sm-10">
@@ -222,36 +222,8 @@
     </div>
 </div>
 
-@*<div>
-    <a asp-action="Index">Back to List</a>
-</div>*@
-
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-
-    @* dynamically get dorms by selected credit hour *@
-@*    <script>
-        $(document).ready(function () {
-            $("#CreditHourId").change(function () {
-                var creditHourId = $(this).val();
-                var genderId = @userGenderId;
-                $.ajax({
-                    type: "GET",
-                    url: "/Form/GetDormsByCreditHour",
-                    data: { creditHourId: creditHourId, genderId: genderId },
-                    success: function (response) {
-                        $("#DormId").empty();
-                        $("#DormId").append('<option>Select Dorm</option>');
-                        $.each(response, function (i, dorm) {
-                            $("#DormId").append('<option value="' + dorm.dormId + '">' + dorm.dormName + '</option>');
-                        });
-                    },
-                    error: function (xhr, status, error) {
-                        console.error(xhr.responseText);
-                    }
-                });
-            });
-        });*@
     
     <script>
         $(document).ready(function () {
