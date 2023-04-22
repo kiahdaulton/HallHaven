@@ -21,6 +21,7 @@ namespace HallHaven.Models
         public string? DisplayName { get; set; }
         public string? Email { get; set; }
         public bool EmailConfirmed { get; set; }
+        public bool IsHidden { get; set; }
 
         public virtual Gender? Gender { get; set; }
         public virtual ICollection<Form> Forms { get; set; }

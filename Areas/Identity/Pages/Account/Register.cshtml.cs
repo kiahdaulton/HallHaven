@@ -172,6 +172,8 @@ namespace HallHaven.Areas.Identity.Pages.Account
                 customUser.LastName = Input.LastName;
                 customUser.Email = Input.Email;
                 customUser.ProfileBio = Input.ProfileBio;
+                // set profile to visible
+                customUser.IsHidden = false;
               
 
                 // user table

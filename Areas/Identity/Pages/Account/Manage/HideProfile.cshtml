@@ -1,9 +1,20 @@
 ﻿@page
 @model IndexModel
+
+@using HallHaven.Areas.Identity.Data;
+@using Microsoft.AspNetCore.Identity;
+@using HallHaven.Models;
+@using System.Security.Claims;
+@inject UserManager<HallHavenUser> _userManager
+
 @{
     ViewData["Title"] = "Hide Profile";
     ViewData["ActivePage"] = ManageNavPages.HideProfile;
+
+    var user = await _userManager.GetUserAsync(User);
+    var customId = user.CustomUserId;
 }
+
 
 <h3>@ViewData["Title"]</h3>
 
@@ -14,11 +25,11 @@
         <div class="col-sm-10">
             <div class="mt-2">
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" onchange="hideProfile(this)" id="HideProfileTrue" asp-for="Input.HideProfile" type="radio" value="True" />
+                    <input class="form-check-input" onchange="hideProfile(this, '@customId')" id="HideProfileTrue" asp-for="Input.HideProfile" type="radio" value="True" />
                     <label class="form-check-label" for="HideProfileTrue">Yes</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" id="HideProfileFalse" asp-for="Input.HideProfile" type="radio" value="False" />
+                    <input class="form-check-input" onchange="hideProfile(this, '@customId')" id="HideProfileFalse" asp-for="Input.HideProfile" type="radio" value="False" />
                     <label class="form-check-label" for="HideProfileFalse">No</label>
                 </div>
             </div>
@@ -27,26 +38,19 @@
     </div>
 </fieldset>
 
-@*<div class="row">
-    <div class="col-md-6">
-        <label>Please click to hide your profile once you find a roommate</label>
-        <button id="hide-profile-button" type="submit" onchange="hideProfile(this)" class="w-100 btn btn-lg btn-primary">Hide my profile</button>
-    </div>
-</div>*@
-
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
 
-        function hideProfile(selectedRadio) {
+        function hideProfile(selectedRadio, customId) {
             var selectedValue = selectedRadio.value;
             if (selectedValue == "True") {
                 // Make an AJAX request to hide the current user's profile
                 $.ajax({
-                    url: '@Url.Action("HideProfile", "Home")',
-                    type: 'POST',
-                    data: { hideProfile: true },
-                    success: function () {
+                    url: "/Home/HideProfile",
+                    type: 'GET',
+                    data: { hideProfile: true, customId: customId },
+                    success: function (response) {
                         // Show a success message
                         $('#HideProfileTrue').html("Your profile has been hidden from other students.");
                     },
@@ -56,9 +60,22 @@
                     }
                 });
             } else {
-                // Display error message
-                $('#HideProfileFalse').html("There was an error hiding your profile. Please try again.");
+                // Make an AJAX request to show the current user's profile
+                $.ajax({
+                    url: "/Home/HideProfile",
+                    type: 'GET',
+                    data: { hideProfile: false, customId: customId },
+                    success: function (response) {
+                        // Show a success message
+                        $('#HideProfileFalse').html("Your profile is now visible to other students.");
+                    },
+                    error: function () {
+                        // Display error message
+                        $('#HideProfileFalse').html("There was an error showing your profile. Please try again.");
+                    }
+                });
             }
         }
+
     </script>
 }

@@ -143,7 +143,7 @@ namespace HallHaven.Controllers
                 var gender = user.Gender;
 
                 // get list of hall haven context users
-                var users = _context.Users
+                var users = _context.Users.Where(u => u.IsHidden == false)
                     .Include(f => f.Forms)
                     .Include(f => f.MatchUser1s)
                     .Include(f => f.MatchUser2s)
@@ -152,83 +152,93 @@ namespace HallHaven.Controllers
                     // get user1Id as the logged in user
                     .OrderByDescending(f => f.MatchUser2s.Where(u => u.User1Id == customId).Max(mu1 => mu1.SimilarityPercentage));
 
-                var userModelData = await users.ToListAsync(); // Retrieve the data for the user model
-
-                // get logged in user by id
-                List<User> currentUser = _context.Users.Where(c => c.UserId == customId)
-                    .Include(f => f.Forms.Where(f => f.UserId == customId))
-                    .Include(f => f.MatchUser1s)
-                    .Include(f => f.MatchUser2s)
-                    .Include(u => u.Gender).ToList();
-
-                // get any user where IsCandiateStudent is true
-                var usersByGenderAndCandiate = userModelData.Where(u => u.Forms.Any(f => f.IsCandiateStudent == true) && u.Forms.Any(f => f.IsStudentAthlete == false)).ToList();
-
-                var usersByGenderCandiateAthlete = userModelData.Where(u => u.Forms.Any(f => f.IsCandiateStudent == true) && u.Forms.Any(f => f.IsStudentAthlete == true)).ToList();
-
-                if (currentUser != null)
+                if (users != null)
                 {
-                    // apply IsCandiateStudent and IsStudentAthlete filters from the form
-                    // if current user is a candiate student
-                    if (currentUser.First().Forms.First().IsCandiateStudent == true)
-                    {
-                        // get student atheletes
-                        if (currentUser.First().Forms.First().IsStudentAthlete == true)
-                        {
-                            // new incoming student athlete
-                            // if the student is a candiate student and a student athelete
-                            // show students who are candiate students and are atheletes
-                            userModelData = usersByGenderCandiateAthlete;
+                    var userModelData = await users.ToListAsync(); // Retrieve the data for the user model
 
-                        }
-                        else
+                    // get logged in user by id
+                    List<User> currentUser = _context.Users.Where(c => c.UserId == customId)
+                        .Include(f => f.Forms.Where(f => f.UserId == customId))
+                        .Include(f => f.MatchUser1s)
+                        .Include(f => f.MatchUser2s)
+                        .Include(u => u.Gender).ToList();
+
+                    // get any user where IsCandiateStudent is true
+                    var usersByGenderAndCandiate = userModelData.Where(u => u.Forms.Any(f => f.IsCandiateStudent == true) && u.Forms.Any(f => f.IsStudentAthlete == false)).ToList();
+
+                    var usersByGenderCandiateAthlete = userModelData.Where(u => u.Forms.Any(f => f.IsCandiateStudent == true) && u.Forms.Any(f => f.IsStudentAthlete == true)).ToList();
+
+                    if (currentUser != null)
+                    {
+                        // apply IsCandiateStudent and IsStudentAthlete filters from the form
+                        // if current user is a candiate student
+                        if (currentUser.First().Forms.First().IsCandiateStudent == true)
                         {
-                            // only show users that are candiate students AND not student atheletes
-                            userModelData = usersByGenderAndCandiate;
+                            // get student atheletes
+                            if (currentUser.First().Forms.First().IsStudentAthlete == true)
+                            {
+                                // new incoming student athlete
+                                // if the student is a candiate student and a student athelete
+                                // show students who are candiate students and are atheletes
+                                userModelData = usersByGenderCandiateAthlete;
+
+                            }
+                            else
+                            {
+                                // only show users that are candiate students AND not student atheletes
+                                userModelData = usersByGenderAndCandiate;
+                            }
                         }
                     }
+
+                    // populate formViewModel
+                    var dorms = await _context.Dorms.Where(g => g.Gender.Gender1 == gender).ToListAsync();
+                    var creditHours = await _context.CreditHours.ToListAsync();
+                    var majors = await _context.Majors.ToListAsync();
+
+                    var dormsList = new SelectList(dorms, "DormId", "DormName");
+                    var creditHoursList = new SelectList(creditHours, "CreditHourId", "CreditHourName");
+                    var majorsList = new SelectList(majors, "MajorId", "MajorName");
+
+
+                    // add in selected values to search by
+                    var viewModel = new FormViewModel
+                    {
+                        Dorms = dormsList,
+                        CreditHours = creditHoursList,
+                        Majors = majorsList
+                    };
+
+                    var formViewModelData = viewModel; // Retrieve the data for the form view model
+
+                    var homeViewModel = new HomeViewModel
+                    {
+                        Users = userModelData,
+                        FormViewModel = formViewModelData
+                    };
+
+                    int testSelectedDormId = homeViewModel.FormViewModel.SelectedDormId;
+
+                    return View(homeViewModel);
                 }
-
-                // populate formViewModel
-                var dorms = await _context.Dorms.Where(g => g.Gender.Gender1 == gender).ToListAsync();
-                var creditHours = await _context.CreditHours.ToListAsync();
-                var majors = await _context.Majors.ToListAsync();
-
-                var dormsList = new SelectList(dorms, "DormId", "DormName");
-                var creditHoursList = new SelectList(creditHours, "CreditHourId", "CreditHourName");
-                var majorsList = new SelectList(majors, "MajorId", "MajorName");
-
-
-                // add in selected values to search by
-                var viewModel = new FormViewModel
-                {
-                    Dorms = dormsList,
-                    CreditHours = creditHoursList,
-                    Majors = majorsList
-                };
-
-                var formViewModelData = viewModel; // Retrieve the data for the form view model
-
-                var homeViewModel = new HomeViewModel
-                {
-                    Users = userModelData,
-                    FormViewModel = formViewModelData
-                };
-
-                int testSelectedDormId = homeViewModel.FormViewModel.SelectedDormId;
-
-                return View(homeViewModel);
             }
 
             return View();
         }
 
-        [HttpPost]
-        public IActionResult HideProfile(string hideProfile)
+        [HttpGet]
+        public IActionResult HideProfile(bool hideProfile, int customId)
         {
-            // test
-            var test = hideProfile;
-            return View(hideProfile);
+
+            List<User> currentUser = _context.Users.Where(c => c.UserId == customId)
+                .Include(f => f.Forms.Where(f => f.UserId == customId))
+                .Include(f => f.MatchUser1s)
+                .Include(f => f.MatchUser2s)
+                .Include(u => u.Gender).ToList();
+
+            currentUser.First().IsHidden = hideProfile;
+            _context.SaveChangesAsync();
+            return Ok();
         }
 
         public IActionResult UsersList()
