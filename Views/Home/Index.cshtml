@@ -37,9 +37,10 @@
 </div>
 
 @* Add user input to the email form *@
-<form method="post" action="/Home/SendEmail">
-    <button type="submit" class="btn btn-primary">Send Email</button>
+@*<form method="post" action="/Home/SendEmail">
+    <button class="emailModalButton btn btn-primary" type="submit">Send Email</button>
 </form>
+*@
 
 @* Display filtering dropdowns if user is logged in *@
 @if (_signInManager.IsSignedIn(User))
@@ -49,7 +50,7 @@
             @Html.AntiForgeryToken()
 
             <!-- dropdowns for filtering -->
-        @Html.DropDownListFor(m => m.FormViewModel.SelectedDormId, Model.FormViewModel.Dorms, "All Dorms", new { @class = "form-control" })
+            @Html.DropDownListFor(m => m.FormViewModel.SelectedDormId, Model.FormViewModel.Dorms, "All Dorms", new { @class = "form-control" })
             @Html.DropDownListFor(m => m.FormViewModel.SelectedCreditHourId, Model.FormViewModel.CreditHours, "All Credit Hours", new { @class = "form-control" })
             @Html.DropDownListFor(m => m.FormViewModel.SelectedMajorId, Model.FormViewModel.Majors, "All Majors", new { @class = "form-control" })
 
@@ -102,6 +103,36 @@ else
                                 </div>
                             </div>
 
+                            // email Modal
+                            <div id="emailModal-@user.UserId" class="modal fade">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">@user.DisplayName's Email</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>@user.Email</p>
+                                            <form method="post" action="/Home/SendEmail">
+                                                <input type="hidden" name="recipient" value="@user.Email" />
+                                                <div class="form-group">
+                                                    <label for="subject">Subject:</label>
+                                                    <input type="text" class="form-control" id="subject" name="subject" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="message">Message:</label>
+                                                    <textarea class="form-control" id="message" name="message"></textarea>
+                                                </div>
+                                                <button type="submit" class="btn btn-primary">Send</button>
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default closeEmailModalBtn" data-target="#emailModal-@user.UserId" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
                             <div class="col">
                                 <div class="card shadow-sm">
 
@@ -120,7 +151,6 @@ else
                                     <div class="card-body">
                                         <div class="card-text">
                                             <h4 class="d-flex justify-content-center" style="text-align: center">@user.DisplayName</h4>
-                                            <div>@user.Email</div>
                                             @{
                                                 // get each user's form (if not null) and grab major and dorm to be displayed
                                                 var userForm = @user.Forms.Where(g => g.UserId == @user.UserId).ToList();
@@ -177,7 +207,8 @@ else
                                                 <button class="btn btn-outline-secondary modalButton" type="button" data-toggle="modal" data-target="#myModal-@user.UserId">
                                                     <img class="icon" src="/images/user.png" alt="User Icon" />
                                                 </button>
-                                                <button type="button" class="btn btn-outline-secondary"><img class="icon" src="/images/mail.png" alt="Mail Icon" /></button>
+                                                <button type="button" class="btn btn-outline-secondary emailModalButton" data-toggle="modal" data-target="#emailModal-@user.UserId">
+                                                    <img class="icon" src="/images/mail.png" alt="Mail Icon" /></button>
                                             </div>
                                         </div>
                                     </div>
@@ -210,6 +241,18 @@ else
         $(".closeModalBtn").click(function () {
             var userId = $(this).data("target").split("-")[1];
             $("#myModal-" + userId).modal("hide");
+        });
+
+        $(document).ready(function () {
+            $(".emailModalButton").click(function () {
+                var userId = $(this).data("target").split("-")[1];
+                $("#emailModal-" + userId).modal("show");
+            });
+        });
+
+        $(".closeEmailModalBtn").click(function () {
+            var userId = $(this).data("target").split("-")[1];
+            $("#emailModal-" + userId).modal("hide");
         });
 
         $(function () {
