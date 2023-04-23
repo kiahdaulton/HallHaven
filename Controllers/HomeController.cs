@@ -13,6 +13,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Claims;
 using static HallHaven.Models.ClaimsPrincipalExtensions;
+using static System.Collections.Specialized.BitVector32;
 
 namespace HallHaven.Controllers
 {
@@ -250,21 +251,44 @@ namespace HallHaven.Controllers
         }
 
         // hide the user profile in the account if true is selected
-        [HttpGet]
-        public IActionResult HideProfile(bool hideProfile, int customId)
+        [HttpPost]
+        public IActionResult HideProfile(bool hideProfile)
         {
 
-            List<User> currentUser = _context.Users.Where(c => c.UserId == customId)
-                .Include(f => f.Forms.Where(f => f.UserId == customId))
-                .Include(f => f.MatchUser1s)
-                .Include(f => f.MatchUser2s)
-                .Include(u => u.Gender).ToList();
+            string customId = Request.Form["customId"];
+            int customIdInt = int.Parse(customId);
 
-            // set isHidden to the selected user value
-            currentUser.First().IsHidden = hideProfile;
-            _context.SaveChanges(); 
-            return Ok();
+            try
+            {
+                // get currentUser
+                List<User> currentUser = _context.Users.Where(c => c.UserId == customIdInt)
+                    .Include(f => f.Forms.Where(f => f.UserId == customIdInt))
+                    .Include(f => f.MatchUser1s)
+                    .Include(f => f.MatchUser2s)
+                    .Include(u => u.Gender).ToList();
+
+                //set isHidden to the selected user value
+                if (currentUser.Count != 0)
+                {
+                    currentUser.First().IsHidden = hideProfile;
+                    _context.SaveChanges();
+                    return Redirect("/Identity/Account/Manage/HideProfile");
+                }
+                else
+                {
+                    return Redirect("/Identity/Account/Manage/HideProfile");
+                }
+            }
+            catch (Exception ex)
+            {
+                // log the exception
+                Console.WriteLine($"Error: {ex.Message}");
+
+                // return a 500 error response
+                return StatusCode(500);
+            }
         }
+
 
         [HttpPost]
         public async Task<IActionResult> SendEmail(string recipient, string subject, string message)
@@ -290,9 +314,9 @@ namespace HallHaven.Controllers
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        public Task<IActionResult> Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return Task.FromResult<IActionResult>(View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier }));
         }
     }
 }

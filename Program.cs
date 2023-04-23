@@ -44,6 +44,12 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
+//app.MapControllerRoute(
+//               name: "hideProfile",
+//               pattern: "Home/HideProfileAsync",
+//               defaults: new { controller = "Home", action = "HideProfileAsync" });
+
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
