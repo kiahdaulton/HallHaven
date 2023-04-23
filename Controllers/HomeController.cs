@@ -250,7 +250,7 @@ namespace HallHaven.Controllers
             return View();
         }
 
-        // hide the user profile in the account if true is selected
+        //hide the user profile in the account if true is selected
         [HttpPost]
         public IActionResult HideProfile(bool hideProfile)
         {
@@ -270,9 +270,12 @@ namespace HallHaven.Controllers
                 //set isHidden to the selected user value
                 if (currentUser.Count != 0)
                 {
+                    var test = hideProfile;
                     currentUser.First().IsHidden = hideProfile;
                     _context.SaveChanges();
+
                     return Redirect("/Identity/Account/Manage/HideProfile");
+
                 }
                 else
                 {
