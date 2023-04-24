@@ -4,8 +4,22 @@ using HallHaven.Data;
 using HallHaven.Areas.Identity.Data;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using HallHaven.Services;
+using Azure.Identity;
+using Microsoft.AspNetCore.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
+
+//var keyVaultEndpoint = new Uri(Environment.GetEnvironmentVariable("VaultUri"));
+//builder.Configuration.AddAzureKeyVault(keyVaultEndpoint, new DefaultAzureCredential());
+
+
+//if (builder.Environment.IsProduction())
+//{
+//    builder.Configuration.AddAzureKeyVault(
+//        new Uri($"https://{builder.Configuration["HallHavenvault"]}.vault.azure.net/"),
+//        new DefaultAzureCredential());
+//}
+
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
 builder.Services.AddDbContext<HallHavenContext>(options =>

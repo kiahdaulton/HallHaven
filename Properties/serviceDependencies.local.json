@@ -8,6 +8,11 @@
       "type": "mssql.onprem",
       "connectionId": "ConnectionStrings:DefaultConnection",
       "dynamicId": null
+    },
+    "secrets2": {
+      "type": "secrets.user",
+      "connectionId": "VaultUri",
+      "dynamicId": null
     }
   }
 }

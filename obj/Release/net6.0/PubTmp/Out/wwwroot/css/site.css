@@ -1,0 +1,275 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+    margin-bottom: 60px;
+}
+
+.icon {
+    width: 30px;
+    height: 30px;
+    filter: brightness(0) invert(1);
+}
+
+.form-group {
+    margin-bottom: 10px;
+}
+
+.nav-pills .nav-link {
+    color: #000;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    color: #fff;
+    background-color: #1e5e96;
+}
+
+.nav-link:focus, .nav-link:hover {
+    color: #000;
+}
+
+#download-data {
+    margin-bottom: 15px;
+}
+
+#manage {
+    height: 41.6px !important;
+}
+
+.form-check-input:checked {
+    background-color: #1e5e96;
+    border-color: #1e5e96;
+}
+
+.btn-primary {
+    background-color: #1e5e96;
+    border-color: #1e5e96;
+}
+
+    .btn-primary:hover {
+        background-color: #03335F;
+        border-color: #03335F;
+    }
+
+    .btn-primary:focus {
+        background-color: #03335F;
+        border-color: #03335F;
+    }
+    .btn-primary:visited {
+        background-color: #03335F;
+        border-color: #03335F;
+    }
+    .btn-primary:active {
+        background-color: #03335F;
+        border-color: #03335F;
+    }
+
+.btn-secondary {
+    background-color: #737373;
+    border-color: #737373;
+}
+
+.text-overlay {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    margin-top: 10px;
+}
+
+    .text-overlay h1 {
+        font-size: 3rem;
+        font-weight: bold;
+        color: #03335F;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+.logo-overlay {
+    display: none;
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+    .logo-overlay img {
+        width: 200px;
+        height: auto;
+    }
+
+.album {
+    display: none;
+}
+
+.mb-3 {
+    margin-bottom: 0rem !important;
+}
+
+datalist {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    writing-mode: vertical-lr;
+    width: 200px;
+}
+
+option {
+    padding: 0;
+}
+
+input[type="range"] {
+    width: 200px;
+    margin: 0;
+}
+
+#FormViewModel_SelectedDormId {
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+#FormViewModel_SelectedCreditHourId {
+    margin-bottom: 10px;
+}
+
+#FormViewModel_SelectedMajorId {
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+#filterWrap {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+#filterForm {
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+}
+
+.register-login-image {
+    width: 400px;
+    height: auto;
+}
+
+/* #1e5e96 */
+.card-body {
+    background-color: #03335F;
+    color: #ffffff;
+    border-color: transparent !important;
+}
+
+textarea.form-control {
+    height: 175px !important;
+}
+
+/* Change the track color */
+/*input[type="range"]::-webkit-slider-runnable-track {
+    background-color: #03335F;
+}*/
+/* Change the thumb color */
+/*input[type="range"]::-webkit-slider-thumb {
+    background-color: #03335F;*/
+/*border: 1px solid #03335F;*/
+/*}*/
+@media only screen and (max-width: 1400px) {
+    .logo-overlay {
+        position: absolute;
+        top: 30%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+        .logo-overlay img {
+            width: 200px;
+            height: auto;
+        }
+}
+
+@media only screen and (max-width: 1200px) {
+    .logo-overlay {
+        position: absolute;
+        top: 25%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+        .logo-overlay img {
+            width: 200px;
+            height: auto;
+        }
+
+    .text-overlay h1 {
+        font-size: 40px;
+    }
+}
+
+@media only screen and (max-width: 1100px) {
+    .logo-overlay {
+        position: absolute;
+        top: 20%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+        .logo-overlay img {
+            width: 200px;
+            height: auto;
+        }
+}
+
+@media only screen and (max-width: 992px) {
+
+}
+
+
+    @media only screen and (max-width: 768px) {
+
+        .logo-overlay {
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+            .logo-overlay img {
+                width: 200px;
+                height: auto;
+            }
+
+        .text-overlay {
+            margin-top: 40px;
+        }
+        .text-overlay h1 {
+            font-size: 25px;
+        }
+
+        .register-login-image {
+            width: 200px;
+        }
+    }
+
+    @media only screen and (max-width: 576px) {
+
+        .card-img-top {
+            height: 50vw;
+        }
+
+        .text-overlay {
+            margin-top: 75px;
+        }
+    }
