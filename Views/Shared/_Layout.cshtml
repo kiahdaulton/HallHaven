@@ -26,7 +26,7 @@
                         <img src="~/images/HallHavenLogov2Transparent.png" class="img-center" height="50" width="50" />
                     </div>
                 </a>
-               @* <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Hall Haven</a>*@
+
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -38,40 +38,7 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="Form" asp-action="Index">Form</a>
-                        </li>
-@*                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="User" asp-action="Index">User</a>
-                        </li>*@
-
-                        @*  display nav item if user has filled out form 
-                            pass in user's form id in url
-                        *@
-@*                        @{
-                            @model IEnumerable<HallHaven.Models.Form>
-                            @if (Model != null)
-                            {
-                                @foreach (var item in Model)
-                                {
-                                    var identityUser = await _userManager.GetUserAsync(User);
-                                    var customId = identityUser.CustomUserId;
-
-                                    @if (item.UserId == customId)
-                                    {
-                                        <li class="nav-item">
-                                            <a class="nav-link text-light" asp-area="" asp-route-id="@item.FormId" asp-controller="Form" asp-action="Edit">Edit Form</a>
-                                        </li>
-                                    }
-                                }
-                            } else
-                            {
-                                // display no nav item
-                            }
-
-                        }*@
-@*                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Form" asp-action="Edit">Edit Form</a>
-                        </li>*@
-                      
+                        </li>                  
                     </ul>
                     <partial name="_LoginPartial"/>
                 </div>

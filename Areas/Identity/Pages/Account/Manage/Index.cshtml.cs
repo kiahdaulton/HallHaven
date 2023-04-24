@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using HallHaven.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace HallHaven.Areas.Identity.Pages.Account.Manage
 {

@@ -67,83 +67,16 @@ namespace HallHaven.Areas.Identity.Pages.Account.Manage
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>    
+            [Required(ErrorMessage = "Please select an option")]
             public bool HideProfile { get; set; }
         }
 
         public void OnGet()
         {
+
+        // on page load for hide profile
+
         }
-
-        //    public async Task<IActionResult> OnPostHideProfileAsync()
-        //    {
-        //        bool hideProfile = bool.Parse(Request.Form["hideProfile"]);
-        //        bool hideProfile2 = Input.HideProfile;
-
-        //        if (!ModelState.IsValid)
-        //        {
-        //            return Page();
-        //        }
-        //        var user = await _userManager.GetUserAsync(User);
-        //        var customId = user.CustomUserId;
-
-
-        //        // get the current user from the database
-        //        List<User> currentUser = _context.Users.Where(c => c.UserId == customId)
-        //                .Include(f => f.Forms.Where(f => f.UserId == customId))
-        //                .Include(f => f.MatchUser1s)
-        //                .Include(f => f.MatchUser2s)
-        //                .Include(u => u.Gender).ToList();
-
-        //        //set isHidden to the selected user value
-        //        if (currentUser.Count != 0)
-        //        {
-        //            currentUser.First().IsHidden = hideProfile;
-        //            await _context.SaveChangesAsync();
-
-        //            return Page();
-
-        //        }
-        //        else
-        //        {
-        //            ModelState.AddModelError(string.Empty, "Profile saved");
-        //            return Page();
-        //        }
-        //    }    
-
-        //}
-
-        //[HttpPost]
-        //public async Task<IActionResult> OnPostAsync()
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return Page();
-        //    }
-
-        //    // get the current user from the database
-        //    var user = await _userManager.GetUserAsync(User);
-        //    var customId = user.CustomUserId;
-        //    var currentUser = await _context.Users
-        //        .Include(u => u.Gender)
-        //        .Include(f => f.Forms)
-        //        .Include(f => f.MatchUser1s)
-        //        .Include(f => f.MatchUser2s)
-        //        .FirstOrDefaultAsync(c => c.UserId == customId);
-
-        //    // set isHidden to the selected user value
-        //    if (currentUser != null)
-        //    {
-        //        currentUser.IsHidden = Input.HideProfile;
-        //        await _context.SaveChangesAsync();
-
-        //        return RedirectToPage();
-        //    }
-        //    else
-        //    {
-        //        ModelState.AddModelError(string.Empty, "Error hiding profile.");
-        //        return Page();
-        //    }
-        //}
 
     }
 }

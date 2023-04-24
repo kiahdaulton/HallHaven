@@ -2,18 +2,12 @@
 using HallHaven.Data;
 using HallHaven.Models;
 using HallHaven.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Security.Claims;
 using static HallHaven.Models.ClaimsPrincipalExtensions;
-using static System.Collections.Specialized.BitVector32;
 
 namespace HallHaven.Controllers
 {
@@ -270,7 +264,7 @@ namespace HallHaven.Controllers
                 //set isHidden to the selected user value
                 if (currentUser.Count != 0)
                 {
-                    var test = hideProfile;
+                    //var test = hideProfile;
                     currentUser.First().IsHidden = hideProfile;
                     _context.SaveChanges();
 

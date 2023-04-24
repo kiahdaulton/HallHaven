@@ -45,32 +45,6 @@
     <button type="submit" class="btn btn-primary">Save</button>
 </form>
 
-@*<form method="post" action="/Identity/Account/Manage/HideProfile" >
-    <label class="control-label">Would you like to hide your profile from other students?</label>
-    <fieldset class="form-group form-floating" style="margin-bottom: 15px;">
-        <div class="row">
-            <div class="col-sm-10">
-                <div class="mt-2">
-                    <input type="hidden" name="customId" value="@customId" />
-
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" id="HideProfileTrue" name="Input.HideProfile" type="radio" value="True" @(hideProfile == true ? "checked" : "") />
-                        <label class="form-check-label" for="HideProfileTrue">Yes</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" id="HideProfileFalse" name="Input.HideProfile" type="radio" value="False" @(hideProfile == false ? "checked" : "") />
-                        <label class="form-check-label" for="HideProfileFalse">No</label>
-                    </div>
-                </div>
-                <span asp-validation-for="Input.HideProfile" class="text-danger"></span>
-            </div>
-        </div>
-    </fieldset>
-
-    <button type="submit" class="btn btn-primary">Save</button>
-</form>*@
-
-
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>

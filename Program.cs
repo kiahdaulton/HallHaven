@@ -9,18 +9,11 @@ using Microsoft.AspNetCore.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// link to development secrets
 var keyVaultEndpoint = new Uri(Environment.GetEnvironmentVariable("VaultUri"));
 builder.Configuration.AddAzureKeyVault(keyVaultEndpoint, new DefaultAzureCredential());
 
-//if (builder.Environment.IsProduction())
-//{
-//    //builder.Configuration.AddAzureKeyVault(
-//    //    new Uri($"https://{builder.Configuration["VaultUri"]}.vault.azure.net/"),
-//    //    new DefaultAzureCredential());
-//    var keyVaultEndpoint = new Uri(Environment.GetEnvironmentVariable("VaultUri"));
-//    builder.Configuration.AddAzureKeyVault(keyVaultEndpoint, new DefaultAzureCredential());
-//}
-
+// database connection string
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
 builder.Services.AddDbContext<HallHavenContext>(options =>

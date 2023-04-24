@@ -2,30 +2,19 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
 using HallHaven.Areas.Identity.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Logging;
 using HallHaven.Data;
 using HallHaven.Models;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using HallHaven.Controllers;
-using System.ComponentModel.DataAnnotations.Schema;
+
 
 namespace HallHaven.Areas.Identity.Pages.Account
 {
@@ -128,6 +117,7 @@ namespace HallHaven.Areas.Identity.Pages.Account
             /// </summary>
             [Required]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            //[Compare("Password", ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.")]
             [DataType(DataType.Password)]
             [Display(Name = "Password")]
             public string Password { get; set; }
@@ -153,6 +143,7 @@ namespace HallHaven.Areas.Identity.Pages.Account
         {
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
             if (ModelState.IsValid)
             {
                 // create new instance of user
@@ -186,21 +177,12 @@ namespace HallHaven.Areas.Identity.Pages.Account
                     }
                 }
 
-
-                // generate new user in user table
-                _context.Add(customUser);
-                await _context.SaveChangesAsync();
-
-
                 // create identity user
                 var user = CreateUser();
                 user.FirstName = Input.FirstName;
                 user.LastName = Input.LastName;
                 user.Gender = Input.Gender;
-                //user.ProfilePicture = Input.ProfilePicture;
                 user.ProfileBio = Input.ProfileBio;
-                // set null customUserId to value of userId in user table
-                user.CustomUserId = customUser.UserId;
 
                 // identity table
                 if (Input.ProfilePictureFile != null && Input.ProfilePictureFile.Length > 0)
@@ -222,6 +204,15 @@ namespace HallHaven.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
+
+                    // generate new user in user table
+                    _context.Add(customUser);
+                    await _context.SaveChangesAsync();
+
+                    // set customUserId to value of userId in user table
+                    user.CustomUserId = customUser.UserId;
+                    // update identity user
+                    await _userManager.UpdateAsync(user);
 
                     // userId is created
                     var userId = await _userManager.GetUserIdAsync(user);
@@ -247,10 +238,13 @@ namespace HallHaven.Areas.Identity.Pages.Account
                         return LocalRedirect(returnUrl);
                     }
                 }
+
                 foreach (var error in result.Errors)
                 {
+                    // show errors in form such as invalid password
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
+
             }
 
             // If we got this far, something failed, redisplay form

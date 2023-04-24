@@ -31,7 +31,6 @@ namespace HallHaven.Controllers
             {
                 // get logged in user
                 var user = await _userManager.GetUserAsync(User);
-                //var customUser = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
                 // get logged in user's id
                 var customId = user.CustomUserId;
