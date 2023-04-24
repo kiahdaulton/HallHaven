@@ -1,5 +1,9 @@
 {
   "dependencies": {
+    "secrets3": {
+      "restored": true,
+      "restoreTime": "2023-04-24T01:22:15.5251733Z"
+    },
     "secrets2": {
       "restored": true,
       "restoreTime": "2023-04-23T23:57:26.0398263Z"
@@ -13,5 +17,16 @@
       "restoreTime": "2023-03-29T13:40:21.5522275Z"
     }
   },
-  "parameters": {}
+  "parameters": {
+    "secrets3.subscriptionId": {
+      "Name": "secrets3.subscriptionId",
+      "Type": "subscription",
+      "Value": "3b20331d-4ab6-4115-9f6b-8806cc098e78"
+    },
+    "secrets3.resourceGroupName": {
+      "Name": "secrets3.resourceGroupName",
+      "Type": "resourceGroup",
+      "Value": "hallHavenResourceGroup"
+    }
+  }
 }

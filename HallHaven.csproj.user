@@ -16,6 +16,6 @@
     <WebStackScaffolding_DbContextTypeFullName>HallHaven.Data.HallHavenContext</WebStackScaffolding_DbContextTypeFullName>
     <WebStackScaffolding_IsAsyncSelected>False</WebStackScaffolding_IsAsyncSelected>
     <WebStackScaffolding_IsViewGenerationSelected>True</WebStackScaffolding_IsViewGenerationSelected>
-    <NameOfLastUsedPublishProfile>C:\Users\kiahd\source\repos\HallHaven\Properties\PublishProfiles\HallHaven - Web Deploy.pubxml</NameOfLastUsedPublishProfile>
+    <NameOfLastUsedPublishProfile>C:\Users\kiahd\source\repos\HallHaven\Properties\PublishProfiles\HallHaven - Web Deploy1.pubxml</NameOfLastUsedPublishProfile>
   </PropertyGroup>
 </Project>

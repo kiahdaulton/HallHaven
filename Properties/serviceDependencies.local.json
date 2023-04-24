@@ -13,6 +13,13 @@
       "type": "secrets.user",
       "connectionId": "VaultUri",
       "dynamicId": null
+    },
+    "secrets3": {
+      "secretStore": null,
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.KeyVault/vaults/HallHavenvault",
+      "type": "secrets.keyVault",
+      "connectionId": "VaultUri",
+      "dynamicId": null
     }
   }
 }

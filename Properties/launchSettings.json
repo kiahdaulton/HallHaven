@@ -1,4 +1,4 @@
-﻿{
+{
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
@@ -14,14 +14,18 @@
       "launchBrowser": true,
       "applicationUrl": "https://localhost:7033;http://localhost:5174",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "VaultUri": "https://hallhavenvault.vault.azure.net/",
+        "AZURE_USERNAME": "231321@student.cofo.edu"
       }
     },
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "VaultUri": "https://hallhavenvault.vault.azure.net/",
+        "AZURE_USERNAME": "231321@student.cofo.edu"
       }
     }
   }

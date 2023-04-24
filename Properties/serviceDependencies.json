@@ -12,6 +12,11 @@
       "type": "secrets",
       "connectionId": "VaultUri",
       "dynamicId": null
+    },
+    "secrets3": {
+      "type": "secrets",
+      "connectionId": "VaultUri",
+      "dynamicId": null
     }
   }
 }
