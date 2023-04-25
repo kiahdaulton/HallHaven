@@ -166,7 +166,6 @@ input[type="range"] {
     height: auto;
 }
 
-/* #1e5e96 */
 .card-body {
     background-color: #03335F;
     color: #ffffff;
@@ -177,15 +176,15 @@ textarea.form-control {
     height: 175px !important;
 }
 
-/* Change the track color */
-/*input[type="range"]::-webkit-slider-runnable-track {
-    background-color: #03335F;
-}*/
-/* Change the thumb color */
-/*input[type="range"]::-webkit-slider-thumb {
-    background-color: #03335F;*/
-/*border: 1px solid #03335F;*/
-/*}*/
+.navbar-light .navbar-toggler {
+    filter: brightness(0) invert(1);
+}
+
+.formImg {
+    width: 30vw;
+    height: auto;
+}
+
 @media only screen and (max-width: 1400px) {
     .logo-overlay {
         position: absolute;
@@ -216,6 +215,12 @@ textarea.form-control {
     .text-overlay h1 {
         font-size: 40px;
     }
+
+    .formImg {
+        width: 40vw;
+        height: auto;
+        margin-top: 30px;
+    }
 }
 
 @media only screen and (max-width: 1100px) {
@@ -234,6 +239,11 @@ textarea.form-control {
 
 @media only screen and (max-width: 992px) {
 
+    .formImg {
+        width: 50vw;
+        height: auto;
+        margin-top: 30px;
+    }
 }
 
 
@@ -261,6 +271,10 @@ textarea.form-control {
         .register-login-image {
             width: 200px;
         }
+
+        .accountResp {
+            margin-top: 30px;
+        }
     }
 
     @media only screen and (max-width: 576px) {
@@ -271,5 +285,20 @@ textarea.form-control {
 
         .text-overlay {
             margin-top: 75px;
+        }
+
+            .text-overlay h1 {
+                font-size: 25px;
+            }
+
+        .logo-overlay img {
+            width: 125px;
+            height: auto;
+        }
+
+        .formImg {
+            width: 60vw;
+            height: auto;
+            margin-top: 30px;
         }
     }
