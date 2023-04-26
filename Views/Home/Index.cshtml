@@ -104,7 +104,6 @@ else
                                             <h4 class="modal-title">Send @user.DisplayName an Email</h4>
                                         </div>
                                         <div class="modal-body">
-                                            @*<p>@user.Email</p>*@
                                             <form method="post" action="/Home/SendEmail">
                                                 <input type="hidden" name="recipient" value="@user.Email" />
                                                 <div class="form-group">

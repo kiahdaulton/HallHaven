@@ -333,7 +333,6 @@ namespace HallHaven.Controllers
 
             await _context.SaveChangesAsync();
 
-
             // re-run algorithm with saved data
 
             // get user
@@ -347,6 +346,7 @@ namespace HallHaven.Controllers
                 return NotFound();
             }
 
+            // update all existing matches with updated form data
             foreach (Match existingMatch in existingMatches)
             {
 

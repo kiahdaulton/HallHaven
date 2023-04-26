@@ -39,7 +39,7 @@ namespace HallHaven.Controllers
                 var customId = user.CustomUserId;
                 var gender = user.Gender;
 
-                List<User> usersByGender = _context.Users
+                List<User> usersByGender = _context.Users.Where(u => u.IsHidden == false)
                     .Include(f => f.Forms)
                     .Include(f => f.MatchUser1s)
                     .Include(f => f.MatchUser2s)

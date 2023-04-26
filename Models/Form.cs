@@ -64,8 +64,8 @@ namespace HallHaven.Models
         [Required(ErrorMessage = "Please select the level of noise you prefer in your room while studying")]
         public int BackgroundNoiseLevel { get; set; }
 
-        [Display(Name = "What is the average time you plan to sleep on a weekday?")]
-        [Required(ErrorMessage = "Please select the average time you go to sleep")]
+        [Display(Name = "What is your preferred bedtime?")]
+        [Required(ErrorMessage = "Please select your preferred bedtime?")]
         public int? BedTimeRanking { get; set; }
 
         [Display(Name = "How modest you are in your dorm room?")]
